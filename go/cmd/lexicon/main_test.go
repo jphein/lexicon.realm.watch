@@ -104,3 +104,34 @@ func TestResolve_Unknown(t *testing.T) {
 		t.Error("expected non-zero for unknown name")
 	}
 }
+
+func TestList_All(t *testing.T) {
+	var stdout, stderr bytes.Buffer
+	cat := filepath.Join("..", "..", "..", "tests", "fixtures", "catalog-test.yaml")
+	code := run([]string{"lexicon", "list", "--catalog", cat}, &stdout, &stderr)
+	if code != 0 {
+		t.Fatalf("exit %d; stderr=%q", code, stderr.String())
+	}
+	out := stdout.String()
+	for _, want := range []string{"clock", "dreamspace", "realmwatch"} {
+		if !strings.Contains(out, want) {
+			t.Errorf("list missing %q: %q", want, out)
+		}
+	}
+}
+
+func TestList_FilterByRealm(t *testing.T) {
+	var stdout, stderr bytes.Buffer
+	cat := filepath.Join("..", "..", "..", "tests", "fixtures", "catalog-test.yaml")
+	code := run([]string{"lexicon", "list", "--realm", "signal", "--catalog", cat}, &stdout, &stderr)
+	if code != 0 {
+		t.Fatalf("exit %d; stderr=%q", code, stderr.String())
+	}
+	out := stdout.String()
+	if !strings.Contains(out, "clock") {
+		t.Errorf("expected clock in signal-realm list: %q", out)
+	}
+	if strings.Contains(out, "realmwatch") {
+		t.Errorf("realmwatch (void realm) should not be in signal list")
+	}
+}
