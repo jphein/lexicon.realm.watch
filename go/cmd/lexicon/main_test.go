@@ -135,3 +135,17 @@ func TestList_FilterByRealm(t *testing.T) {
 		t.Errorf("realmwatch (void realm) should not be in signal list")
 	}
 }
+
+func TestValidate_Clean(t *testing.T) {
+	var stdout, stderr bytes.Buffer
+	cat := filepath.Join("..", "..", "..", "tests", "fixtures", "catalog-test.yaml")
+	code := run([]string{
+		"lexicon", "validate",
+		"--catalog", cat,
+		"--vocabularies", vocabsArg(),
+	}, &stdout, &stderr)
+	if code != 0 {
+		t.Errorf("expected exit 0 on clean validate; got %d, stderr=%q stdout=%q",
+			code, stderr.String(), stdout.String())
+	}
+}
