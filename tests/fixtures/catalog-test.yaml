@@ -1,0 +1,35 @@
+projects:
+  - id: clock
+    current_name: clock.realm.watch
+    kind: realm-tool
+    realm: signal
+    domain: clock.realm.watch
+    repo: https://github.com/jphein/clock.realm.watch
+    description: A clock for an AI that doesn't have one.
+    created: 2026-04-23
+    prior_names: []
+    status: active
+
+  - id: dreamspace
+    current_name: dreamscape.realm.watch
+    kind: site
+    realm: oracle
+    domain: dreamscape.realm.watch
+    repo: https://github.com/jphein/dreamscape.realm.watch
+    description: Creative project.
+    created: 2025-08-01
+    prior_names:
+      - { name: dreamspace, retired: 2026-04-15, reason: "moved into realm.watch family" }
+      - { name: dreamscape, retired: 2026-04-20, reason: "intermediate alias" }
+    status: active
+
+  - id: realmwatch
+    current_name: realmwatch
+    kind: service
+    realm: void
+    domain: ~
+    repo: ~
+    description: Local-only homelab network monitor.
+    created: 2025-09-01
+    prior_names: []
+    status: local-only
