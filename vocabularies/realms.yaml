@@ -1,0 +1,24 @@
+# Themed realms. Each realm provides flavoring for project names and entity rolls.
+# Source of truth — realm-sigil consumes this file once v1.0 ships (sync-vocabularies.sh).
+realms:
+  fantasy:
+    description: High-fantasy Tolkienesque vocabulary
+    words: [primal, shadow, ember, runic, moonlit, ravenforge, brimwarden, hollow, mistveil, oakheart]
+  tarot:
+    description: Tarot-card archetypes and arcana
+    words: [arcana, fool, hierophant, hanged, tower, star, sun, moon, judgement, world]
+  oracle:
+    description: Prophecy, fate, and divination imagery
+    words: [oracle, augur, sibyl, prophet, dreamer, harbinger, omen, vision, fate, sigil]
+  void:
+    description: Cosmic emptiness, entropy, and shadow
+    words: [void, abyss, hollow, eclipse, null, drift, silent, unmade, hush, shroud]
+  forge:
+    description: Smithing, craft, and creation
+    words: [forge, anvil, kiln, ember, smelter, ironheart, hammer, mold, wright, smithy]
+  signal:
+    description: Networking, electromagnetic, and data-flow imagery
+    words: [pulsar, beacon, qubit, relay, packet, lighthouse, antenna, ping, telegraph, semaphore]
+  stellar:
+    description: Stars, planets, and astronomy
+    words: [stellar, nova, pulsar, quasar, nebula, comet, orbit, lunar, solstice, zenith]

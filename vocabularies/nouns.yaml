@@ -1,0 +1,7 @@
+nouns:
+  fantasy:
+    description: Concrete fantasy nouns suitable for compound names
+    words: [sigil, pulsar, oracle, forge, echo, warden, raven, hollow, ember, beacon]
+  any:
+    description: Generic nouns for branch/agent rolls
+    words: [roster, forge, echo, beacon, harbor, signal, lantern, anchor, pillar, channel]

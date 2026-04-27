@@ -1,0 +1,4 @@
+scientists:
+  any:
+    description: Notable scientists (Docker namesgenerator corpus, curated subset)
+    words: [curie, einstein, hopper, turing, lovelace, ramanujan, feynman, darwin, bohr, hawking, mendel, pasteur, kepler, faraday]

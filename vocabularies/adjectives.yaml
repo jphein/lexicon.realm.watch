@@ -1,0 +1,7 @@
+adjectives:
+  fantasy:
+    description: Atmospheric, evocative adjectives for fantasy names
+    words: [primal, runic, lunar, ancient, hollow, mystic, gilded, somber, woven, brimming]
+  any:
+    description: Docker-corpus-style generic adjectives, suitable for agent names
+    words: [gallant, furious, mystic, lunar, sleepy, eager, wise, bold, swift, sly, calm, brisk, keen]

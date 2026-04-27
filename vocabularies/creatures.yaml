@@ -1,0 +1,4 @@
+creatures:
+  any:
+    description: Fantasy creatures and personae for entity rolls (realmwatch RPG layer)
+    words: [wraith, sentinel, echo, warden, ravenkin, brimwarden, mothlight, drakeling, hollowmere, sylph]
