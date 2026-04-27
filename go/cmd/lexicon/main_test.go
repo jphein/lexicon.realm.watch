@@ -71,3 +71,36 @@ func TestRoll_ProjectRequiresRealm(t *testing.T) {
 		t.Errorf("stderr should mention realm: %q", stderr.String())
 	}
 }
+
+func TestResolve_FoundByID(t *testing.T) {
+	var stdout, stderr bytes.Buffer
+	catalogPath := filepath.Join("..", "..", "..", "tests", "fixtures", "catalog-test.yaml")
+	code := run([]string{"lexicon", "resolve", "clock", "--catalog", catalogPath}, &stdout, &stderr)
+	if code != 0 {
+		t.Fatalf("exit %d; stderr=%q", code, stderr.String())
+	}
+	if !strings.Contains(stdout.String(), "clock.realm.watch") {
+		t.Errorf("output missing current name: %q", stdout.String())
+	}
+}
+
+func TestResolve_FoundByPriorName(t *testing.T) {
+	var stdout, stderr bytes.Buffer
+	catalogPath := filepath.Join("..", "..", "..", "tests", "fixtures", "catalog-test.yaml")
+	code := run([]string{"lexicon", "resolve", "dreamspace", "--catalog", catalogPath}, &stdout, &stderr)
+	if code != 0 {
+		t.Fatalf("exit %d; stderr=%q", code, stderr.String())
+	}
+	if !strings.Contains(stdout.String(), "dreamscape.realm.watch") {
+		t.Errorf("output missing current name: %q", stdout.String())
+	}
+}
+
+func TestResolve_Unknown(t *testing.T) {
+	var stdout, stderr bytes.Buffer
+	catalogPath := filepath.Join("..", "..", "..", "tests", "fixtures", "catalog-test.yaml")
+	code := run([]string{"lexicon", "resolve", "no-such-thing", "--catalog", catalogPath}, &stdout, &stderr)
+	if code == 0 {
+		t.Error("expected non-zero for unknown name")
+	}
+}
