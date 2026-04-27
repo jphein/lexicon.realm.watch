@@ -73,3 +73,15 @@ func (v *Vocabulary) Groups(category string) []string {
 	}
 	return out
 }
+
+// AddGroup inserts or replaces (category, group) → words. Used when merging
+// multiple vocabulary files into one Vocabulary.
+func (v *Vocabulary) AddGroup(category, group string, words []string) {
+	if v.categories == nil {
+		v.categories = map[string]map[string]vocabGroup{}
+	}
+	if v.categories[category] == nil {
+		v.categories[category] = map[string]vocabGroup{}
+	}
+	v.categories[category][group] = vocabGroup{Words: append([]string{}, words...)}
+}
