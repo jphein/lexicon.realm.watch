@@ -101,14 +101,6 @@ func resolveVocabulariesDir(override string) string {
 // Stub command handlers — overwritten by Tasks 14–19 each implementing one.
 // Until those tasks land, every command returns a "not yet implemented" error.
 
-func cmdRecipes(args []string, stdout, stderr io.Writer) int {
-	fmt.Fprintln(stderr, "lexicon recipes: not yet implemented (Task 18)")
-	return 1
-}
-func cmdVocabularies(args []string, stdout, stderr io.Writer) int {
-	fmt.Fprintln(stderr, "lexicon vocabularies: not yet implemented (Task 18)")
-	return 1
-}
 func cmdClaim(args []string, stdout, stderr io.Writer) int {
 	fmt.Fprintln(stderr, "lexicon claim: not yet implemented (Task 19)")
 	return 1

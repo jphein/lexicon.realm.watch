@@ -149,3 +149,28 @@ func TestValidate_Clean(t *testing.T) {
 			code, stderr.String(), stdout.String())
 	}
 }
+
+func TestRecipes_Lists(t *testing.T) {
+	var stdout, stderr bytes.Buffer
+	code := run([]string{"lexicon", "recipes", "--vocabularies", vocabsArg()}, &stdout, &stderr)
+	if code != 0 {
+		t.Fatalf("exit %d; stderr=%q", code, stderr.String())
+	}
+	out := stdout.String()
+	for _, want := range []string{"project", "agent", "branch", "entity"} {
+		if !strings.Contains(out, want) {
+			t.Errorf("recipes output missing %q: %q", want, out)
+		}
+	}
+}
+
+func TestVocabularies_Lists(t *testing.T) {
+	var stdout, stderr bytes.Buffer
+	code := run([]string{"lexicon", "vocabularies", "--vocabularies", vocabsArg()}, &stdout, &stderr)
+	if code != 0 {
+		t.Fatalf("exit %d; stderr=%q", code, stderr.String())
+	}
+	if !strings.Contains(stdout.String(), "realms") {
+		t.Errorf("vocabularies should list realms category: %q", stdout.String())
+	}
+}
