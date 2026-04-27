@@ -1,0 +1,40 @@
+# Recipes drive the roller. Each recipe declares which vocabulary slots it uses
+# and how to compose them into a name. New recipes are data-only changes.
+#
+# Pattern token format: {slot_name:transform}
+#   transforms: cap (capitalize), lower, upper, raw (unchanged)
+#
+# A slot name may appear multiple times in a pattern; each occurrence is an
+# independent roll from the same source (so two `noun` slots produce two
+# different nouns, with uniqueness enforced within a single roll).
+
+recipes:
+  project:
+    description: Project / service name in the realm.watch family
+    pattern: "{adjective:cap}-{noun:cap}"
+    sources:
+      adjective: { from: adjectives, group: fantasy }
+      noun:      { from: nouns,      group: fantasy }
+    required_options: [realm]   # caller must specify --realm
+
+  agent:
+    description: Docker-style snake_case agent name
+    pattern: "{adjective:lower}_{scientist:lower}"
+    sources:
+      adjective: { from: adjectives, group: any }
+      scientist: { from: scientists, group: any }
+
+  branch:
+    description: Conventional-commit branch name
+    pattern: "{prefix}/{adjective:lower}-{noun:lower}-{noun:lower}"
+    sources:
+      adjective: { from: adjectives, group: any }
+      noun:      { from: nouns,      group: any }
+    required_options: [prefix]
+
+  entity:
+    description: Realmwatch RPG creature / persona
+    pattern: "{adjective:cap} {creature:cap}"
+    sources:
+      adjective: { from: adjectives, group: fantasy }
+      creature:  { from: creatures,  group: any }
