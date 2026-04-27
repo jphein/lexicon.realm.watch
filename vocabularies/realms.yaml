@@ -12,7 +12,7 @@ realms:
     words: [oracle, augur, sibyl, prophet, dreamer, harbinger, omen, vision, fate, sigil]
   void:
     description: Cosmic emptiness, entropy, and shadow
-    words: [void, abyss, hollow, eclipse, null, drift, silent, unmade, hush, shroud]
+    words: [void, abyss, hollow, eclipse, "null", drift, silent, unmade, hush, shroud]
   forge:
     description: Smithing, craft, and creation
     words: [forge, anvil, kiln, ember, smelter, ironheart, hammer, mold, wright, smithy]
