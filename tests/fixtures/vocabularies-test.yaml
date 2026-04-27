@@ -1,0 +1,14 @@
+# Frozen test corpus. Real vocabularies live in /vocabularies. Tests use this
+# file so that vocabulary edits don't break tests.
+realms:
+  test_realm:
+    description: Test realm
+    words: [alpha, beta, gamma]
+adjectives:
+  any:
+    description: Test adjectives
+    words: [quick, brisk]
+nouns:
+  any:
+    description: Test nouns
+    words: [forge, beacon]
