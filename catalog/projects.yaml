@@ -1,0 +1,61 @@
+# Canonical project registry for the realm.
+# Entries are added by hand or by `lexicon claim`. See docs/superpowers/specs/2026-04-26-lexicon-design.md
+# for schema rules.
+
+projects:
+  - id: clock
+    current_name: clock.realm.watch
+    kind: realm-tool
+    realm: signal
+    domain: clock.realm.watch
+    repo: https://github.com/jphein/clock.realm.watch
+    description: A clock for an AI that doesn't have one.
+    created: 2026-04-23
+    prior_names: []
+    status: active
+
+  - id: dark
+    current_name: dark.realm.watch
+    kind: realm-tool
+    realm: void
+    domain: dark.realm.watch
+    repo: https://github.com/jphein/dark.realm.watch
+    description: System-aware dark/light theming as a drop-in include.
+    created: 2026-04-15
+    prior_names: []
+    status: active
+
+  - id: realm-sigil
+    current_name: realm-sigil
+    kind: library
+    realm: oracle
+    domain: ~
+    repo: https://github.com/jphein/realm-sigil
+    description: Deterministic magical version name generation across Go/Python/JS.
+    created: 2025-11-01
+    prior_names: []
+    status: active
+    notes: Will become a downstream consumer of lexicon's vocabularies (v1.0 cutover).
+
+  - id: lexicon
+    current_name: lexicon.realm.watch
+    kind: realm-tool
+    realm: oracle
+    domain: lexicon.realm.watch
+    repo: https://github.com/jphein/lexicon.realm.watch
+    description: Names and the changing of names — the runtime naming workhorse.
+    created: 2026-04-26
+    prior_names: []
+    status: active
+
+  - id: realmwatch
+    current_name: realmwatch
+    kind: service
+    realm: void
+    domain: ~
+    repo: ~
+    description: Fantasy-themed homelab network monitor + AI voice assistant.
+    created: 2025-09-01
+    prior_names: []
+    status: local-only
+    notes: Candidate for rename to <something>.realm.watch in v0.2.
