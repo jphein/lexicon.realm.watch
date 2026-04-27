@@ -1,0 +1,28 @@
+{
+  "_doc": "Cross-language seeded-roll parity. Each entry: given (seed, words, slot), the algorithm SHA256(seed || BE_uint64(slot)) -> first 8 bytes BE -> uint64 -> mod len(words) must produce expected_index. All language implementations test against this file.",
+  "_algorithm": "out_index = uint64(BE first 8 bytes of SHA-256(seed_bytes || BE_uint64_8bytes(slot))) mod len(words)",
+  "cases": [
+    {
+      "seed": "abc123",
+      "words": ["alpha", "beta", "gamma", "delta"],
+      "slot": 0,
+      "expected_index": 1,
+      "expected_word": "beta",
+      "_note": "expected_index/word filled in by Task 6 step 5 once Go computes them"
+    },
+    {
+      "seed": "abc123",
+      "words": ["alpha", "beta", "gamma", "delta"],
+      "slot": 1,
+      "expected_index": 2,
+      "expected_word": "gamma"
+    },
+    {
+      "seed": "realmwatch",
+      "words": ["primal", "shadow", "ember", "runic", "moonlit"],
+      "slot": 0,
+      "expected_index": 0,
+      "expected_word": "primal"
+    }
+  ]
+}
