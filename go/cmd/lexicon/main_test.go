@@ -2,9 +2,12 @@ package main
 
 import (
 	"bytes"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	lexicon "github.com/jphein/lexicon.realm.watch/go"
 )
 
 func TestRun_HelpListsCommands(t *testing.T) {
@@ -172,5 +175,48 @@ func TestVocabularies_Lists(t *testing.T) {
 	}
 	if !strings.Contains(stdout.String(), "realms") {
 		t.Errorf("vocabularies should list realms category: %q", stdout.String())
+	}
+}
+
+func TestClaim_RecordsRename(t *testing.T) {
+	tmpCat := filepath.Join(t.TempDir(), "projects.yaml")
+	src, _ := os.ReadFile(filepath.Join("..", "..", "..", "tests", "fixtures", "catalog-test.yaml"))
+	_ = os.WriteFile(tmpCat, src, 0o644)
+
+	var stdout, stderr bytes.Buffer
+	code := run([]string{
+		"lexicon", "claim", "watch.realm.watch",
+		"--renames", "realmwatch",
+		"--reason", "test",
+		"--catalog", tmpCat,
+	}, &stdout, &stderr)
+	if code != 0 {
+		t.Fatalf("exit %d; stderr=%q", code, stderr.String())
+	}
+	cat, err := lexicon.LoadCatalog(tmpCat)
+	if err != nil {
+		t.Fatalf("reload: %v", err)
+	}
+	rw, _ := cat.Resolve("realmwatch")
+	if rw.CurrentName != "watch.realm.watch" {
+		t.Errorf("rename not persisted: %q", rw.CurrentName)
+	}
+}
+
+func TestClaim_NewProject(t *testing.T) {
+	tmpCat := filepath.Join(t.TempDir(), "projects.yaml")
+	src, _ := os.ReadFile(filepath.Join("..", "..", "..", "tests", "fixtures", "catalog-test.yaml"))
+	_ = os.WriteFile(tmpCat, src, 0o644)
+
+	var stdout, stderr bytes.Buffer
+	code := run([]string{
+		"lexicon", "claim", "ledger.realm.watch",
+		"--kind", "service",
+		"--realm", "forge",
+		"--description", "ledger service",
+		"--catalog", tmpCat,
+	}, &stdout, &stderr)
+	if code != 0 {
+		t.Fatalf("exit %d; stderr=%q", code, stderr.String())
 	}
 }
