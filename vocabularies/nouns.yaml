@@ -1,7 +1,8 @@
 nouns:
   fantasy:
+    # Path B union with realm-sigil/words/realms.json as of 2026-05-07.
     description: Concrete fantasy nouns suitable for compound names
-    words: [sigil, pulsar, oracle, forge, echo, warden, raven, hollow, ember, beacon]
+    words: [aegis, beacon, crown, dominion, echo, ember, forge, grimoire, herald, hollow, insignia, jewel, keystone, lantern, monolith, nexus, oracle, pinnacle, pulsar, quartz, raven, relic, sigil, throne, warden]
   oracle:
     description: Nouns for prophecy, fate, and divination
     words: [oracle, augur, sibyl, prophet, omen, vision, harbinger, dreamer, seer, scrying, prophecy, runecast, soothsayer, divination]
@@ -9,8 +10,9 @@ nouns:
     description: Nouns for smithing, craft, and creation
     words: [forge, anvil, kiln, ember, hammer, smithy, smelter, ironheart, wright, crucible, bellows, mold, ingot, foundry]
   signal:
+    # Path B union with realm-sigil/words/realms.json as of 2026-05-07.
     description: Nouns for networking, electromagnetic, and data-flow imagery
-    words: [pulsar, beacon, qubit, relay, packet, lighthouse, antenna, semaphore, telegraph, channel, ping, lattice, broadcast, harbor]
+    words: [antenna, beacon, broadcast, carrier, channel, diode, emitter, frequency, gate, harbor, harmonic, impulse, junction, keystone, lattice, lighthouse, link, modem, node, oscillator, packet, ping, pulsar, pulse, qubit, relay, semaphore, signal, telegraph, transponder]
   void:
     description: Nouns for cosmic emptiness, entropy, and shadow
     words: [abyss, hollow, eclipse, drift, hush, shroud, silence, chasm, umbra, threshold, rift, cipher, vanishment, absence]

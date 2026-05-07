@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] — 2026-05-07
+
+The Path B union. Lexicon's vocabularies grow to be a superset of realm-sigil's hand-curated word lists for the realms with public history (`fantasy`, `signal`), making the sigil cutover non-disruptive for any name already shown to users.
+
+### Added
+- **Catalog** — `status.realm.watch` registered as a family member; `kind: service`, `realm: signal`, `status: active`.
+- **Static page** — `realm-sigil` integration. `static/build.sh` now invokes `realm-sigil/static/build.sh` to inject a magical version name (e.g. `Judicious Kenning · 2968063`) into `dist/index.html` as `<meta name="realm-version">` and writes the unified `version.json`. Falls back gracefully if sigil isn't checked out (override via `SIGIL_BUILD=<path>`).
+
+### Changed
+- **`vocabularies/adjectives.yaml`** — `fantasy` 10 → 28 words; `signal` 14 → 30 words. Both are unions with `realm-sigil/words/realms.json` per JP's Path B decision.
+- **`vocabularies/nouns.yaml`** — `fantasy` 10 → 25 words; `signal` 14 → 30 words. Same Path B union.
+- **`tests/fixtures/seeded-recipes.json`** — regenerated against the expanded vocabularies. Project + branch recipes produce different `expected_name` values (modulus changed); `agent` and `entity` cases that don't draw from `fantasy`/`signal` are unchanged. All 33 cases continue to match across Go / Python / JS.
+
+### Cutover
+- `sync-vocabularies.sh --check` exits 0 against `realm-sigil` HEAD after this release **only once the matching sigil PR lands.** Before that PR, drift is intentional.
+
 ## [1.0.0] — 2026-05-07
 
 The release where lexicon takes ownership of the canonical vocabularies and stands beside clock and sigil as a peer in the realm.watch family.

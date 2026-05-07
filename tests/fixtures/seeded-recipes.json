@@ -89,25 +89,25 @@
       "seed": "sentinel-zero",
       "recipe": "entity",
       "options": null,
-      "expected_name": "Ancient Selkie"
+      "expected_name": "Lunar Selkie"
     },
     {
       "seed": "oakheart-99",
       "recipe": "entity",
       "options": null,
-      "expected_name": "Mystic Brimwarden"
+      "expected_name": "Draconic Brimwarden"
     },
     {
       "seed": "realm.watch",
       "recipe": "entity",
       "options": null,
-      "expected_name": "Somber Drakeling"
+      "expected_name": "Woven Drakeling"
     },
     {
       "seed": "dreamer",
       "recipe": "entity",
       "options": null,
-      "expected_name": "Woven Ravenkin"
+      "expected_name": "Celestial Ravenkin"
     },
     {
       "seed": "lexicon",
@@ -115,7 +115,7 @@
       "options": {
         "realm": "fantasy"
       },
-      "expected_name": "Somber-Hollow"
+      "expected_name": "Brimming-Keystone"
     },
     {
       "seed": "lexicon",
@@ -155,7 +155,7 @@
       "options": {
         "realm": "signal"
       },
-      "expected_name": "Broadcasting-Relay"
+      "expected_name": "Decoded-Frequency"
     },
     {
       "seed": "lexicon",
@@ -171,7 +171,7 @@
       "options": {
         "realm": "fantasy"
       },
-      "expected_name": "Hollow-Echo"
+      "expected_name": "Mystic-Monolith"
     },
     {
       "seed": "beta",
@@ -179,7 +179,7 @@
       "options": {
         "realm": "fantasy"
       },
-      "expected_name": "Runic-Pulsar"
+      "expected_name": "Infernal-Relic"
     },
     {
       "seed": "gamma",
@@ -187,7 +187,7 @@
       "options": {
         "realm": "fantasy"
       },
-      "expected_name": "Woven-Ember"
+      "expected_name": "Gilded-Dominion"
     },
     {
       "seed": "homelab",
@@ -195,7 +195,7 @@
       "options": {
         "realm": "fantasy"
       },
-      "expected_name": "Ancient-Forge"
+      "expected_name": "Woven-Pulsar"
     },
     {
       "seed": "homelab",
@@ -235,7 +235,7 @@
       "options": {
         "realm": "signal"
       },
-      "expected_name": "Channelled-Harbor"
+      "expected_name": "Pulsing-Pulse"
     },
     {
       "seed": "homelab",

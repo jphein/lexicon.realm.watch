@@ -1,7 +1,8 @@
 adjectives:
   fantasy:
+    # Path B union with realm-sigil/words/realms.json as of 2026-05-07.
     description: Atmospheric, evocative adjectives for fantasy names
-    words: [primal, runic, lunar, ancient, hollow, mystic, gilded, somber, woven, brimming]
+    words: [ancient, arcane, blazing, brimming, celestial, draconic, eldritch, fabled, gilded, hallowed, hollow, infernal, jade, kindled, luminous, lunar, mystic, mythic, noble, obsidian, primal, radiant, runic, somber, spectral, twilight, valiant, woven]
   oracle:
     description: Adjectives for prophecy, fate, and divination
     words: [augural, fated, prescient, sibylline, dreaming, prophetic, foretold, whispered, veiled, divining, foreseen, omened, occult, scrying]
@@ -9,8 +10,9 @@ adjectives:
     description: Adjectives for smithing, craft, and creation
     words: [molten, hammered, tempered, forged, glowing, smoldering, sparking, kilned, ironclad, wrought, bellowed, anvilled, white-hot, smelted]
   signal:
+    # Path B union with realm-sigil/words/realms.json as of 2026-05-07.
     description: Adjectives for networking, electromagnetic, and data-flow imagery
-    words: [pulsing, beaconing, encrypted, broadcasting, harmonic, looping, resonant, modulated, tuned, relayed, humming, syncing, blinking, channelled]
+    words: [amplified, beaconing, blinking, broadcast, broadcasting, channeled, channelled, decoded, echoing, encrypted, filtered, grounded, harmonic, humming, isolated, jittered, keyed, latched, looping, modulated, narrowed, oscillating, pulsed, pulsing, quantized, relayed, resonant, synced, syncing, tuned]
   void:
     description: Adjectives for cosmic emptiness, entropy, and shadow
     words: [hushed, unmade, vacant, silent, drifting, eclipsing, lost, shrouded, fading, hollowed, absent, devoured, untold, dimming]
