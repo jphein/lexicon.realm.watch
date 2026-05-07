@@ -4,6 +4,7 @@
 //	lexicon resolve <name>
 //	lexicon list [--realm X] [--kind Y] [--status Z]
 //	lexicon claim <new-name> --renames=<old-id> [--reason TEXT]
+//	lexicon catalog import [--from <dir>] [--out <path>] [--dry-run]
 //	lexicon validate
 //	lexicon recipes
 //	lexicon vocabularies
@@ -42,6 +43,10 @@ func run(argv []string, stdout, stderr io.Writer) int {
 		return cmdVocabularies(rest, stdout, stderr)
 	case "claim":
 		return cmdClaim(rest, stdout, stderr)
+	case "rename":
+		return cmdRename(rest, stdout, stderr)
+	case "catalog":
+		return cmdCatalog(rest, stdout, stderr)
 	default:
 		fmt.Fprintf(stderr, "unknown command %q\n\n", cmd)
 		printHelp(stderr)
@@ -59,6 +64,8 @@ Commands:
   resolve <name>          look up a project by any name it has had
   list                    list catalog entries (filterable)
   claim <new-name>        record a new entry or rename an existing one
+  rename <old> <new>      print or run the 10-step rename runbook
+  catalog <subcommand>    catalog operations (import, …)
   validate                check catalog/vocabularies/recipes for consistency
   recipes                 list available recipes
   vocabularies            list vocabulary groups

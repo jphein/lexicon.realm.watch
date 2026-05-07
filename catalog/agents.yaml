@@ -1,0 +1,82 @@
+# Durable named agents — the recurring ones JP spawns by name.
+# One-shot dreamer agents (e.g., eager_einstein for a single swarm) do NOT belong here.
+# Voice references must match an id in voices.yaml.
+# See docs/superpowers/specs/2026-04-26-lexicon-design.md (Section 1, "Other catalogs").
+
+agents:
+  - id: audit-realmwatch
+    current_name: audit-realmwatch
+    role: code-reviewer
+    voice: ava
+    description: Audits the realmwatch project for config drift, code hygiene, and CLAUDE.md accuracy.
+    status: active
+
+  - id: fix-passwords
+    current_name: fix-passwords
+    role: debugger
+    voice: brian
+    description: Sweeps repos for hardcoded credentials, replaces with vault references, removes leaked history.
+    status: active
+
+  - id: scout
+    current_name: scout
+    role: researcher
+    voice: emma
+    description: Discovers and probes network nodes on the realm. Backs the /scout slash command.
+    status: active
+
+  - id: retro-runner
+    current_name: retro-runner
+    role: researcher
+    voice: emma
+    description: Runs engineering retrospectives across git history with LOC stats and trend tracking.
+    status: active
+    notes: Backs the /retro slash command.
+
+  - id: patrol
+    current_name: patrol
+    role: code-reviewer
+    voice: ava
+    description: Health check sweep across projects and homelab — guard duty.
+    status: active
+    notes: Backs the /patrol slash command.
+
+  - id: housekeep
+    current_name: housekeep
+    role: code-reviewer
+    voice: ava
+    description: Cleans accumulated cruft (scratch, worktrees, stale branches, settings rules) across projects.
+    status: active
+    notes: Backs the /housekeep slash command.
+
+  - id: cso
+    current_name: cso
+    role: code-reviewer
+    voice: ava
+    description: Chief Security Officer audit — OWASP + STRIDE infrastructure-first review.
+    status: active
+    notes: Backs the /cso slash command.
+
+  - id: ship-runner
+    current_name: ship-runner
+    role: architect
+    voice: andrew
+    description: Unified ship pipeline — test, review, docs, version, changelog, PR.
+    status: active
+    notes: Backs the /ship slash command.
+
+  - id: investigate
+    current_name: investigate
+    role: debugger
+    voice: brian
+    description: Four-phase systematic debugger. Iron Law — no fixes without root cause.
+    status: active
+    notes: Backs the /investigate slash command.
+
+  - id: verify-fixes
+    current_name: verify-fixes
+    role: code-reviewer
+    voice: ava
+    description: Verifies that recent fix agents completed correctly.
+    status: active
+    notes: Backs the /verify-fixes slash command.

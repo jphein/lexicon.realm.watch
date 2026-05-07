@@ -7,12 +7,13 @@ import (
 	"testing"
 )
 
+// seededCase mirrors one entry in tests/fixtures/seeded-recipes.json — the
+// cross-language parity contract. Python and JS readers consume the same file.
 type seededCase struct {
-	Seed          string   `json:"seed"`
-	Words         []string `json:"words"`
-	Slot          uint64   `json:"slot"`
-	ExpectedIndex *int     `json:"expected_index"`
-	ExpectedWord  *string  `json:"expected_word"`
+	Seed         string            `json:"seed"`
+	Recipe       string            `json:"recipe"`
+	Options      map[string]string `json:"options"`
+	ExpectedName string            `json:"expected_name"`
 }
 
 type seededFixture struct {
@@ -28,6 +29,9 @@ func loadSeededFixture(t *testing.T) seededFixture {
 	var f seededFixture
 	if err := json.Unmarshal(data, &f); err != nil {
 		t.Fatalf("decode: %v", err)
+	}
+	if len(f.Cases) == 0 {
+		t.Fatalf("fixture has zero cases — cross-language contract is empty")
 	}
 	return f
 }
@@ -51,17 +55,32 @@ func TestSeededIndex_DifferentSlots(t *testing.T) {
 	}
 }
 
-func TestSeededIndex_MatchesFixture(t *testing.T) {
+// TestRollSeeded_MatchesFixture is the Go side of the cross-language parity
+// contract. Python (python/tests/test_seeded.py) and JS (js/test/seeded.test.js)
+// run the same assertions against the same fixture; if all three pass, the
+// SHA-256-derived seeded RNG is byte-equivalent across runtimes.
+func TestRollSeeded_MatchesFixture(t *testing.T) {
 	f := loadSeededFixture(t)
+	rb := loadTestRecipes(t)
+	v, err := loadLiveVocabsCombined()
+	if err != nil {
+		t.Fatalf("vocab: %v", err)
+	}
 	for i, c := range f.Cases {
-		got := SeededIndex(c.Seed, c.Slot, len(c.Words))
-		if c.ExpectedIndex == nil {
-			t.Logf("case %d: seed=%q slot=%d → index=%d word=%q (record this in fixture)",
-				i, c.Seed, c.Slot, got, c.Words[got])
+		opts := RollOptions{}
+		if r, ok := c.Options["realm"]; ok {
+			opts.Realm = r
+		}
+		if p, ok := c.Options["prefix"]; ok {
+			opts.Prefix = p
+		}
+		got, err := rb.RollSeeded(c.Recipe, v, c.Seed, opts)
+		if err != nil {
+			t.Errorf("case %d (%s seed=%q): RollSeeded error: %v", i, c.Recipe, c.Seed, err)
 			continue
 		}
-		if got != *c.ExpectedIndex {
-			t.Errorf("case %d: got index %d, want %d", i, got, *c.ExpectedIndex)
+		if got != c.ExpectedName {
+			t.Errorf("case %d (%s seed=%q): got %q, want %q", i, c.Recipe, c.Seed, got, c.ExpectedName)
 		}
 	}
 }

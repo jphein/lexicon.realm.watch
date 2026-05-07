@@ -2,6 +2,24 @@ adjectives:
   fantasy:
     description: Atmospheric, evocative adjectives for fantasy names
     words: [primal, runic, lunar, ancient, hollow, mystic, gilded, somber, woven, brimming]
+  oracle:
+    description: Adjectives for prophecy, fate, and divination
+    words: [augural, fated, prescient, sibylline, dreaming, prophetic, foretold, whispered, veiled, divining, foreseen, omened, occult, scrying]
+  forge:
+    description: Adjectives for smithing, craft, and creation
+    words: [molten, hammered, tempered, forged, glowing, smoldering, sparking, kilned, ironclad, wrought, bellowed, anvilled, white-hot, smelted]
+  signal:
+    description: Adjectives for networking, electromagnetic, and data-flow imagery
+    words: [pulsing, beaconing, encrypted, broadcasting, harmonic, looping, resonant, modulated, tuned, relayed, humming, syncing, blinking, channelled]
+  void:
+    description: Adjectives for cosmic emptiness, entropy, and shadow
+    words: [hushed, unmade, vacant, silent, drifting, eclipsing, lost, shrouded, fading, hollowed, absent, devoured, untold, dimming]
+  stellar:
+    description: Adjectives for stars, planets, and astronomy
+    words: [stellar, nebular, orbital, cosmic, gleaming, supernal, luminous, twinkling, celestial, gravitational, eclipsed, comet-borne, equinoctial, far-flung]
+  tarot:
+    description: Adjectives drawn from tarot archetypes and arcana
+    words: [arcane, suspended, towering, fated, foolish, judged, hierophantic, crowned, reversed, illumined, querent, esoteric, hermetic, drawn]
   any:
     description: Docker-corpus-style generic adjectives, suitable for agent names
-    words: [gallant, furious, mystic, lunar, sleepy, eager, wise, bold, swift, sly, calm, brisk, keen]
+    words: [gallant, furious, mystic, lunar, sleepy, eager, wise, bold, swift, sly, calm, brisk, keen, quirky, jolly, brave, clever, modest, peaceful, hopeful, vibrant, dreamy]

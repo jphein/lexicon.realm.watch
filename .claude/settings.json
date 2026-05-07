@@ -1,0 +1,28 @@
+{
+  "_comment": "Example project-local Claude Code settings for lexicon.realm.watch. See hooks/README.md before installing — these hooks are SAMPLES, not auto-registered.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/hooks/catalog-status.py\"",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$CLAUDE_TOOL_INPUT\" | grep -q 'tests/fixtures/seeded-recipes\\.json'; then echo 'BLOCK: tests/fixtures/seeded-recipes.json is the cross-language parity contract — regenerate via go/cmd/seed-fixtures, do not hand-edit.' >&2; exit 2; fi",
+            "timeout": 3000
+          }
+        ]
+      }
+    ]
+  }
+}

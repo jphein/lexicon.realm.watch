@@ -1,28 +1,249 @@
 {
-  "_doc": "Cross-language seeded-roll parity. Each entry: given (seed, words, slot), the algorithm SHA256(seed || BE_uint64(slot)) -> first 8 bytes BE -> uint64 -> mod len(words) must produce expected_index. All language implementations test against this file.",
-  "_algorithm": "out_index = uint64(BE first 8 bytes of SHA-256(seed_bytes || BE_uint64_8bytes(slot))) mod len(words)",
+  "_doc": "Cross-language seeded-recipe parity contract. Each case asserts that RollSeeded(recipe, seed, options) produces expected_name. Python and JS implementations MUST produce identical output for every case.",
+  "_algorithm": "SeededIndex(seed, slot, modulus) = uint64(BE first 8 bytes of SHA-256(utf8(seed) || BE_uint64_8bytes(slot))) mod modulus. Slot counter increments per slot occurrence within a single roll. Within-roll uniqueness: a slot retries up to len(words) times before falling back to a duplicate.",
+  "_generator": "go/cmd/seed-fixtures — regenerate via: cd go \u0026\u0026 /snap/bin/go run ./cmd/seed-fixtures \u003e ../tests/fixtures/seeded-recipes.json",
   "cases": [
     {
-      "seed": "abc123",
-      "words": ["alpha", "beta", "gamma", "delta"],
-      "slot": 0,
-      "expected_index": 1,
-      "expected_word": "beta",
-      "_note": "expected_index/word filled in by Task 6 step 5 once Go computes them"
-    },
-    {
-      "seed": "abc123",
-      "words": ["alpha", "beta", "gamma", "delta"],
-      "slot": 1,
-      "expected_index": 2,
-      "expected_word": "gamma"
-    },
-    {
       "seed": "realmwatch",
-      "words": ["primal", "shadow", "ember", "runic", "moonlit"],
-      "slot": 0,
-      "expected_index": 0,
-      "expected_word": "primal"
+      "recipe": "agent",
+      "options": null,
+      "expected_name": "hopeful_faraday"
+    },
+    {
+      "seed": "abc123",
+      "recipe": "agent",
+      "options": null,
+      "expected_name": "brave_ramanujan"
+    },
+    {
+      "seed": "the-oracle",
+      "recipe": "agent",
+      "options": null,
+      "expected_name": "hopeful_franklin"
+    },
+    {
+      "seed": "jp@techempower.org",
+      "recipe": "agent",
+      "options": null,
+      "expected_name": "brave_noether"
+    },
+    {
+      "seed": "中文种子",
+      "recipe": "agent",
+      "options": null,
+      "expected_name": "gallant_feynman"
+    },
+    {
+      "seed": "",
+      "recipe": "agent",
+      "options": null,
+      "expected_name": "clever_babbage"
+    },
+    {
+      "seed": "a-very-long-seed-that-should-not-affect-output-determinism-1234567890",
+      "recipe": "agent",
+      "options": null,
+      "expected_name": "bold_copernicus"
+    },
+    {
+      "seed": "v1.0.0",
+      "recipe": "branch",
+      "options": {
+        "prefix": "feat"
+      },
+      "expected_name": "feat/brave-beacon-forge"
+    },
+    {
+      "seed": "hotfix-2026",
+      "recipe": "branch",
+      "options": {
+        "prefix": "fix"
+      },
+      "expected_name": "fix/calm-lantern-roster"
+    },
+    {
+      "seed": "refactor-the-roller",
+      "recipe": "branch",
+      "options": {
+        "prefix": "refactor"
+      },
+      "expected_name": "refactor/modest-signal-harbor"
+    },
+    {
+      "seed": "docs-pass",
+      "recipe": "branch",
+      "options": {
+        "prefix": "docs"
+      },
+      "expected_name": "docs/quirky-channel-beacon"
+    },
+    {
+      "seed": "chore-bump",
+      "recipe": "branch",
+      "options": {
+        "prefix": "chore"
+      },
+      "expected_name": "chore/sly-signal-forge"
+    },
+    {
+      "seed": "sentinel-zero",
+      "recipe": "entity",
+      "options": null,
+      "expected_name": "Ancient Selkie"
+    },
+    {
+      "seed": "oakheart-99",
+      "recipe": "entity",
+      "options": null,
+      "expected_name": "Mystic Brimwarden"
+    },
+    {
+      "seed": "realm.watch",
+      "recipe": "entity",
+      "options": null,
+      "expected_name": "Somber Drakeling"
+    },
+    {
+      "seed": "dreamer",
+      "recipe": "entity",
+      "options": null,
+      "expected_name": "Woven Ravenkin"
+    },
+    {
+      "seed": "lexicon",
+      "recipe": "project",
+      "options": {
+        "realm": "fantasy"
+      },
+      "expected_name": "Somber-Hollow"
+    },
+    {
+      "seed": "lexicon",
+      "recipe": "project",
+      "options": {
+        "realm": "tarot"
+      },
+      "expected_name": "Fated-Hanged"
+    },
+    {
+      "seed": "lexicon",
+      "recipe": "project",
+      "options": {
+        "realm": "oracle"
+      },
+      "expected_name": "Sibylline-Prophet"
+    },
+    {
+      "seed": "lexicon",
+      "recipe": "project",
+      "options": {
+        "realm": "void"
+      },
+      "expected_name": "Silent-Drift"
+    },
+    {
+      "seed": "lexicon",
+      "recipe": "project",
+      "options": {
+        "realm": "forge"
+      },
+      "expected_name": "Forged-Ember"
+    },
+    {
+      "seed": "lexicon",
+      "recipe": "project",
+      "options": {
+        "realm": "signal"
+      },
+      "expected_name": "Broadcasting-Relay"
+    },
+    {
+      "seed": "lexicon",
+      "recipe": "project",
+      "options": {
+        "realm": "stellar"
+      },
+      "expected_name": "Cosmic-Comet"
+    },
+    {
+      "seed": "alpha",
+      "recipe": "project",
+      "options": {
+        "realm": "fantasy"
+      },
+      "expected_name": "Hollow-Echo"
+    },
+    {
+      "seed": "beta",
+      "recipe": "project",
+      "options": {
+        "realm": "fantasy"
+      },
+      "expected_name": "Runic-Pulsar"
+    },
+    {
+      "seed": "gamma",
+      "recipe": "project",
+      "options": {
+        "realm": "fantasy"
+      },
+      "expected_name": "Woven-Ember"
+    },
+    {
+      "seed": "homelab",
+      "recipe": "project",
+      "options": {
+        "realm": "fantasy"
+      },
+      "expected_name": "Ancient-Forge"
+    },
+    {
+      "seed": "homelab",
+      "recipe": "project",
+      "options": {
+        "realm": "tarot"
+      },
+      "expected_name": "Drawn-Magician"
+    },
+    {
+      "seed": "homelab",
+      "recipe": "project",
+      "options": {
+        "realm": "oracle"
+      },
+      "expected_name": "Scrying-Divination"
+    },
+    {
+      "seed": "homelab",
+      "recipe": "project",
+      "options": {
+        "realm": "void"
+      },
+      "expected_name": "Dimming-Absence"
+    },
+    {
+      "seed": "homelab",
+      "recipe": "project",
+      "options": {
+        "realm": "forge"
+      },
+      "expected_name": "Smelted-Foundry"
+    },
+    {
+      "seed": "homelab",
+      "recipe": "project",
+      "options": {
+        "realm": "signal"
+      },
+      "expected_name": "Channelled-Harbor"
+    },
+    {
+      "seed": "homelab",
+      "recipe": "project",
+      "options": {
+        "realm": "stellar"
+      },
+      "expected_name": "Far-flung-Eclipse"
     }
   ]
 }

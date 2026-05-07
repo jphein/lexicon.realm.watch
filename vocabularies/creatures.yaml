@@ -1,4 +1,36 @@
 creatures:
   any:
     description: Fantasy creatures and personae for entity rolls (realmwatch RPG layer)
-    words: [wraith, sentinel, echo, warden, ravenkin, brimwarden, mothlight, drakeling, hollowmere, sylph]
+    words:
+      - wraith
+      - sentinel
+      - echo
+      - warden
+      - ravenkin
+      - brimwarden
+      - mothlight
+      - drakeling
+      - hollowmere
+      - sylph
+      - sphinx
+      - basilisk
+      - kelpie
+      - wendigo
+      - chimera
+      - manticore
+      - griffin
+      - phoenix
+      - gorgon
+      - selkie
+      - banshee
+      - nymph
+      - lamia
+      - dryad
+      - kitsune
+      - djinn
+      - revenant
+      - homunculus
+      - lindworm
+      - cockatrice
+      - leviathan
+      - golem

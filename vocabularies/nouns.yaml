@@ -2,6 +2,24 @@ nouns:
   fantasy:
     description: Concrete fantasy nouns suitable for compound names
     words: [sigil, pulsar, oracle, forge, echo, warden, raven, hollow, ember, beacon]
+  oracle:
+    description: Nouns for prophecy, fate, and divination
+    words: [oracle, augur, sibyl, prophet, omen, vision, harbinger, dreamer, seer, scrying, prophecy, runecast, soothsayer, divination]
+  forge:
+    description: Nouns for smithing, craft, and creation
+    words: [forge, anvil, kiln, ember, hammer, smithy, smelter, ironheart, wright, crucible, bellows, mold, ingot, foundry]
+  signal:
+    description: Nouns for networking, electromagnetic, and data-flow imagery
+    words: [pulsar, beacon, qubit, relay, packet, lighthouse, antenna, semaphore, telegraph, channel, ping, lattice, broadcast, harbor]
+  void:
+    description: Nouns for cosmic emptiness, entropy, and shadow
+    words: [abyss, hollow, eclipse, drift, hush, shroud, silence, chasm, umbra, threshold, rift, cipher, vanishment, absence]
+  stellar:
+    description: Nouns for stars, planets, and astronomy
+    words: [nova, quasar, nebula, comet, orbit, solstice, zenith, meridian, constellation, supernova, parallax, lensing, perihelion, eclipse]
+  tarot:
+    description: Nouns for tarot archetypes and arcana
+    words: [arcana, fool, hierophant, hanged, tower, star, sun, moon, judgement, world, wheel, chariot, hermit, magician]
   any:
     description: Generic nouns for branch/agent rolls
     words: [roster, forge, echo, beacon, harbor, signal, lantern, anchor, pillar, channel]

@@ -1,0 +1,40 @@
+# Voice roster for spawned agents.
+# Mirrors the voice table in ~/.claude/CLAUDE.md (the source of truth for assignment rules).
+# All voices are Azure Dragon HD; agents spawn with quality "hd" and the listed subtitle_color.
+# See docs/superpowers/specs/2026-04-26-lexicon-design.md (Section 1, "Other catalogs").
+
+voices:
+  - id: andrew
+    name: en-US-Andrew:DragonHDLatestNeural
+    color: cyan
+    role: architect
+    description: Design decisions, API shaping, migration planning.
+    notes: ~
+
+  - id: ava
+    name: en-US-Ava:DragonHDLatestNeural
+    color: magenta
+    role: code-reviewer
+    description: Audits, config review, CLAUDE.md review.
+    notes: ~
+
+  - id: brian
+    name: en-US-Brian:DragonHDLatestNeural
+    color: green
+    role: debugger
+    description: Fix agents, troubleshooting, error investigation. Default voice when in doubt.
+    notes: ~
+
+  - id: emma
+    name: en-US-Emma:DragonHDLatestNeural
+    color: yellow
+    role: researcher
+    description: Discovery, exploration, documentation.
+    notes: ~
+
+  - id: davis
+    name: en-US-Davis:DragonHDLatestNeural
+    color: blue
+    role: narrator
+    description: Main-thread status updates and final summaries.
+    notes: Orchestrator only — never assign to subagents.
