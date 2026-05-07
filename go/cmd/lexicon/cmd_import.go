@@ -29,6 +29,8 @@ func cmdCatalog(args []string, stdout, stderr io.Writer) int {
 	switch sub {
 	case "import":
 		return cmdCatalogImport(rest, stdout, stderr)
+	case "render":
+		return cmdCatalogRender(rest, stdout, stderr)
 	default:
 		fmt.Fprintf(stderr, "unknown catalog subcommand %q\n\n", sub)
 		printCatalogHelp(stderr)
@@ -43,6 +45,7 @@ Usage: lexicon catalog <subcommand> [options]
 
 Subcommands:
   import   walk a directory of projects and emit a draft catalog YAML
+  render   render the catalog as a skill or markdown table
 
 Run 'lexicon catalog <subcommand> --help' for command-specific options.`)
 }

@@ -5,6 +5,7 @@
 //	lexicon list [--realm X] [--kind Y] [--status Z]
 //	lexicon claim <new-name> --renames=<old-id> [--reason TEXT]
 //	lexicon catalog import [--from <dir>] [--out <path>] [--dry-run]
+//	lexicon catalog render [--format=skill|md-table] [--out <path>]
 //	lexicon validate
 //	lexicon recipes
 //	lexicon vocabularies

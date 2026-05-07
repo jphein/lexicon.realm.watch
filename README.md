@@ -147,6 +147,22 @@ lexicon catalog import --out my-draft.yaml   # → file (refuses to overwrite ca
 
 Realm is left as `?` for human review — auto-guessing the realm defeats the purpose of having a roller. Status defaults to `local-only` for projects with no git remote.
 
+## Projecting the catalog into a Claude Code skill
+
+`lexicon catalog render` turns `projects.yaml` into LLM-readable artifacts so the catalog can live as a *lazy-loaded* skill instead of bloating eager `~/.claude/CLAUDE.md` context. Two formats:
+
+```bash
+lexicon catalog render --format=skill        # → SKILL.md (frontmatter + body, grouped by status)
+lexicon catalog render --format=md-table     # → GitHub-flavored markdown table
+
+# Wire the skill into Claude Code:
+mkdir -p ~/.claude/skills/project-catalog
+lexicon catalog render --catalog catalog/projects.yaml --format=skill \
+  > ~/.claude/skills/project-catalog/SKILL.md
+```
+
+The skill auto-loads when Claude needs to identify a project, and stays out of the prompt otherwise. `projects.yaml` remains the source of truth — re-render whenever it changes. See `docs/superpowers/specs/2026-05-07-catalog-render-skill.md` for the design rationale.
+
 ## Catalogs
 
 Lexicon's data lives in three checked-in YAML files:

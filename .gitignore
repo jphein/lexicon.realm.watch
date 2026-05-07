@@ -20,3 +20,6 @@ node_modules/
 # Python
 __pycache__/
 *.pyc
+
+# Claude Code session state
+.claude/scheduled_tasks.lock

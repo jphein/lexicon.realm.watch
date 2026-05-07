@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] — 2026-05-07
+
+The catalog learns to project itself. `projects.yaml` can now be rendered as a Claude Code skill, so the project catalog can live as a *lazy-loaded* skill instead of taking ~80 lines of eager `~/.claude/CLAUDE.md` context.
+
+### Added
+- **`lexicon catalog render`** subcommand. Two output formats:
+  - `--format=skill` — emits a complete `SKILL.md` with YAML frontmatter (use-when description for Claude's auto-discovery), grouped by status (active → local-only → archived → other), sorted by `current_name` within each group.
+  - `--format=md-table` — emits a GitHub-flavored markdown table (the form used in `~/.claude/CLAUDE.md`), sorted by `current_name`.
+- `--out PATH` to write to a file instead of stdout. Default stdout.
+- Help: `lexicon catalog --help` lists the new `render` subcommand alongside `import`.
+
+### Design
+- Spec: `docs/superpowers/specs/2026-05-07-catalog-render-skill.md`. Marked **Implemented** with this release.
+- Renderers (`renderSkill`, `renderMDTable`) are pure data → `[]byte` — no I/O — so tests are cheap and golden-file stable.
+
 ## [1.1.0] — 2026-05-07
 
 The Path B union. Lexicon's vocabularies grow to be a superset of realm-sigil's hand-curated word lists for the realms with public history (`fantasy`, `signal`), making the sigil cutover non-disruptive for any name already shown to users.
