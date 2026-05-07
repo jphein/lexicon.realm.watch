@@ -1,0 +1,65 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.0.0] — 2026-05-07
+
+The release where lexicon takes ownership of the canonical vocabularies and stands beside clock and sigil as a peer in the realm.watch family.
+
+### Added
+- **Static landing page** (`static/`) — `index.html`, `app.js`, `style.css`, `favicon.svg`, `build.sh`. Live roller widget powered by the in-browser JS library; catalog viewer rendered from `catalog/projects.yaml` at build time. Dark/light theme via `prefers-color-scheme`. Live at [jphein.github.io/lexicon.realm.watch](https://jphein.github.io/lexicon.realm.watch/).
+- **Sigil cutover** — `sync-vocabularies.sh` converts `vocabularies/*.yaml` → `realm-sigil/words/*.json`. Modes: default (write), `--check` (CI drift detector), `--dry-run`. Idempotent.
+- **Sigil cutover design doc** — `docs/superpowers/specs/2026-05-07-sigil-cutover-design.md` — rollout sequence, version-coordination policy, CI shape.
+- **End-to-end test** — `go/e2e_test.go` exercises the full chain: load vocabulary → load recipes → RollN → load catalog → Resolve → Claim → validate, plus a binary-exec smoke test.
+- **README rewrite** — install instructions for all three languages, rename runbook documented, sigil cutover note, catalog overview.
+- **CHANGELOG** — this file.
+
+### Changed
+- **Vocabularies are now the source of truth.** Sigil consumes via `sync-vocabularies.sh`; `realm-sigil/sync-words.sh` retires.
+
+## [0.3.0] — 2026-05-07
+
+Cross-language parity. Same recipe names, same option keys, same results in Go, Python, and JS. The fixture (`tests/fixtures/seeded-recipes.json`) becomes the cross-language contract.
+
+### Added
+- **Python library** (`python/`) — `lexicon` package with `roll`, `roll_seeded`, `roll_n`, `load_catalog`, plus the `Vocabulary`, `RecipeBook`, `Catalog` classes. Uses `ruamel.yaml` for round-trippable catalog edits. Tested on Python ≥3.10. `pip install -e python/`.
+- **JS library** (`js/`) — `@jphein/lexicon` package with the same surface. Pure ESM. Works in Node ≥20 (`node:crypto`) and browsers (`crypto.subtle`); environment auto-detected. `seededIndex` is `Promise`-returning so calling code is identical across runtimes.
+- **Cross-language fixture parity** — every implementation must produce byte-identical output for the 33 cases in `tests/fixtures/seeded-recipes.json`. Verified for Go, Python, and JS at v0.3.0.
+
+## [0.2.0] — 2026-05-07
+
+Catalog mutations and rename runbook. The keystone for moving projects into the `*.realm.watch` family.
+
+### Added
+- **`lexicon rename`** — 10-step guided runbook. `--plan` prints the checklist; `--execute` runs auto steps with per-step y/n confirmation; `--yes` auto-confirms; `--skip N` omits a step. Filesystem ops gated behind an interface so tests run in tmpdirs and never touch `~/Projects` or `~/.claude`. (`go/cmd/lexicon/cmd_rename.go`.)
+- **`lexicon catalog import`** — walks a directory (default `~/Projects`), reads `README.md` / `package.json` / `pyproject.toml` / `go.mod` / `git remote`, emits a draft YAML for human review. `--dry-run`, `--out`, `--include-hidden`. Refuses to overwrite the canonical `catalog/projects.yaml`. (`go/cmd/lexicon/cmd_import.go`.)
+- **Vocabulary expansion** — `oracle`, `forge`, `signal`, `void`, `stellar`, `tarot` adjective and noun groups (10–14 words each). `creatures.yaml` expanded from 10 → 32 (sphinx, basilisk, kelpie, …). `scientists.yaml` expanded from 14 → 32 (Tesla, Lovelace, Hopper, …).
+- **Cross-language fixture seeder** — `go/cmd/seed-fixtures/main.go` regenerates `tests/fixtures/seeded-recipes.json` from the Go reference impl. The JSON file is the cross-language contract; the seeder is checked in so vocab changes can re-roll the fixtures intentionally.
+- **`tests/fixtures/README.md`** — explains the contract and the regeneration command.
+- **Auxiliary catalogs** — `catalog/agents.yaml` (10 durable named agents) and `catalog/voices.yaml` (5-voice roster mirroring `~/.claude/CLAUDE.md`). `docs/catalogs.md` explains how the three catalogs relate.
+- **Hook samples** (`hooks/`) — `catalog-status.py` (SessionStart banner), `lexicon-validate-precommit.sh` (git pre-commit). Sample `.claude/settings.json` shows the wiring. Not auto-installed; symlink to enable.
+
+## [0.1.0] — 2026-04-26
+
+First release. Go library + `lexicon` CLI, the catalog YAML schema, and the v1 recipes (project, agent, branch, entity).
+
+### Added
+- **Go library** — vocabulary loader, recipe engine with pattern parser and transforms (`cap` / `lower` / `upper` / raw), SHA-256-based seeded RNG with cross-language parity, `RollN` with within-set uniqueness, catalog loader with `Resolve` / `ByRealm` / `ByKind` / `ByStatus` queries, `Claim` mutation, deterministic YAML round-trip, cross-file consistency validation.
+- **`lexicon` CLI** —
+  - `lexicon roll <recipe>` with `--realm`, `--prefix`, `--n`
+  - `lexicon resolve <name>` with prior-name lookup
+  - `lexicon list` with `--realm` / `--kind` / `--status` filters
+  - `lexicon validate` cross-checks catalog ↔ vocabularies ↔ recipes
+  - `lexicon recipes` and `lexicon vocabularies` list available surfaces
+  - `lexicon claim <new-name>` records a new entry or rename
+- **Catalog seed** — `catalog/projects.yaml` populated with the realm.watch family + `realm-sigil` + `realmwatch`.
+- **`version.json`** following realm-sigil's contract; realm `oracle`.
+- **`CLAUDE.md`** with project shape, do-not edit notes for the fixture contract, testing notes.
+
+[1.0.0]: https://github.com/jphein/lexicon.realm.watch/releases/tag/v1.0.0
+[0.3.0]: https://github.com/jphein/lexicon.realm.watch/releases/tag/v0.3.0
+[0.2.0]: https://github.com/jphein/lexicon.realm.watch/releases/tag/v0.2.0
+[0.1.0]: https://github.com/jphein/lexicon.realm.watch/releases/tag/v0.1.0

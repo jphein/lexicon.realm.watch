@@ -1,5 +1,12 @@
 # Themed realms. Each realm provides flavoring for project names and entity rolls.
 # Source of truth — realm-sigil consumes this file once v1.0 ships (sync-vocabularies.sh).
+#
+# Sigil cutover decision (JP, 2026-05-07):
+#   - fantasy, signal: Path B — grow lexicon's lists to cover sigil's existing
+#     corpus before cutover, so sigil's user-visible names don't churn.
+#   - oracle, forge, void, stellar, tarot: Path A — adopt lexicon as-is. These
+#     realms have no public history in sigil yet, so churn is harmless.
+# See docs/superpowers/specs/2026-05-07-sigil-cutover-design.md.
 realms:
   fantasy:
     description: High-fantasy Tolkienesque vocabulary

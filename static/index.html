@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>lexicon.realm.watch — names and the changing of names</title>
+  <meta name="description" content="The runtime naming workhorse for the realm.watch family — roll names, track renames, own the canonical word library.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&amp;family=MedievalSharp&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header class="book-cover">
+      <h1>lexicon.realm.watch <span class="em">— names and the changing of names</span></h1>
+      <p class="tagline">three hard things · the third tool</p>
+    </header>
+
+    <section class="framing" id="about">
+      <h2>The third tool</h2>
+      <p>There are two hard things in computer science: cache invalidation and naming things. <a href="https://clock.realm.watch">clock.realm.watch</a> handles the first at the prompt seam — current time, injected when the model needs it. <a href="https://github.com/jphein/realm-sigil">realm-sigil</a> handles the second at build time, deterministically, from a git hash.</p>
+      <p>Lexicon is what you reach for when the two collide — when an existing project has been renamed and the old name has been cached in a thousand places. It is also the daily roller for ad-hoc names (agents, branches, entities) and the canonical word library that the rest of the family consumes.</p>
+    </section>
+
+    <section id="roller">
+      <h2>Roll a name</h2>
+      <div class="roller">
+        <div class="field">
+          <label for="recipe">recipe</label>
+          <select id="recipe"></select>
+        </div>
+        <div class="field" id="realm-field">
+          <label for="realm">realm</label>
+          <select id="realm"></select>
+        </div>
+        <div class="field hidden" id="prefix-field">
+          <label for="prefix">prefix</label>
+          <input id="prefix" type="text" value="feat" maxlength="20">
+        </div>
+        <div class="field" id="n-field">
+          <label for="n">candidates</label>
+          <input id="n" type="text" inputmode="numeric" value="5" maxlength="2">
+        </div>
+      </div>
+      <div class="actions">
+        <button class="roll-btn" id="roll-btn" type="button">Roll</button>
+        <span class="roll-meta" id="roll-meta"></span>
+      </div>
+      <div class="candidates" id="candidates" aria-live="polite"></div>
+    </section>
+
+    <section id="catalog">
+      <h2>The canonical roster</h2>
+      <div class="catalog-controls">
+        <div class="field">
+          <label for="catalog-realm">filter by realm</label>
+          <select id="catalog-realm"><option value="">all realms</option></select>
+        </div>
+        <span class="catalog-count" id="catalog-count"></span>
+      </div>
+      <div class="table-wrap">
+        <table class="catalog" id="catalog-table">
+          <thead>
+            <tr>
+              <th>name</th>
+              <th>realm</th>
+              <th>kind</th>
+              <th>description</th>
+              <th class="priors">prior names</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- __CATALOG_ROWS__ -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      <div class="siblings">
+        <a href="https://clock.realm.watch">clock</a> ·
+        <a href="https://github.com/jphein/realm-sigil">sigil</a> ·
+        <a href="https://github.com/jphein/lexicon.realm.watch">lexicon</a>
+      </div>
+      <div class="karlton">there are only two hard things — and now, names of names.</div>
+    </footer>
+  </main>
+
+  <!-- __VOCAB_BLOCK__ -->
+  <script src="app.js"></script>
+</body>
+</html>

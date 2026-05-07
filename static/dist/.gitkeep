@@ -1,0 +1,2 @@
+# build.sh writes index.html, style.css, app.js, favicon.svg here.
+# kept in repo so GitHub Pages can serve from this directory directly.
