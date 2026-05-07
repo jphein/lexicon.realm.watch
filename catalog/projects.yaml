@@ -59,3 +59,15 @@ projects:
     prior_names: []
     status: local-only
     notes: Candidate for rename to <something>.realm.watch in v0.2.
+
+  - id: status
+    current_name: status.realm.watch
+    kind: service
+    realm: signal
+    domain: status.realm.watch
+    repo: ~
+    description: Status dashboard for the realm.watch family + homelab — HTTP/ping/TCP/UDP/version checks across the realm.
+    created: 2026-04-01
+    prior_names: []
+    status: active
+    notes: Local repo only; deployed publicly via Caddy. checks.json is the source of truth for monitored URLs.
