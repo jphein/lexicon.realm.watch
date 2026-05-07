@@ -17,9 +17,10 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// cmdCatalog dispatches the `lexicon catalog <subcommand>` group. Today only
-// `import` is implemented; future subcommands (export, diff, merge) plug in
-// without further main.go changes.
+// cmdCatalog dispatches the `lexicon catalog <subcommand>` group. Subcommands
+// today: import (bootstrap from a project tree) and render (project the
+// catalog into a Claude Code skill or markdown table). Future subcommands
+// (export, diff, merge) plug in without further main.go changes.
 func cmdCatalog(args []string, stdout, stderr io.Writer) int {
 	if len(args) == 0 || args[0] == "--help" || args[0] == "-h" || args[0] == "help" {
 		printCatalogHelp(stdout)
