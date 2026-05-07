@@ -188,8 +188,25 @@ PYEOF
 cp "$HERE/style.css"   "$DIST/style.css"
 cp "$HERE/app.js"      "$DIST/app.js"
 cp "$HERE/favicon.svg" "$DIST/favicon.svg"
-cp "$ROOT/version.json" "$DIST/version.json"
-echo "  copied style.css, app.js, favicon.svg, version.json"
+echo "  copied style.css, app.js, favicon.svg"
+
+# Realm-sigil version stamp — family standard. Generates dist/version.json
+# (with magical name derived from git hash) and injects a <meta> tag into
+# the rendered index.html. See ~/.claude/CLAUDE.md "realm-sigil (Unified
+# Versioning)" section.
+SIGIL_BUILD="${SIGIL_BUILD:-$ROOT/../realm-sigil/static/build.sh}"
+if [[ -x "$SIGIL_BUILD" ]]; then
+  "$SIGIL_BUILD" \
+    --name lexicon.realm.watch \
+    --description "Names and the changing of names — the realm.watch runtime naming tool." \
+    --realm oracle \
+    --repo https://github.com/jphein/lexicon.realm.watch \
+    --html index.html \
+    --dir "$DIST"
+  echo "  stamped version via realm-sigil"
+else
+  echo "  WARN: realm-sigil build.sh not found at $SIGIL_BUILD — skipping version stamp" >&2
+fi
 
 # Quick sanity: assert the rendered HTML has data injected
 if ! grep -q "__LEXICON_VOCAB__" "$DIST/index.html"; then
