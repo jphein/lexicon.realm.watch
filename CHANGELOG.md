@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] — 2026-05-07
+
+The classification pass. All 86 `realm: "?"` entries from the v1.3.0 bulk migration now have real realm assignments. Catalog is fully clean — `lexicon validate` exits 0 with zero warnings.
+
+### Changed
+- **Realm assignments** for the 82 migrated entries (the four `*.realm.watch` slugify duplicates were deleted instead — see below). Distribution: forge 25 · oracle 24 · signal 21 · void 9 · tarot 5 · stellar 2 · fantasy 2.
+  - **forge**: tools, infra, ops, build (claude-code-switcher, scripts, optimize, ventoy, ha, …).
+  - **oracle**: AI, Claude, memory, secrets, divination (oracle-mcp, memorypalace, gstack, vault-gate, opus, …).
+  - **signal**: networking, audio, video, comms, monitoring (speech-to-cli, gnome-speaks, streaming, os.realm.watch, …).
+  - **void**: archived, sensitive, decommissioned (umbra, oldsites, sdp, shawnahein.com, …).
+  - **tarot**: personal narrative, archetype, drafts (jp, notebook, lettertomom, poppasblog, artcardsv5).
+  - **stellar**: time + cosmos (claudedoublehours, starcharts).
+  - **fantasy**: high-fantasy worlds (portfolio, roblox).
+
+### Removed
+- 4 slugify duplicates from the v1.3.0 migration: `clock.realm.watch`, `dark.realm.watch`, `lexicon.realm.watch`, `status.realm.watch`. These were duplicates of the curated `clock`, `dark`, `lexicon`, `status` entries (the migrator's `slugify(name)` produced full domain ids, while the curated catalog used short ids).
+
+### Catalog totals
+- 88 projects across 7 realms.
+
 ## [1.3.0] — 2026-05-07
 
 The bulk-migration release. Adds a `?` sentinel for unclassified realms so a 86-project import from the old `~/.claude/CLAUDE.md` table could land without forcing premature classification, and grows the catalog from 6 to 92 entries.

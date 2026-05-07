@@ -1,12 +1,12 @@
 {
   "name": "lexicon.realm.watch",
   "description": "Names and the changing of names \u2014 the realm.watch runtime naming tool.",
-  "version": "Sibylline Vision \u00b7 19f0b5f",
-  "hash": "19f0b5f",
+  "version": "Veiled Augur \u00b7 577f366",
+  "hash": "577f366",
   "branch": "main",
   "dirty": true,
-  "built": "2026-05-07T23:32:02Z",
+  "built": "2026-05-07T23:53:14Z",
   "realm": "oracle",
   "repo": "https://github.com/jphein/lexicon.realm.watch",
-  "commit_url": "https://github.com/jphein/lexicon.realm.watch/commit/19f0b5f"
+  "commit_url": "https://github.com/jphein/lexicon.realm.watch/commit/577f366"
 }
