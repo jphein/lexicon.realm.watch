@@ -71,3 +71,1025 @@ projects:
     prior_names: []
     status: active
     notes: Local repo only; deployed publicly via Caddy. checks.json is the source of truth for monitored URLs.
+# Migrated from ~/.claude/CLAUDE.md project table on 2026-05-07.
+# Append-only — does NOT overwrite existing curated entries.
+# Realm is set to `?` for everything not already curated; review and fix.
+
+
+  - id: speech-to-cli
+    current_name: speech-to-cli
+    kind: service
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: MCP server for STT/TTS via Azure Speech
+    created: ~
+    prior_names: []
+    status: active
+
+  - id: claude-code-switcher
+    current_name: claude-code-switcher
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: CLI for switching Claude Code API providers/models
+    created: ~
+    prior_names: []
+    status: active
+
+  - id: cloud-chat-assistant
+    current_name: cloud-chat-assistant
+    kind: service
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: MCP server for multi-session Azure OpenAI chat
+    created: ~
+    prior_names: []
+    status: active
+
+  - id: artcardsv5
+    current_name: artcardsv5
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Art cards project
+    created: ~
+    prior_names: []
+    status: active
+
+  - id: dreamspace
+    current_name: dreamspace
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Creative project (symlinked as dreamscape)
+    created: ~
+    prior_names: []
+    status: active
+
+  - id: hostname-badge
+    current_name: hostname-badge
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Hostname badge utility
+    created: ~
+    prior_names: []
+    status: active
+
+  - id: techempower
+    current_name: techempower
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Tech empower project
+    created: ~
+    prior_names: []
+    status: active
+
+  - id: unshuffled
+    current_name: unshuffled
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Azure TTS text-to-audio converter
+    created: ~
+    prior_names: []
+    status: active
+
+  - id: opus
+    current_name: opus
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Claude Opus 4.6 info page
+    created: ~
+    prior_names: []
+    status: active
+
+  - id: portfolio
+    current_name: portfolio
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: "Fantasy-themed portfolio with AI creatures, constellation map"
+    created: ~
+    prior_names: []
+    status: active
+    notes: "[Live](https://portfolio.jphe.in), private repo"
+
+  - id: oracle-mcp
+    current_name: oracle-mcp
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/jphein/the-oracle"
+    description: FastMCP proxy + crystal-ball web UI bridging cloud-chat-assistant + speech-to-cli
+    created: ~
+    prior_names: []
+    status: active
+    notes: "(repo named `the-oracle`, folder is `oracle-mcp`). Distinct from `oracle/` (Go voice oracle)"
+
+  - id: oracle
+    current_name: oracle
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Oracle Sanctum — voice-first AI oracle with fantasy UI
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: Local only
+
+  - id: gnome-speaks
+    current_name: gnome-speaks
+    kind: extension
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: GNOME Shell speech extension service
+    created: ~
+    prior_names: []
+    status: active
+
+  - id: claudedoublehours
+    current_name: claudedoublehours
+    kind: extension
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: GNOME Shell extension tracking Claude 2x off-peak hours
+    created: ~
+    prior_names: []
+    status: active
+
+  - id: gnome-shell-monitor
+    current_name: gnome-shell-monitor
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: GNOME Shell log/compositor health watcher (component of os.realm.watch)
+    created: ~
+    prior_names: []
+    status: active
+    notes: "Lives at `os.realm.watch/extensions/gnome-shell-monitor/`"
+
+  - id: kiyo-xhci-fix
+    current_name: kiyo-xhci-fix
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Kernel patches + watchdog for Razer Kiyo Pro USB crash
+    created: ~
+    prior_names: []
+    status: active
+
+  - id: disks
+    current_name: disks
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: "Headless file server configs — NFS, Samba, Docker media services"
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: Local only
+
+  - id: realm-portal
+    current_name: realm-portal
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Unified homelab portal (front door to LAN services) on ubox VM
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: Local only
+
+  - id: realmcoin
+    current_name: realmcoin
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Fantasy homelab coin/currency with YNAB integration
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: Local only
+
+  - id: scripts
+    current_name: scripts
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: "Utility scripts — Claude Code bootstrap, device tools"
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: Not a git repo
+
+  - id: optimize
+    current_name: optimize
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Ubuntu desktop optimization scripts and guides
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: Not a git repo
+
+  - id: openwrt
+    current_name: openwrt
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Router configs and operational guides
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: Not a git repo
+
+  - id: esp-wifi-repeater
+    current_name: esp_wifi_repeater
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: ESP WiFi repeater firmware (fork)
+    created: ~
+    prior_names: []
+    status: active
+    notes: "Fork, no push access"
+
+  - id: os.realm.watch
+    current_name: os.realm.watch
+    kind: realm-tool
+    realm: "?"
+    domain: os.realm.watch
+    repo: "https://github.com/jphein/os.realm.watch"
+    description: RealmWatch OS — 5 FastMCP game servers (RPG layer over network monitor)
+    created: ~
+    prior_names: []
+    status: active
+
+  - id: realm-optimizer
+    current_name: realm-optimizer
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: "AI-powered system optimization advisor, surfaces suggestions as realm quests (plugin in os.realm.watch)"
+    created: ~
+    prior_names: []
+    status: active
+    notes: "Lives at `os.realm.watch/servers/plugins/realm_optimizer.py`"
+
+  - id: gaming-tuning
+    current_name: gaming-tuning
+    kind: docs
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: "Roblox/gaming performance tuning for Linux (Wine, Vinegar, GameMode)"
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: Local only
+
+  - id: minecraft-bedrock-linux
+    current_name: minecraft-bedrock-linux
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/jphein/minecraft-bedrock-linux"
+    description: "Guide: running Minecraft Bedrock on Ubuntu via Lutris + GDK-Proton (KVM VM used only to extract encrypted game files)"
+    created: ~
+    prior_names: []
+    status: active
+
+  - id: obs-plugins
+    current_name: obs-plugins
+    kind: docs
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Linux OBS streaming setup (portable bundle approach)
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: Local only
+
+  - id: lettertomom
+    current_name: lettertomom
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Single-page HTML letter
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: Local only
+
+  - id: outline
+    current_name: outline
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: "Outline wiki tooling — API wrapper, doc seeder, sync, Claude Code hooks"
+    created: ~
+    prior_names: []
+    status: active
+    notes: Auto-syncs docs to outline.jphe.in
+
+  - id: mirror.realm.watch
+    current_name: mirror.realm.watch
+    kind: realm-tool
+    realm: "?"
+    domain: mirror.realm.watch
+    repo: ~
+    description: Superpowers skill mirror/distribution
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: Local only
+
+  - id: update
+    current_name: update
+    kind: docs
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Superpowers skill updates/staging
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: Local only
+
+  - id: clock.realm.watch
+    current_name: clock.realm.watch
+    kind: realm-tool
+    realm: "?"
+    domain: clock.realm.watch
+    repo: "https://github.com/jphein/clock.realm.watch"
+    description: Static fantasy clock + temporal-grounding hooks for Claude Code
+    created: ~
+    prior_names: []
+    status: active
+    notes: "[Live](https://jphein.github.io/clock.realm.watch/),"
+
+  - id: dark.realm.watch
+    current_name: dark.realm.watch
+    kind: realm-tool
+    realm: "?"
+    domain: dark.realm.watch
+    repo: ~
+    description: System-aware dark/light theming as a drop-in include (CSS / JS / Linux CLI)
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: "[Live](https://dark.realm.watch), local only (no remote)"
+
+  - id: familiar.realm.watch
+    current_name: familiar.realm.watch
+    kind: realm-tool
+    realm: "?"
+    domain: familiar.realm.watch
+    repo: "https://github.com/jphein/familiar.realm.watch"
+    description: "Local-first AI companion — reads mempalace before speaking, writes after"
+    created: ~
+    prior_names: []
+    status: active
+    notes: "Hosts: familiar (10.0.6.115), katana (10.0.6.129)"
+
+  - id: lexicon.realm.watch
+    current_name: lexicon.realm.watch
+    kind: realm-tool
+    realm: "?"
+    domain: lexicon.realm.watch
+    repo: ~
+    description: Project naming + rename system; canonical project registry
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: Local only. Pairs with clock (cache invalidation) and realm-sigil (build-time naming)
+
+  - id: status.realm.watch
+    current_name: status.realm.watch
+    kind: realm-tool
+    realm: "?"
+    domain: status.realm.watch
+    repo: ~
+    description: Status page aggregator — checks version endpoints across all realm projects
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: "Local only. checks.json is the canonical \"where to find each project's /api/version\" registry referenced by realm-sigil"
+
+  - id: memorypalace
+    current_name: memorypalace
+    kind: fork
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/jphein/mempalace"
+    description: "JP's production fork of mempalace (151K-drawer palace, daemon-served)"
+    created: ~
+    prior_names: []
+    status: active
+    notes: "Tracks upstream/develop. Note: directory is `memorypalace`, git/package name is `mempalace`"
+
+  - id: mempalace-triage
+    current_name: mempalace-triage
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/MemPalace/mempalace-triage"
+    description: Maintainer triage tooling for MemPalace/mempalace upstream
+    created: ~
+    prior_names: []
+    status: active
+    notes: Lives outside MemPalace/mempalace by design
+
+  - id: palace-daemon
+    current_name: palace-daemon
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/jphein/palace-daemon"
+    description: HTTP/MCP gateway coordinating concurrent access to a MemPalace instance
+    created: ~
+    prior_names: []
+    status: active
+    notes: "Production at `disks.jphe.in:8085`. HEAD currently on `feat/viz-dashboard`"
+
+  - id: multipass-structural-memory-eval
+    current_name: multipass-structural-memory-eval
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/jphein/multipass-structural-memory-eval"
+    description: "Diagnostic framework for memory systems (RAG, KGs, mempalace)"
+    created: ~
+    prior_names: []
+    status: active
+    notes: "HEAD on `feat/rlm-adapter`"
+
+  - id: rlm
+    current_name: rlm
+    kind: fork
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/jphein/rlm"
+    description: Fork of alexzhang13/rlm (Recursive Language Models) — evaluating as consumption layer for MemPalace
+    created: ~
+    prior_names: []
+    status: active
+    notes: Tracks upstream/main; fork work is integration glue only
+
+  - id: karta
+    current_name: karta
+    kind: service
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/jphein/karta"
+    description: Fork of agentic memory system with native Rust MCP server
+    created: ~
+    prior_names: []
+    status: active
+    notes: "Adds 7 MCP tools (`karta_add_note`, `karta_dream`, etc.) on top of upstream"
+
+  - id: gstack
+    current_name: gstack
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/jphein/gstack"
+    description: "Garry Tan's open-source Claude Code skill stack (skills + headless browser)"
+    created: ~
+    prior_names: []
+    status: active
+    notes: "Source for /cso, /retro, /investigate, /ship slash commands"
+
+  - id: vault-gate
+    current_name: vault-gate
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/jphein/vault-gate"
+    description: Claude Code PreToolUse hook that auto-unlocks Vaultwarden via Ghostty + GNOME Keyring
+    created: ~
+    prior_names: []
+    status: active
+    notes: Pairs with the SUDO/secrets workflow above
+
+  - id: bestiary
+    current_name: bestiary
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Browser-based Claude Code clone with canvas-rendered conversations + cross-model companion reviewers
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: "Local only (no remote). Deploys to Alpine VM `jp@10.0.6.137:/opt/bestiary`"
+
+  - id: oracle-chat
+    current_name: oracle-chat
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Reusable AI chat web component (CSS + JS) — themable via custom properties
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: "Local only. Companion piece to `oracle-mcp` UI"
+
+  - id: clawwatch
+    current_name: clawwatch
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/ThinkOffApp/ClawWatch"
+    description: First intelligent AI agent running natively on a smartwatch (NullClaw + Vosk + Anthropic)
+    created: ~
+    prior_names: []
+    status: active
+    notes: "Remote is org repo, not jphein"
+
+  - id: storyvox
+    current_name: storyvox
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/jphein/storyvox"
+    description: Royal Road audiobook player with offline neural TTS + sentence-level reader/audio sync
+    created: ~
+    prior_names: []
+    status: active
+    notes: "Active dev branch: `claude/issue-12-infinite-scroll`"
+
+  - id: voxsherpa-tts
+    current_name: VoxSherpa-TTS
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/jphein/VoxSherpa-TTS"
+    description: "Offline neural TTS engine for Android (Sherpa-ONNX-powered, GPL v3)"
+    created: ~
+    prior_names: []
+    status: active
+    notes: "Upstream: CodeBySonu95/VoxSherpa-TTS. On Play Store. Used by storyvox"
+
+  - id: tonemask
+    current_name: tonemask
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: "Personal voice-cloning project — wearable mask synthesizes JP's voice for live changes + TTS"
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: "Local only (no remote). Phase 1 shipped, Phase 2 streaming server in flight, Phase 3 mask hardware not started"
+
+  - id: tablet-tune
+    current_name: tablet-tune
+    kind: docs
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Samsung Galaxy Tab A7 Lite (SM-T227U) optimization runbook + research notes
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: "Local only (no git). Boot-loop-prevention package list, ADB/no-root tuning playbook"
+
+  - id: donkeyco
+    current_name: donkeyco
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: "Donkey Co. — JP's web design portfolio"
+    created: ~
+    prior_names: []
+    status: active
+
+  - id: imaginalvision.com
+    current_name: imaginalvision.com
+    kind: site
+    realm: "?"
+    domain: imaginalvision.com
+    repo: ~
+    description: Marketing/landing site (deployed via Cloudflare Workers)
+    created: ~
+    prior_names: []
+    status: active
+    notes: Local + Cloudflare. Has version.json (realm-sigil)
+
+  - id: jp
+    current_name: jp
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/jphein/jp"
+    description: "\"67 Days\" — single-page retrospective: 2003 commits, 49 projects, Feb 5–Apr 12 2026"
+    created: ~
+    prior_names: []
+    status: active
+    notes: "[Live](https://jphein.github.io/jp/),"
+
+  - id: jpheinnet
+    current_name: jpheinnet
+    kind: site
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/jphein/jpheinnet"
+    description: jphein.net — minimal Jekyll personal site
+    created: ~
+    prior_names: []
+    status: active
+    notes: "[Live](http://jphein.net/), Branch: master (legacy default)"
+
+  - id: poppasblog
+    current_name: poppasblog
+    kind: site
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/jphein/poppasblog"
+    description: "\"Poppa's Blog\" — California Survey Co. surveyor's blog, static site from WordPress export"
+    created: ~
+    prior_names: []
+    status: active
+    notes: "[Live](https://jphein.github.io/poppasblog/),"
+
+  - id: jphein-wordpress-server
+    current_name: jphein-wordpress-server
+    kind: site
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/jphein/jphein-wordpress-server"
+    description: Ops scripts + docs for jphein.com production WordPress (GCP)
+    created: ~
+    prior_names: []
+    status: active
+    notes: "Pairs with `jphein-wordpress-site`"
+
+  - id: jphein-wordpress-site
+    current_name: jphein-wordpress-site
+    kind: site
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/jphein/jphein-wordpress-site"
+    description: Docker compose + nginx/Apache/MySQL configs for jphein.com WordPress
+    created: ~
+    prior_names: []
+    status: active
+    notes: "Pairs with `jphein-wordpress-server`"
+
+  - id: forageforall
+    current_name: forageforall
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/jphein/forageforall"
+    description: Open-source map of fruit trees + edible plants on public land
+    created: ~
+    prior_names: []
+    status: active
+    notes: "[Web app](https://jphein.github.io/forageforall/app/), AGPL-3.0"
+
+  - id: starcharts
+    current_name: starcharts
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/jphein/starcharts"
+    description: Shared night-sky quest tracker for families — give stars for meaningful acts
+    created: ~
+    prior_names: []
+    status: active
+    notes: "RUNBOOK.md (29KB), README.md (16KB)"
+
+  - id: roblox
+    current_name: roblox
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: High Fantasy Platformer — Roblox game project
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: Local only (no remote). Standard Rojo/Wally project layout
+
+  - id: vault
+    current_name: vault
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Vaultwarden migration scripts (Clipperz HTML+JSON → Bitwarden JSON)
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: Local only (no git). One-off used 2026-03-26
+
+  - id: ventoy
+    current_name: ventoy
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/jphein/ventoy"
+    description: Ventoy multi-boot USB toolkit — ISO autoupdater + first-boot Claude Code installer
+    created: ~
+    prior_names: []
+    status: active
+    notes: "11 ISOs, ventoy.json persistence config"
+
+  - id: usb-issues
+    current_name: usb-issues
+    kind: site
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: "Linux kernel USB bug report + WordPress blog post (xHCI, phantom iowait, mic conflicts)"
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: Local only. CLAUDE.md tracks 4 distinct kernel bugs found on katana
+
+  - id: streamcam-fixes
+    current_name: streamcam-fixes
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/jphein/streamcam-fixes"
+    description: Logitech StreamCam Linux fixes — PipeWire mic + USB reset workarounds
+    created: ~
+    prior_names: []
+    status: active
+
+  - id: streaming
+    current_name: streaming
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: "OBS + veadotube setup for JP's daughters (kitty avatars)"
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: "Local only. Symlinks `avatars` → `../veadotube-avatars`"
+
+  - id: veadotube-avatars
+    current_name: veadotube-avatars
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Veadotube mini avatar data + build scripts (snowperson/knight/kitties)
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: Local only (no git). Bulk is bundled veadotube binary + image assets (~284M)
+
+  - id: umbra
+    current_name: umbra
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Pyte-based logger for Umbra capybara speech bubbles (April Fools 2026)
+    created: ~
+    prior_names: []
+    status: archived
+    notes: "Local only (no git). **Archived** — Umbra companion removed from Claude Code"
+
+  - id: notebook
+    current_name: notebook
+    kind: docs
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/jphein/notebook"
+    description: "JP's writing drafts + working documents (essays, notes, data dumps)"
+    created: ~
+    prior_names: []
+    status: active
+    notes: Source for cross-references in mempalace docs
+
+  - id: printing
+    current_name: printing
+    kind: docs
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: HP LaserJet MFP M234sdw setup notes + runbook for the homelab printer
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: "Local only (no git). Single README, VLAN 11"
+
+  - id: stack
+    current_name: stack
+    kind: docs
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Homelab architecture documentation — 4-host Ubuntu setup (Incus + Docker + Caddy + Authelia + Consul + Restic)
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: Local only (no git). 25K canonical homelab-stack.md
+
+  - id: ipv6
+    current_name: ipv6
+    kind: docs
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Paused IPv6 deployment plan for the admin VLAN (SLAAC + ULA prefix)
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: "Local only (no git). Status: paused, ready to implement"
+
+  - id: current-sensor
+    current_name: current sensor
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: KiCad PCB project for a homelab current sensor (CT-based)
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: "Local only (no git). **Note: directory has a space — consider renaming to `current-sensor/`**"
+
+  - id: openclaw
+    current_name: openclaw
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: "Status page + agent skills deployed to JP's openclaw VM (homelab game-server monitor)"
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: "Local only (no remote). `deploy.sh` pushes to `openclaw` host. terraria/ holds Terraria server worlds"
+
+  - id: claude-code-python
+    current_name: claude-code-python
+    kind: fork
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/instructkr/claude-code"
+    description: Fork of instructkr/claude-code (Python rewrite of Claude Code)
+    created: ~
+    prior_names: []
+    status: active
+    notes: (upstream). Reference/study fork
+
+  - id: shawnahein.com
+    current_name: shawnahein.com
+    kind: site
+    realm: "?"
+    domain: shawnahein.com
+    repo: ~
+    description: "Pre-edit recon notes + offline backup of shawnahein.com (Shawna Hein's consulting/coaching site)"
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: "Local only (no git). 452M includes site backup + InMotion SSH keys (`id_rsa`, `shein`)"
+
+  - id: solar
+    current_name: solar
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Personal regional-center / disability progress report templates + Vevor ATX split-phase wiring SVG
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: Local only (no git). Mixed personal docs + electrical reference
+
+  - id: sdp
+    current_name: sdp
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: "Self-Determination Program records — spending plan, budget analyses, year-to-date reports"
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: Local only (no git). Personal — sensitive
+
+  - id: sdp+disability-appeal
+    current_name: sdp+disability-appeal
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: "Active SSI disability appeal case file (document-based, has its own CLAUDE.md tracking the appeal)"
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: "Local only (no git). Personal — sensitive — **deadline-tracked**"
+# 86 new entries; 2 preserved from existing catalog.
+
+
+  - id: jewelrycycle
+    current_name: jewelrycycle
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: jewelrycycle.com configurator + screenshots + VPC architecture diagrams
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: "Local only (no git). 21M, includes site/ Docker stack"
+
+  - id: ha
+    current_name: ha
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Home Assistant scratch / triage workspace
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: "Local only (no git). 42M (mostly the `scratch/` subdir from 2026-04-27 triage)"
+
+  - id: mempalace-data
+    current_name: mempalace-data
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: Live ChromaDB palace store + drift snapshots for the local mempalace CLI
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: "Local only (no git). 308M. Referenced by `~/.mempalace/config.json palace_path`. Migration to `disks.jphe.in:8085` daemon in flight"
+
+  - id: claude-code-source
+    current_name: claude-code-source
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: De-minified Claude Code 2.1.88 source dump (study/reference)
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: Local only (no git). 13M
+
+  - id: claude-code-source-leaked
+    current_name: claude-code-source-leaked
+    kind: tool
+    realm: "?"
+    domain: ~
+    repo: "https://github.com/hangsman/claude-code-source"
+    description: "Mirror of `hangsman/claude-code-source` — full Claude Code dump (`cli.js` 13MB, `cli.js.map` 60MB)"
+    created: ~
+    prior_names: []
+    status: active
+    notes: "(upstream). 71M, ~2851 untracked working-tree files"
+
+  - id: oldsites
+    current_name: oldsites
+    kind: site
+    realm: "?"
+    domain: ~
+    repo: ~
+    description: "Finished Wayback-Machine recovery of legacy sites (circusjam, hanglefthosting, heincoproperty, locomotioncircus)"
+    created: ~
+    prior_names: []
+    status: local-only
+    notes: "Local only (no git). 69M, frozen since 2026-04-22 (`.all_done` flag)"

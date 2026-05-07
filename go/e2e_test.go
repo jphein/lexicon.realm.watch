@@ -112,11 +112,13 @@ func TestE2E(t *testing.T) {
 		}
 	}
 
-	// --- 8. Validate — live catalog must be clean -------------------------
+	// --- 8. Validate — live catalog must have zero error-level issues.
+	// Warnings (e.g. pending_realm sentinels for in-flight migrations) are
+	// allowed: they're surfaced visibly but don't fail validation.
 	issues := Validate(cat, v, rb)
-	if len(issues) != 0 {
-		for _, i := range issues {
-			t.Errorf("validate issue: %s", i)
+	for _, i := range issues {
+		if i.Severity != SeverityWarning {
+			t.Errorf("validate error-level issue: %s", i)
 		}
 	}
 

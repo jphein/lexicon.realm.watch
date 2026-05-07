@@ -1,12 +1,12 @@
 {
   "name": "lexicon.realm.watch",
   "description": "Names and the changing of names \u2014 the realm.watch runtime naming tool.",
-  "version": "Scrying Dreamer \u00b7 a2b510d",
-  "hash": "a2b510d",
+  "version": "Sibylline Vision \u00b7 19f0b5f",
+  "hash": "19f0b5f",
   "branch": "main",
   "dirty": true,
-  "built": "2026-05-07T23:16:29Z",
+  "built": "2026-05-07T23:32:02Z",
   "realm": "oracle",
   "repo": "https://github.com/jphein/lexicon.realm.watch",
-  "commit_url": "https://github.com/jphein/lexicon.realm.watch/commit/a2b510d"
+  "commit_url": "https://github.com/jphein/lexicon.realm.watch/commit/19f0b5f"
 }

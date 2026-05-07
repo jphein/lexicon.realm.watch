@@ -19,8 +19,27 @@ func TestValidate_LiveDataPasses(t *testing.T) {
 		t.Fatalf("recipes: %v", err)
 	}
 	issues := Validate(cat, v, rb)
-	if len(issues) > 0 {
-		t.Errorf("expected no issues, got: %v", issues)
+	for _, i := range issues {
+		if i.Severity != SeverityWarning {
+			t.Errorf("expected only warnings, got error-level issue: %v", i)
+		}
+	}
+}
+
+func TestValidate_PendingRealmIsWarning(t *testing.T) {
+	cat := &Catalog{Projects: []*Project{
+		{ID: "needs-classification", CurrentName: "needs-classification", Realm: PendingRealm},
+	}}
+	v := &Vocabulary{categories: map[string]map[string]vocabGroup{
+		"realms": {"fantasy": {Words: []string{"a"}}},
+	}}
+	issues := Validate(cat, v, &RecipeBook{recipes: map[string]recipeDef{}})
+	if len(issues) != 1 {
+		t.Fatalf("expected 1 issue, got %d: %v", len(issues), issues)
+	}
+	got := issues[0]
+	if got.Code != "pending_realm" || got.Severity != SeverityWarning {
+		t.Errorf("expected pending_realm/warning, got %v", got)
 	}
 }
 

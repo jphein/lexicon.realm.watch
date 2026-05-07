@@ -37,8 +37,18 @@ func cmdValidate(args []string, stdout, stderr io.Writer) int {
 		fmt.Fprintln(stdout, "OK")
 		return 0
 	}
+	errors, warnings := 0, 0
 	for _, i := range issues {
 		fmt.Fprintln(stderr, i)
+		if i.Severity == lexicon.SeverityWarning {
+			warnings++
+		} else {
+			errors++
+		}
+	}
+	if errors == 0 {
+		fmt.Fprintf(stdout, "OK (with %d warning(s))\n", warnings)
+		return 0
 	}
 	return 1
 }
