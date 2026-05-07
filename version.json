@@ -1,12 +1,12 @@
 {
   "name": "lexicon.realm.watch",
   "description": "Names and the changing of names \u2014 the realm.watch runtime naming tool.",
-  "version": "Veiled Augury \u00b7 2968063",
-  "hash": "2968063",
+  "version": "Scrying Dreamer \u00b7 a2b510d",
+  "hash": "a2b510d",
   "branch": "main",
   "dirty": true,
-  "built": "2026-05-07T18:26:49Z",
+  "built": "2026-05-07T23:16:29Z",
   "realm": "oracle",
   "repo": "https://github.com/jphein/lexicon.realm.watch",
-  "commit_url": "https://github.com/jphein/lexicon.realm.watch/commit/2968063"
+  "commit_url": "https://github.com/jphein/lexicon.realm.watch/commit/a2b510d"
 }
