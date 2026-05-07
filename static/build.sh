@@ -188,7 +188,8 @@ PYEOF
 cp "$HERE/style.css"   "$DIST/style.css"
 cp "$HERE/app.js"      "$DIST/app.js"
 cp "$HERE/favicon.svg" "$DIST/favicon.svg"
-echo "  copied style.css, app.js, favicon.svg"
+cp "$ROOT/version.json" "$DIST/version.json"
+echo "  copied style.css, app.js, favicon.svg, version.json"
 
 # Quick sanity: assert the rendered HTML has data injected
 if ! grep -q "__LEXICON_VOCAB__" "$DIST/index.html"; then
