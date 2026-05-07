@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>lexicon.realm.watch — names and the changing of names</title>
+  <meta name="description" content="The runtime naming workhorse for the realm.watch family — roll names, track renames, own the canonical word library.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&amp;family=MedievalSharp&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header class="book-cover">
+      <h1>lexicon.realm.watch <span class="em">— names and the changing of names</span></h1>
+      <p class="tagline">three hard things · the third tool</p>
+    </header>
+
+    <section class="framing" id="about">
+      <h2>The third tool</h2>
+      <p>There are two hard things in computer science: cache invalidation and naming things. <a href="https://clock.realm.watch">clock.realm.watch</a> handles the first at the prompt seam — current time, injected when the model needs it. <a href="https://github.com/jphein/realm-sigil">realm-sigil</a> handles the second at build time, deterministically, from a git hash.</p>
+      <p>Lexicon is what you reach for when the two collide — when an existing project has been renamed and the old name has been cached in a thousand places. It is also the daily roller for ad-hoc names (agents, branches, entities) and the canonical word library that the rest of the family consumes.</p>
+    </section>
+
+    <section id="roller">
+      <h2>Roll a name</h2>
+      <div class="roller">
+        <div class="field">
+          <label for="recipe">recipe</label>
+          <select id="recipe"></select>
+        </div>
+        <div class="field" id="realm-field">
+          <label for="realm">realm</label>
+          <select id="realm"></select>
+        </div>
+        <div class="field hidden" id="prefix-field">
+          <label for="prefix">prefix</label>
+          <input id="prefix" type="text" value="feat" maxlength="20">
+        </div>
+        <div class="field" id="n-field">
+          <label for="n">candidates</label>
+          <input id="n" type="text" inputmode="numeric" value="5" maxlength="2">
+        </div>
+      </div>
+      <div class="actions">
+        <button class="roll-btn" id="roll-btn" type="button">Roll</button>
+        <span class="roll-meta" id="roll-meta"></span>
+      </div>
+      <div class="candidates" id="candidates" aria-live="polite"></div>
+    </section>
+
+    <section id="catalog">
+      <h2>The canonical roster</h2>
+      <div class="catalog-controls">
+        <div class="field">
+          <label for="catalog-realm">filter by realm</label>
+          <select id="catalog-realm"><option value="">all realms</option></select>
+        </div>
+        <span class="catalog-count" id="catalog-count"></span>
+      </div>
+      <div class="table-wrap">
+        <table class="catalog" id="catalog-table">
+          <thead>
+            <tr>
+              <th>name</th>
+              <th>realm</th>
+              <th>kind</th>
+              <th>description</th>
+              <th class="priors">prior names</th>
+            </tr>
+          </thead>
+          <tbody>
+    <tr data-realm="oracle">
+      <td class="name"><a href="https://lexicon.realm.watch" rel="noopener">lexicon.realm.watch</a></td>
+      <td class="realm">oracle</td>
+      <td class="kind">realm-tool</td>
+      <td class="desc">Names and the changing of names — the runtime naming workhorse.</td>
+      <td class="priors"><span class="none">—</span></td>
+    </tr>
+    <tr data-realm="signal">
+      <td class="name"><a href="https://clock.realm.watch" rel="noopener">clock.realm.watch</a></td>
+      <td class="realm">signal</td>
+      <td class="kind">realm-tool</td>
+      <td class="desc">A clock for an AI that doesn&#x27;t have one.</td>
+      <td class="priors"><span class="none">—</span></td>
+    </tr>
+    <tr data-realm="void">
+      <td class="name"><a href="https://dark.realm.watch" rel="noopener">dark.realm.watch</a></td>
+      <td class="realm">void</td>
+      <td class="kind">realm-tool</td>
+      <td class="desc">System-aware dark/light theming as a drop-in include.</td>
+      <td class="priors"><span class="none">—</span></td>
+    </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      <div class="siblings">
+        <a href="https://clock.realm.watch">clock</a> ·
+        <a href="https://github.com/jphein/realm-sigil">sigil</a> ·
+        <a href="https://github.com/jphein/lexicon.realm.watch">lexicon</a>
+      </div>
+      <div class="karlton">there are only two hard things — and now, names of names.</div>
+    </footer>
+  </main>
+
+  <script>
+  window.__LEXICON_VOCAB__   = {"adjectives": {"fantasy": ["primal", "runic", "lunar", "ancient", "hollow", "mystic", "gilded", "somber", "woven", "brimming"], "oracle": ["augural", "fated", "prescient", "sibylline", "dreaming", "prophetic", "foretold", "whispered", "veiled", "divining", "foreseen", "omened", "occult", "scrying"], "forge": ["molten", "hammered", "tempered", "forged", "glowing", "smoldering", "sparking", "kilned", "ironclad", "wrought", "bellowed", "anvilled", "white-hot", "smelted"], "signal": ["pulsing", "beaconing", "encrypted", "broadcasting", "harmonic", "looping", "resonant", "modulated", "tuned", "relayed", "humming", "syncing", "blinking", "channelled"], "void": ["hushed", "unmade", "vacant", "silent", "drifting", "eclipsing", "lost", "shrouded", "fading", "hollowed", "absent", "devoured", "untold", "dimming"], "stellar": ["stellar", "nebular", "orbital", "cosmic", "gleaming", "supernal", "luminous", "twinkling", "celestial", "gravitational", "eclipsed", "comet-borne", "equinoctial", "far-flung"], "tarot": ["arcane", "suspended", "towering", "fated", "foolish", "judged", "hierophantic", "crowned", "reversed", "illumined", "querent", "esoteric", "hermetic", "drawn"], "any": ["gallant", "furious", "mystic", "lunar", "sleepy", "eager", "wise", "bold", "swift", "sly", "calm", "brisk", "keen", "quirky", "jolly", "brave", "clever", "modest", "peaceful", "hopeful", "vibrant", "dreamy"]}, "nouns": {"fantasy": ["sigil", "pulsar", "oracle", "forge", "echo", "warden", "raven", "hollow", "ember", "beacon"], "oracle": ["oracle", "augur", "sibyl", "prophet", "omen", "vision", "harbinger", "dreamer", "seer", "scrying", "prophecy", "runecast", "soothsayer", "divination"], "forge": ["forge", "anvil", "kiln", "ember", "hammer", "smithy", "smelter", "ironheart", "wright", "crucible", "bellows", "mold", "ingot", "foundry"], "signal": ["pulsar", "beacon", "qubit", "relay", "packet", "lighthouse", "antenna", "semaphore", "telegraph", "channel", "ping", "lattice", "broadcast", "harbor"], "void": ["abyss", "hollow", "eclipse", "drift", "hush", "shroud", "silence", "chasm", "umbra", "threshold", "rift", "cipher", "vanishment", "absence"], "stellar": ["nova", "quasar", "nebula", "comet", "orbit", "solstice", "zenith", "meridian", "constellation", "supernova", "parallax", "lensing", "perihelion", "eclipse"], "tarot": ["arcana", "fool", "hierophant", "hanged", "tower", "star", "sun", "moon", "judgement", "world", "wheel", "chariot", "hermit", "magician"], "any": ["roster", "forge", "echo", "beacon", "harbor", "signal", "lantern", "anchor", "pillar", "channel"]}, "scientists": {"any": ["curie", "einstein", "hopper", "turing", "lovelace", "ramanujan", "feynman", "darwin", "bohr", "hawking", "mendel", "pasteur", "kepler", "faraday", "tesla", "newton", "galileo", "copernicus", "meitner", "franklin", "mccarthy", "knuth", "dijkstra", "ritchie", "thompson", "shannon", "babbage", "noether", "heisenberg", "planck", "maxwell", "leibniz"]}, "creatures": {"any": ["wraith", "sentinel", "echo", "warden", "ravenkin", "brimwarden", "mothlight", "drakeling", "hollowmere", "sylph", "sphinx", "basilisk", "kelpie", "wendigo", "chimera", "manticore", "griffin", "phoenix", "gorgon", "selkie", "banshee", "nymph", "lamia", "dryad", "kitsune", "djinn", "revenant", "homunculus", "lindworm", "cockatrice", "leviathan", "golem"]}, "realms": {"fantasy": ["primal", "shadow", "ember", "runic", "moonlit", "ravenforge", "brimwarden", "hollow", "mistveil", "oakheart"], "tarot": ["arcana", "fool", "hierophant", "hanged", "tower", "star", "sun", "moon", "judgement", "world"], "oracle": ["oracle", "augur", "sibyl", "prophet", "dreamer", "harbinger", "omen", "vision", "fate", "sigil"], "void": ["void", "abyss", "hollow", "eclipse", "null", "drift", "silent", "unmade", "hush", "shroud"], "forge": ["forge", "anvil", "kiln", "ember", "smelter", "ironheart", "hammer", "mold", "wright", "smithy"], "signal": ["pulsar", "beacon", "qubit", "relay", "packet", "lighthouse", "antenna", "ping", "telegraph", "semaphore"], "stellar": ["stellar", "nova", "pulsar", "quasar", "nebula", "comet", "orbit", "lunar", "solstice", "zenith"]}};
+  window.__LEXICON_RECIPES__ = {"project": {"description": "Project / service name in the realm.watch family", "pattern": "{adjective:cap}-{noun:cap}", "sources": {"adjective": {"from": "adjectives", "group": "fantasy"}, "noun": {"from": "nouns", "group": "fantasy"}}, "required_options": ["realm"]}, "agent": {"description": "Docker-style snake_case agent name", "pattern": "{adjective:lower}_{scientist:lower}", "sources": {"adjective": {"from": "adjectives", "group": "any"}, "scientist": {"from": "scientists", "group": "any"}}, "required_options": []}, "branch": {"description": "Conventional-commit branch name", "pattern": "{prefix}/{adjective:lower}-{noun:lower}-{noun:lower}", "sources": {"adjective": {"from": "adjectives", "group": "any"}, "noun": {"from": "nouns", "group": "any"}}, "required_options": ["prefix"]}, "entity": {"description": "Realmwatch RPG creature / persona", "pattern": "{adjective:cap} {creature:cap}", "sources": {"adjective": {"from": "adjectives", "group": "fantasy"}, "creature": {"from": "creatures", "group": "any"}}, "required_options": []}};
+  window.__LEXICON_REALMS__  = {"fantasy": {"description": "High-fantasy Tolkienesque vocabulary", "words": ["primal", "shadow", "ember", "runic", "moonlit", "ravenforge", "brimwarden", "hollow", "mistveil", "oakheart"]}, "tarot": {"description": "Tarot-card archetypes and arcana", "words": ["arcana", "fool", "hierophant", "hanged", "tower", "star", "sun", "moon", "judgement", "world"]}, "oracle": {"description": "Prophecy, fate, and divination imagery", "words": ["oracle", "augur", "sibyl", "prophet", "dreamer", "harbinger", "omen", "vision", "fate", "sigil"]}, "void": {"description": "Cosmic emptiness, entropy, and shadow", "words": ["void", "abyss", "hollow", "eclipse", "null", "drift", "silent", "unmade", "hush", "shroud"]}, "forge": {"description": "Smithing, craft, and creation", "words": ["forge", "anvil", "kiln", "ember", "smelter", "ironheart", "hammer", "mold", "wright", "smithy"]}, "signal": {"description": "Networking, electromagnetic, and data-flow imagery", "words": ["pulsar", "beacon", "qubit", "relay", "packet", "lighthouse", "antenna", "ping", "telegraph", "semaphore"]}, "stellar": {"description": "Stars, planets, and astronomy", "words": ["stellar", "nova", "pulsar", "quasar", "nebula", "comet", "orbit", "lunar", "solstice", "zenith"]}};
+</script>
+  <script src="app.js"></script>
+</body>
+</html>
