@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lexicon-realm-watch"
+version = "0.1.0"
+description = "Names and the changing of names — Python parity for lexicon.realm.watch."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "JP", email = "jp@jphein.com" }]
+dependencies = [
+    "ruamel.yaml>=0.18",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.urls]
+Homepage = "https://github.com/jphein/lexicon.realm.watch"
+Repository = "https://github.com/jphein/lexicon.realm.watch"
+
+[tool.setuptools.packages.find]
+include = ["lexicon*"]
+exclude = ["tests*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
