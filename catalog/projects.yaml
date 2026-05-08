@@ -563,16 +563,19 @@ projects:
     notes: Pairs with the SUDO/secrets workflow above
 
   - id: bestiary
-    current_name: bestiary
+    current_name: bestiary.realm.watch
     kind: tool
     realm: oracle
     domain: ~
-    repo: ~
+    repo: https://github.com/jphein/bestiary.realm.watch
     description: Browser-based Claude Code clone with canvas-rendered conversations + cross-model companion reviewers
     created: ~
-    prior_names: []
+    prior_names:
+      - name: bestiary
+        retired: 2026-05-08
+        reason: Adopt *.realm.watch convention for realm-aligned projects
     status: local-only
-    notes: "Local only (no remote). Deploys to Alpine VM `jp@10.0.6.137:/opt/bestiary`"
+    notes: "Deploys to Alpine VM `jp@10.0.6.137:/opt/bestiary`"
 
   - id: oracle-chat
     current_name: oracle-chat
