@@ -2,7 +2,7 @@
 
 **Date:** 2026-05-07 → 2026-05-08
 **Author:** JP (with orchestrator brainstorm)
-**Status:** Proposed
+**Status:** Implemented
 **Cross-references:**
 - `docs/superpowers/specs/2026-04-26-lexicon-design.md` (parent design)
 - `docs/superpowers/specs/2026-05-07-catalog-render-skill.md` (render projection — will need updating)
@@ -144,10 +144,16 @@ Low-medium. The catalog works fine without this; it's a quality-of-life upgrade.
 
 ## Done criteria
 
-- [ ] Schema: `Project.Audience` field exists.
-- [ ] All 88 catalog entries classified.
-- [ ] `lexicon list --audience=...` filters.
-- [ ] `lexicon catalog render --format=skill` groups by audience, then status.
-- [ ] Regression test for the new render grouping.
-- [ ] `~/.claude/skills/project-catalog/SKILL.md` regenerated.
-- [ ] Spec marked `Status: Implemented` (this file).
+- [x] Schema: `Project.Audience` field exists (`audience,omitempty` in `go/catalog.go`).
+- [x] All 88 catalog entries classified (14 realm / 46 personal / 19 external / 9 fork).
+- [x] `lexicon list --audience=...` filters.
+- [x] `lexicon catalog render --format=skill` groups by audience, then status.
+- [x] Regression test for the new render grouping (`TestCatalogRender_SkillAudienceGroupOrder`).
+- [x] `~/.claude/skills/project-catalog/SKILL.md` regenerated.
+- [x] Spec marked `Status: Implemented` (this file).
+
+## Implementation notes
+
+- `validate.go` warns with code `pending_audience` when audience is unset and no inference rule fires (kind=fork → fork; current_name suffix `.realm.watch` → realm).
+- `InferAudience(p)` is the single source of truth shared between renderer, list filter, and validator.
+- The catalog YAML round-trip (`updateProjectMapping`/`newProjectMapping` in `catalog.go`) preserves the field on save; backfill itself was a one-shot Python pass (`scripts/backfill-audience.py`) inserting `audience:` directly after `realm:` so the field sits next to its conceptual neighbors rather than at end-of-mapping.
