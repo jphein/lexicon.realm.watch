@@ -160,9 +160,9 @@ func buildRenameSteps() []renameStep {
 			doFunc: stepTransitionalSymlink,
 		},
 		{
-			num: 3, title: "Package metadata sweep", auto: false, skipKey: "metadata",
+			num: 3, title: "Package metadata sweep", auto: true, skipKey: "metadata",
 			detail: "Update name field in package.json, pyproject.toml, go.mod, version.json",
-			doFunc: stepPackageMetadataReminder,
+			doFunc: stepPackageMetadata,
 		},
 		{
 			num: 4, title: "CLAUDE.md sweeps", auto: false, skipKey: "claude-md",
@@ -285,18 +285,25 @@ func stepTransitionalSymlink(env *renameEnv) error {
 	return env.fs.Symlink(target, link)
 }
 
-func stepPackageMetadataReminder(env *renameEnv) error {
-	fmt.Fprintln(env.stdout, "  package.json    : update \"name\" field if present")
-	fmt.Fprintln(env.stdout, "  pyproject.toml  : update [project] name if present")
-	fmt.Fprintln(env.stdout, "  go.mod          : update module directive + internal imports")
-	fmt.Fprintln(env.stdout, "  version.json    : update name to match new project name")
-	fmt.Fprintf(env.stdout, "  (search root: %s)\n", filepath.Join(env.projectsDir, env.newName))
+func stepPackageMetadata(env *renameEnv) error {
+	projDir := filepath.Join(env.projectsDir, env.newName)
+	edited, err := applyPackageMetadataSweep(projDir, env.oldID, env.newName)
+	if err != nil {
+		return err
+	}
+	if len(edited) == 0 {
+		fmt.Fprintf(env.stdout, "  no metadata files reference %q (nothing to update)\n", env.oldID)
+		return nil
+	}
+	for _, p := range edited {
+		fmt.Fprintf(env.stdout, "  updated: %s\n", p)
+	}
 	return nil
 }
 
 func stepClaudeMDReminder(env *renameEnv) error {
 	fmt.Fprintln(env.stdout, "  ~/.claude/CLAUDE.md       : project table — replace old row")
-	fmt.Fprintf(env.stdout,  "  %s/CLAUDE.md  : project-local references\n", filepath.Join(env.projectsDir, env.newName))
+	fmt.Fprintf(env.stdout, "  %s/CLAUDE.md  : project-local references\n", filepath.Join(env.projectsDir, env.newName))
 	return nil
 }
 
