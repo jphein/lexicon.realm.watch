@@ -26,14 +26,17 @@ projects:
     status: active
 
   - id: realm-sigil
-    current_name: realm-sigil
+    current_name: sigil.realm.watch
     kind: library
     realm: oracle
     domain: ~
-    repo: https://github.com/jphein/realm-sigil
+    repo: https://github.com/jphein/sigil.realm.watch
     description: Deterministic magical version name generation across Go/Python/JS.
     created: 2025-11-01
-    prior_names: []
+    prior_names:
+      - name: realm-sigil
+        retired: 2026-05-08
+        reason: Adopt *.realm.watch convention for realm-aligned projects
     status: active
     notes: Will become a downstream consumer of lexicon's vocabularies (v1.0 cutover).
 
@@ -196,14 +199,17 @@ projects:
     notes: "(repo named `the-oracle`, folder is `oracle-mcp`). Distinct from `oracle/` (Go voice oracle)"
 
   - id: oracle
-    current_name: oracle
+    current_name: oracle.realm.watch
     kind: tool
     realm: oracle
     domain: ~
-    repo: ~
+    repo: https://github.com/jphein/oracle.realm.watch
     description: Oracle Sanctum — voice-first AI oracle with fantasy UI
     created: ~
-    prior_names: []
+    prior_names:
+      - name: oracle
+        retired: 2026-05-08
+        reason: Adopt *.realm.watch convention for realm-aligned projects
     status: local-only
     notes: Local only
 
@@ -280,14 +286,17 @@ projects:
     notes: Local only
 
   - id: realmcoin
-    current_name: realmcoin
+    current_name: coin.realm.watch
     kind: tool
     realm: forge
     domain: ~
-    repo: ~
+    repo: https://github.com/jphein/coin.realm.watch
     description: Fantasy homelab coin/currency with YNAB integration
     created: ~
-    prior_names: []
+    prior_names:
+      - name: realmcoin
+        retired: 2026-05-08
+        reason: Adopt *.realm.watch convention for realm-aligned projects
     status: local-only
     notes: Local only
 
