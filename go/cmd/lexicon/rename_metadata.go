@@ -22,31 +22,59 @@ import (
 //   - pyproject.toml         — [project] name field (or [tool.poetry] name)
 //   - version.json           — top-level "name" field
 //   - **/*.go                — import strings referencing the old module path
+//
+// Metadata files are searched recursively up to 3 directory levels deep, so
+// per-language layouts like realm-sigil (go/, js/, python/) get rewritten too.
+// Build/dependency dirs (vendor, node_modules, venv, …) and hidden dirs are
+// skipped.
 func applyPackageMetadataSweep(projDir, oldName, newName string) ([]string, error) {
 	var edited []string
 
-	if e, err := updateGoMod(filepath.Join(projDir, "go.mod"), oldName, newName); err != nil {
-		return edited, err
-	} else if e {
-		edited = append(edited, "go.mod")
-	}
+	walkErr := filepath.WalkDir(projDir, func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if d.IsDir() {
+			if path == projDir {
+				return nil
+			}
+			if shouldSkipDir(d.Name()) {
+				return filepath.SkipDir
+			}
+			rel, _ := filepath.Rel(projDir, path)
+			if rel != "." && strings.Count(rel, string(filepath.Separator)) >= 3 {
+				return filepath.SkipDir
+			}
+			return nil
+		}
 
-	if e, err := updatePackageJSON(filepath.Join(projDir, "package.json"), oldName, newName); err != nil {
-		return edited, err
-	} else if e {
-		edited = append(edited, "package.json")
-	}
-
-	if e, err := updatePyprojectTOML(filepath.Join(projDir, "pyproject.toml"), oldName, newName); err != nil {
-		return edited, err
-	} else if e {
-		edited = append(edited, "pyproject.toml")
-	}
-
-	if e, err := updateVersionJSON(filepath.Join(projDir, "version.json"), oldName, newName); err != nil {
-		return edited, err
-	} else if e {
-		edited = append(edited, "version.json")
+		var (
+			changed bool
+			fileErr error
+		)
+		switch d.Name() {
+		case "go.mod":
+			changed, fileErr = updateGoMod(path, oldName, newName)
+		case "package.json":
+			changed, fileErr = updatePackageJSON(path, oldName, newName)
+		case "pyproject.toml":
+			changed, fileErr = updatePyprojectTOML(path, oldName, newName)
+		case "version.json":
+			changed, fileErr = updateVersionJSON(path, oldName, newName)
+		default:
+			return nil
+		}
+		if fileErr != nil {
+			return fileErr
+		}
+		if changed {
+			rel, _ := filepath.Rel(projDir, path)
+			edited = append(edited, filepath.ToSlash(rel))
+		}
+		return nil
+	})
+	if walkErr != nil {
+		return edited, walkErr
 	}
 
 	imports, err := updateGoImports(projDir, oldName, newName)
@@ -56,6 +84,22 @@ func applyPackageMetadataSweep(projDir, oldName, newName string) ([]string, erro
 	edited = append(edited, imports...)
 
 	return edited, nil
+}
+
+// shouldSkipDir returns true for directory names that we never want to descend
+// into during the metadata sweep — build artifacts, dependency caches, VCS
+// internals, and hidden dirs in general.
+func shouldSkipDir(name string) bool {
+	if strings.HasPrefix(name, ".") {
+		return true
+	}
+	switch name {
+	case "vendor", "node_modules", "venv",
+		"testdata", "__pycache__",
+		"dist", "build", "target", "out":
+		return true
+	}
+	return false
 }
 
 func updateGoMod(path, oldName, newName string) (bool, error) {
