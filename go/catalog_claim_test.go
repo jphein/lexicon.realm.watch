@@ -107,3 +107,144 @@ func TestCatalog_Save_RoundTrips(t *testing.T) {
 		t.Error("file does not mention new name")
 	}
 }
+
+// TestCatalog_Save_PreservesCommentsAndNullStyle exercises the contract that
+// Save must round-trip the on-disk YAML without destroying curated
+// formatting: comments survive, blank-line separators between entries
+// survive, untouched fields keep their original scalar style (`~` stays `~`,
+// not coerced to `""`).
+//
+// Regression test for the rename byproduct seen on 2026-05-07: every
+// `domain: ~` got rewritten to `domain: ""` and every leading comment was
+// stripped, producing 320+ lines of unrelated diff noise around a
+// single-entry rename.
+func TestCatalog_Save_PreservesCommentsAndNullStyle(t *testing.T) {
+	src := `# Header comment line one
+# Header comment line two
+projects:
+  - id: alpha
+    current_name: alpha
+    kind: tool
+    realm: forge
+    domain: ~
+    repo: ~
+    description: A
+    created: 2026-04-01
+    prior_names: []
+    status: active
+
+  - id: beta
+    current_name: beta
+    kind: tool
+    realm: forge
+    domain: ~
+    repo: ~
+    description: B
+    created: 2026-04-01
+    prior_names: []
+    status: active
+`
+	path := filepath.Join(t.TempDir(), "cat.yaml")
+	if err := os.WriteFile(path, []byte(src), 0o644); err != nil {
+		t.Fatalf("write src: %v", err)
+	}
+	c, err := LoadCatalog(path)
+	if err != nil {
+		t.Fatalf("load: %v", err)
+	}
+	if err := c.Claim("alpha2", ClaimOpts{
+		RenamesOf: "alpha",
+		Reason:    "round-trip test",
+		Retired:   "2026-05-08",
+	}); err != nil {
+		t.Fatalf("claim: %v", err)
+	}
+	if err := c.Save(); err != nil {
+		t.Fatalf("save: %v", err)
+	}
+	got, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("re-read: %v", err)
+	}
+	out := string(got)
+
+	// 1. Header comments must survive.
+	for _, want := range []string{"# Header comment line one", "# Header comment line two"} {
+		if !strings.Contains(out, want) {
+			t.Errorf("missing comment %q after Save:\n%s", want, out)
+		}
+	}
+
+	// 2. Untouched `~` (null) fields must stay `~`, not be coerced to "".
+	if strings.Contains(out, `domain: ""`) || strings.Contains(out, `repo: ""`) {
+		t.Errorf("untouched null was coerced to empty string:\n%s", out)
+	}
+	if !strings.Contains(out, "domain: ~") {
+		t.Errorf("`domain: ~` not preserved:\n%s", out)
+	}
+
+	// 3. The rename was actually applied to alpha.
+	if !strings.Contains(out, "current_name: alpha2") {
+		t.Errorf("rename not applied to file:\n%s", out)
+	}
+
+	// 4. Beta is untouched — including its specific shape.
+	if !strings.Contains(out, "  - id: beta\n    current_name: beta\n") {
+		t.Errorf("beta entry shape changed:\n%s", out)
+	}
+
+	// 5. ISO date for unchanged created field must not be quoted.
+	if strings.Contains(out, `created: "2026-04-01"`) {
+		t.Errorf("ISO date got quoted unnecessarily:\n%s", out)
+	}
+}
+
+// TestCatalog_Save_AppendNew_KeepsHeaderComments verifies that the new-entry
+// path through Claim (no RenamesOf) also preserves curated formatting.
+func TestCatalog_Save_AppendNew_KeepsHeaderComments(t *testing.T) {
+	src := `# Curated header
+projects:
+  - id: alpha
+    current_name: alpha
+    kind: tool
+    realm: forge
+    domain: ~
+    repo: ~
+    description: A
+    created: 2026-04-01
+    prior_names: []
+    status: active
+`
+	path := filepath.Join(t.TempDir(), "cat.yaml")
+	if err := os.WriteFile(path, []byte(src), 0o644); err != nil {
+		t.Fatalf("write src: %v", err)
+	}
+	c, err := LoadCatalog(path)
+	if err != nil {
+		t.Fatalf("load: %v", err)
+	}
+	if err := c.Claim("gamma", ClaimOpts{
+		Kind:        "tool",
+		Realm:       "signal",
+		Description: "gamma project",
+		Created:     "2026-05-08",
+		Status:      "active",
+	}); err != nil {
+		t.Fatalf("claim new: %v", err)
+	}
+	if err := c.Save(); err != nil {
+		t.Fatalf("save: %v", err)
+	}
+	got, _ := os.ReadFile(path)
+	out := string(got)
+	if !strings.Contains(out, "# Curated header") {
+		t.Errorf("header lost on append:\n%s", out)
+	}
+	if !strings.Contains(out, "id: gamma") {
+		t.Errorf("new entry not added:\n%s", out)
+	}
+	// Existing alpha must still show `domain: ~`.
+	if !strings.Contains(out, "domain: ~") {
+		t.Errorf("existing null not preserved on append:\n%s", out)
+	}
+}
