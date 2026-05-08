@@ -71,9 +71,6 @@ projects:
     prior_names: []
     status: active
     notes: Local repo only; deployed publicly via Caddy. checks.json is the source of truth for monitored URLs.
-# Migrated from ~/.claude/CLAUDE.md project table on 2026-05-07.
-# Append-only — does NOT overwrite existing curated entries.
-# Realm is set to `?` for everything not already curated; review and fix.
 
   - id: speech-to-cli
     current_name: speech-to-cli
@@ -268,14 +265,17 @@ projects:
     notes: Local only
 
   - id: realm-portal
-    current_name: realm-portal
+    current_name: portal.realm.watch
     kind: tool
     realm: forge
     domain: ~
     repo: ~
     description: Unified homelab portal (front door to LAN services) on ubox VM
     created: ~
-    prior_names: []
+    prior_names:
+      - name: realm-portal
+        retired: 2026-05-08
+        reason: Adopt *.realm.watch convention for realm-aligned projects
     status: local-only
     notes: Local only
 
@@ -970,7 +970,6 @@ projects:
     prior_names: []
     status: local-only
     notes: "Local only (no git). Personal — sensitive — **deadline-tracked**"
-# 86 new entries; 2 preserved from existing catalog.
 
   - id: jewelrycycle
     current_name: jewelrycycle
