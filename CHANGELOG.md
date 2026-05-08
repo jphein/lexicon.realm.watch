@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] — 2026-05-07
+
+The `lexicon rename` runbook actually does its job now. The first end-to-end test of `lexicon rename` (`realm-portal` → `portal.realm.watch`) surfaced four bugs and one bonus YAML serializer issue; this release fixes all five.
+
+### Fixed
+- **Catalog round-trip preserves curated formatting** (closes #5, the rename byproduct that produced a 732-line diff for a one-entry change). `Catalog.Save` now mutates the cached `*yaml.Node` tree instead of re-encoding from the typed slice, so comments, blank-line separators, and `~` (null) vs `""` (empty string) scalar styles all survive a `Claim`+`Save` cycle. A no-op round-trip against `catalog/projects.yaml` produces a 30-line diff (down from 732); residual drift is cosmetic comment relocation in two migration-historical blocks (since cleaned up).
+- **`lexicon rename` step 5 — `gh repo rename`** (closes #1). `gh` has no `-C` flag; the runbook now invokes it via `cmd.Dir` instead. Step 5 also looks up the project's `repo:` field and skips with a notice when the project has no GitHub remote, instead of failing.
+- **`lexicon rename` step 3 — package metadata sweep** (closes #2). What used to print `-> done` without doing anything now actually edits `go.mod` (module directive + matching internal imports), `package.json` (top-level `name`), `pyproject.toml` (`[project]` / `[tool.poetry]` name), and `version.json` (top-level `name`). Segment-aware: `realm-portal` matches `github.com/jphein/realm-portal` but not `foo-realm-portal-bar`. Idempotent.
+- **`lexicon rename` step 4 — CLAUDE.md sweep** (closes #3). The project's own `<projDir>/CLAUDE.md` now actually gets rewritten with the new name. The user-level `~/.claude/CLAUDE.md` table is out of scope (it no longer exists post catalog → skill migration). Cross-project CLAUDE.md sweeps remain a future "step 4b".
+
+### Added
+- **`lexicon rename --create-remote`** (closes #4). When a project has no GitHub remote and `--create-remote` is set, step 5 publishes via `gh repo create jphein/<new-name> --private --source=. --remote=origin --push` and updates the catalog's `repo:` field with the new URL. `--public` overrides the default `--private` visibility. Opt-in: existing flag-less behavior (skip when no remote) is unchanged.
+
+### Changed
+- Catalog rename `realm-portal` → `portal.realm.watch`, recorded in `prior_names` with reason "Adopt *.realm.watch convention for realm-aligned projects". This is the project that surfaced all the bugs above.
+- Dropped two stale migration banner comments from `catalog/projects.yaml` left over from v1.3.0 ("Migrated from ~/.claude/CLAUDE.md project table on 2026-05-07" and "86 new entries; 2 preserved from existing catalog"). v1.4.0 finished the classification work those banners pointed at.
+
+### Catalog totals
+- 88 projects across 7 realms (unchanged count; one rename).
+
 ## [1.4.0] — 2026-05-07
 
 The classification pass. All 86 `realm: "?"` entries from the v1.3.0 bulk migration now have real realm assignments. Catalog is fully clean — `lexicon validate` exits 0 with zero warnings.

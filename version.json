@@ -2,6 +2,6 @@
   "name": "lexicon.realm.watch",
   "description": "Names and the changing of names — the realm.watch runtime naming tool.",
   "realm": "oracle",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "repo": "https://github.com/jphein/lexicon.realm.watch"
 }
