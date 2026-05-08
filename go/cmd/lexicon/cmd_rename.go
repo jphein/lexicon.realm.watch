@@ -372,6 +372,16 @@ func stepGHRepoRename(env *renameEnv) error {
 		return err
 	}
 	fmt.Fprintf(env.stdout, "  gh: %s\n", strings.TrimSpace(string(out)))
+
+	// gh redirects the old URL, so things still work — but the catalog is the
+	// canonical record and must reflect the new URL.
+	newRepoURL := replacePathSegment(existingRepo, env.oldID, env.newName)
+	if newRepoURL != existingRepo {
+		if err := updateCatalogRepoField(env.catalogPath, env.oldID, newRepoURL); err != nil {
+			return fmt.Errorf("update catalog repo field: %w", err)
+		}
+		fmt.Fprintf(env.stdout, "  catalog repo: %s\n", newRepoURL)
+	}
 	return nil
 }
 

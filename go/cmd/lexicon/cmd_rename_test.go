@@ -499,6 +499,53 @@ func TestExecute_GHCreateRemote_UpdatesCatalogRepoField(t *testing.T) {
 	}
 }
 
+// TestExecute_GHExistingRemote_UpdatesCatalogRepoField is the issue #6
+// regression. When a project already has a GitHub remote, step 5 calls
+// `gh repo rename`. The catalog's repo: field used to keep the OLD URL —
+// gh's HTTP redirect made things still work, but the canonical record was
+// stale. After the fix it should reflect the new URL.
+func TestExecute_GHExistingRemote_UpdatesCatalogRepoField(t *testing.T) {
+	tmpCat := writeTempCatalog(t, `projects:
+  - id: realm-sigil
+    current_name: realm-sigil
+    kind: library
+    realm: forge
+    domain: ~
+    repo: https://github.com/jphein/realm-sigil
+    description: x
+    created: 2026-04-01
+    prior_names: []
+    status: active
+`)
+	fake := newFakeFS()
+	projects := "/projects"
+	fake.addDir(filepath.Join(projects, "sigil.realm.watch"))
+	fake.runOut = []byte("ok")
+
+	env := newTestEnv(t, fake, projects)
+	env.oldID = "realm-sigil"
+	env.newName = "sigil.realm.watch"
+	env.catalogPath = tmpCat
+
+	steps := buildRenameSteps()
+	if rc := executeRenamePlan(env, steps, skipAllExcept(5)); rc != 0 {
+		t.Fatalf("step 5 should succeed; stderr=%q", env.stderr.(*bytes.Buffer).String())
+	}
+
+	cat, err := lexicon.LoadCatalog(tmpCat)
+	if err != nil {
+		t.Fatalf("reload catalog: %v", err)
+	}
+	proj, ok := cat.Resolve("realm-sigil")
+	if !ok {
+		t.Fatal("project lost from catalog")
+	}
+	want := "https://github.com/jphein/sigil.realm.watch"
+	if proj.Repo != want {
+		t.Errorf("repo field stale after rename: %q (want %q)", proj.Repo, want)
+	}
+}
+
 func writeTempCatalog(t *testing.T, body string) string {
 	t.Helper()
 	p := filepath.Join(t.TempDir(), "projects.yaml")
