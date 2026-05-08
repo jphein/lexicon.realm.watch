@@ -242,6 +242,18 @@ func TestExecute_RenamesDirectoryAndCreatesSymlink(t *testing.T) {
 }
 
 func TestExecute_GHCommandRecorded(t *testing.T) {
+	tmpCat := writeTempCatalog(t, `projects:
+  - id: realmwatch
+    current_name: realmwatch
+    kind: service
+    realm: void
+    domain: ~
+    repo: https://github.com/jphein/realmwatch
+    description: x
+    created: 2025-09-01
+    prior_names: []
+    status: active
+`)
 	fake := newFakeFS()
 	projects := "/projects"
 	fake.addDir(filepath.Join(projects, "watch.realm.watch"))
@@ -250,6 +262,7 @@ func TestExecute_GHCommandRecorded(t *testing.T) {
 	env := newTestEnv(t, fake, projects)
 	env.oldID = "realmwatch"
 	env.newName = "watch.realm.watch"
+	env.catalogPath = tmpCat
 
 	steps := buildRenameSteps()
 	skip := skipAllExcept(5)
@@ -350,6 +363,139 @@ func TestExecute_GHSkipsWhenNoRemote(t *testing.T) {
 	stdout := env.stdout.(*bytes.Buffer).String()
 	if !strings.Contains(stdout, "skip") && !strings.Contains(stdout, "no remote") {
 		t.Errorf("step 5 should log a skip notice; got: %s", stdout)
+	}
+}
+
+// TestExecute_GHCreateRemote_RunsWhenFlagSet exercises issue #4: when a
+// project has no GitHub remote and --create-remote is set, step 5 invokes
+// `gh repo create` from the project dir.
+func TestExecute_GHCreateRemote_RunsWhenFlagSet(t *testing.T) {
+	tmpCat := writeTempCatalog(t, `projects:
+  - id: realm-portal
+    current_name: realm-portal
+    kind: tool
+    realm: forge
+    domain: ~
+    repo: ~
+    description: Unified homelab portal
+    created: 2026-04-01
+    prior_names: []
+    status: local-only
+`)
+	fake := newFakeFS()
+	projects := "/projects"
+	fake.addDir(filepath.Join(projects, "portal.realm.watch"))
+	fake.runOut = []byte("Created jphein/portal.realm.watch")
+
+	env := newTestEnv(t, fake, projects)
+	env.oldID = "realm-portal"
+	env.newName = "portal.realm.watch"
+	env.catalogPath = tmpCat
+	env.createRemote = true
+
+	steps := buildRenameSteps()
+	skip := skipAllExcept(5)
+	if rc := executeRenamePlan(env, steps, skip); rc != 0 {
+		t.Fatalf("step 5 should succeed; stderr=%q", env.stderr.(*bytes.Buffer).String())
+	}
+	if len(fake.commands) != 1 {
+		t.Fatalf("expected 1 gh invocation; got %d: %v", len(fake.commands), fake.commands)
+	}
+	cmd := fake.commands[0]
+	if !contains(cmd, "create") || !contains(cmd, "jphein/portal.realm.watch") {
+		t.Errorf("expected gh repo create jphein/portal.realm.watch …; got %v", cmd)
+	}
+	if !contains(cmd, "--private") {
+		t.Errorf("expected default visibility --private; got %v", cmd)
+	}
+	if !contains(cmd, "--source=.") || !contains(cmd, "--push") {
+		t.Errorf("expected --source=. --push; got %v", cmd)
+	}
+	if want := filepath.Join(projects, "portal.realm.watch"); fake.cmdDirs[0] != want {
+		t.Errorf("gh should run from %q; got %q", want, fake.cmdDirs[0])
+	}
+}
+
+func TestExecute_GHCreateRemote_PublicFlag(t *testing.T) {
+	tmpCat := writeTempCatalog(t, `projects:
+  - id: realm-portal
+    current_name: realm-portal
+    kind: tool
+    realm: forge
+    domain: ~
+    repo: ~
+    description: x
+    created: 2026-04-01
+    prior_names: []
+    status: local-only
+`)
+	fake := newFakeFS()
+	projects := "/projects"
+	fake.addDir(filepath.Join(projects, "portal.realm.watch"))
+	fake.runOut = []byte("Created")
+
+	env := newTestEnv(t, fake, projects)
+	env.oldID = "realm-portal"
+	env.newName = "portal.realm.watch"
+	env.catalogPath = tmpCat
+	env.createRemote = true
+	env.publicRemote = true
+
+	steps := buildRenameSteps()
+	if rc := executeRenamePlan(env, steps, skipAllExcept(5)); rc != 0 {
+		t.Fatalf("step 5 failed; stderr=%q", env.stderr.(*bytes.Buffer).String())
+	}
+	cmd := fake.commands[0]
+	if !contains(cmd, "--public") {
+		t.Errorf("expected --public; got %v", cmd)
+	}
+	if contains(cmd, "--private") {
+		t.Errorf("--private should not appear when --public set; got %v", cmd)
+	}
+}
+
+// TestExecute_GHCreateRemote_UpdatesCatalogRepoField verifies that after gh
+// repo create succeeds, the catalog's repo: field is populated so subsequent
+// runs (or step 9's record) treats the project as having a remote.
+func TestExecute_GHCreateRemote_UpdatesCatalogRepoField(t *testing.T) {
+	tmpCat := writeTempCatalog(t, `projects:
+  - id: realm-portal
+    current_name: realm-portal
+    kind: tool
+    realm: forge
+    domain: ~
+    repo: ~
+    description: x
+    created: 2026-04-01
+    prior_names: []
+    status: local-only
+`)
+	fake := newFakeFS()
+	projects := "/projects"
+	fake.addDir(filepath.Join(projects, "portal.realm.watch"))
+	fake.runOut = []byte("Created")
+
+	env := newTestEnv(t, fake, projects)
+	env.oldID = "realm-portal"
+	env.newName = "portal.realm.watch"
+	env.catalogPath = tmpCat
+	env.createRemote = true
+
+	steps := buildRenameSteps()
+	if rc := executeRenamePlan(env, steps, skipAllExcept(5)); rc != 0 {
+		t.Fatalf("step 5 failed; stderr=%q", env.stderr.(*bytes.Buffer).String())
+	}
+	cat, err := lexicon.LoadCatalog(tmpCat)
+	if err != nil {
+		t.Fatalf("reload catalog: %v", err)
+	}
+	proj, ok := cat.Resolve("realm-portal")
+	if !ok {
+		t.Fatal("project lost from catalog")
+	}
+	want := "https://github.com/jphein/portal.realm.watch"
+	if proj.Repo != want {
+		t.Errorf("repo not updated: %q (want %q)", proj.Repo, want)
 	}
 }
 

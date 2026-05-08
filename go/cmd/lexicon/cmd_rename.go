@@ -52,17 +52,19 @@ type renameStep struct {
 
 // renameEnv carries the context shared across steps in --execute mode.
 type renameEnv struct {
-	oldID         string
-	newName       string
-	projectsDir   string // default: ~/Projects
-	sessionsDir   string // default: ~/.claude/projects
-	catalogPath   string
-	reason        string
-	fs            renameFS
-	stdout        io.Writer
-	stderr        io.Writer
-	confirm       func(prompt string) bool
-	now           func() string
+	oldID        string
+	newName      string
+	projectsDir  string // default: ~/Projects
+	sessionsDir  string // default: ~/.claude/projects
+	catalogPath  string
+	reason       string
+	createRemote bool // --create-remote: publish projects with no GitHub remote
+	publicRemote bool // --public: visibility for newly-created remote (default private)
+	fs           renameFS
+	stdout       io.Writer
+	stderr       io.Writer
+	confirm      func(prompt string) bool
+	now          func() string
 }
 
 func cmdRename(args []string, stdout, stderr io.Writer) int {
@@ -78,6 +80,8 @@ func cmdRename(args []string, stdout, stderr io.Writer) int {
 	projectsDir := fs.String("projects-dir", "", "override ~/Projects (mainly for tests)")
 	sessionsDir := fs.String("sessions-dir", "", "override ~/.claude/projects (mainly for tests)")
 	reason := fs.String("reason", "", "reason text attached to the prior_name record (step 9)")
+	createRemote := fs.Bool("create-remote", false, "publish to GitHub when project has no remote (step 5)")
+	publicRemote := fs.Bool("public", false, "create the new remote as public (default: private)")
 
 	// Allow positionals before/after flags.
 	var positional []string
@@ -116,16 +120,18 @@ func cmdRename(args []string, stdout, stderr io.Writer) int {
 	}
 
 	env := &renameEnv{
-		oldID:       positional[0],
-		newName:     positional[1],
-		projectsDir: *projectsDir,
-		sessionsDir: *sessionsDir,
-		catalogPath: resolveCatalogPath(*catalog),
-		reason:      *reason,
-		fs:          osRenameFS{},
-		stdout:      stdout,
-		stderr:      stderr,
-		confirm:     stdinConfirm(stdout, *yes),
+		oldID:        positional[0],
+		newName:      positional[1],
+		projectsDir:  *projectsDir,
+		sessionsDir:  *sessionsDir,
+		catalogPath:  resolveCatalogPath(*catalog),
+		reason:       *reason,
+		createRemote: *createRemote,
+		publicRemote: *publicRemote,
+		fs:           osRenameFS{},
+		stdout:       stdout,
+		stderr:       stderr,
+		confirm:      stdinConfirm(stdout, *yes),
 	}
 	if env.projectsDir == "" {
 		home, _ := os.UserHomeDir()
@@ -315,30 +321,74 @@ func stepClaudeMD(env *renameEnv) error {
 	return nil
 }
 
+// ghOwner is the GitHub account used by `gh repo create`. JP-specific.
+const ghOwner = "jphein"
+
 func stepGHRepoRename(env *renameEnv) error {
-	// Skip if catalog says this project has no GitHub remote — `gh repo
-	// rename` would otherwise fail. The catalog is the source of truth here;
-	// we look up by the immutable id (env.oldID) regardless of whether step
-	// 9 has already updated current_name.
+	cwd := filepath.Join(env.projectsDir, env.newName)
+
+	// Look up existing remote in the catalog. Lookup is by the immutable id
+	// regardless of whether step 9 has already updated current_name.
+	existingRepo := ""
 	if env.catalogPath != "" {
-		cat, err := lexicon.LoadCatalog(env.catalogPath)
-		if err == nil {
-			if proj, ok := cat.Resolve(env.oldID); ok && proj.Repo == "" {
-				fmt.Fprintf(env.stdout, "  skipped: %s has no GitHub remote (catalog repo: ~)\n", env.oldID)
-				return nil
+		if cat, err := lexicon.LoadCatalog(env.catalogPath); err == nil {
+			if proj, ok := cat.Resolve(env.oldID); ok {
+				existingRepo = proj.Repo
 			}
 		}
 	}
-	cwd := filepath.Join(env.projectsDir, env.newName)
-	// gh has no -C flag — must be invoked with the project as cwd.
+
+	if existingRepo == "" {
+		if !env.createRemote {
+			fmt.Fprintf(env.stdout,
+				"  skipped: %s has no GitHub remote (catalog repo: ~). Re-run with --create-remote to publish.\n",
+				env.oldID)
+			return nil
+		}
+		ghFullName := ghOwner + "/" + env.newName
+		visFlag := "--private"
+		if env.publicRemote {
+			visFlag = "--public"
+		}
+		args := []string{"repo", "create", ghFullName, visFlag, "--source=.", "--remote=origin", "--push"}
+		out, err := env.fs.RunInDir(cwd, "gh", args...)
+		if err != nil {
+			fmt.Fprintf(env.stderr, "  gh output: %s\n", strings.TrimSpace(string(out)))
+			return err
+		}
+		fmt.Fprintf(env.stdout, "  gh repo create: %s\n", strings.TrimSpace(string(out)))
+		repoURL := "https://github.com/" + ghFullName
+		if err := updateCatalogRepoField(env.catalogPath, env.oldID, repoURL); err != nil {
+			return fmt.Errorf("update catalog repo field: %w", err)
+		}
+		fmt.Fprintf(env.stdout, "  catalog repo: %s\n", repoURL)
+		return nil
+	}
+
+	// Existing remote — rename it. gh has no -C flag — invoke with cwd set.
 	out, err := env.fs.RunInDir(cwd, "gh", "repo", "rename", env.newName, "--yes")
 	if err != nil {
-		// Echo gh's output so the operator can see why (missing auth, already renamed).
 		fmt.Fprintf(env.stderr, "  gh output: %s\n", strings.TrimSpace(string(out)))
 		return err
 	}
 	fmt.Fprintf(env.stdout, "  gh: %s\n", strings.TrimSpace(string(out)))
 	return nil
+}
+
+func updateCatalogRepoField(catalogPath, projID, repoURL string) error {
+	if catalogPath == "" {
+		return nil
+	}
+	cat, err := lexicon.LoadCatalog(catalogPath)
+	if err != nil {
+		return err
+	}
+	proj, ok := cat.Resolve(projID)
+	if !ok {
+		return fmt.Errorf("project %q not found in catalog", projID)
+	}
+	proj.Repo = repoURL
+	return cat.Save()
 }
 
 func stepDNSReminder(env *renameEnv) error {

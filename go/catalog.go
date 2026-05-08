@@ -182,15 +182,31 @@ func mappingScalarValue(m *yaml.Node, key string) string {
 // have mutated since load. Everything else stays verbatim.
 func updateProjectMapping(m *yaml.Node, p *Project) {
 	setScalar(m, "current_name", p.CurrentName)
+	setScalar(m, "repo", p.Repo)
 	setPriorNames(m, p.PriorNames)
 }
 
+// setScalar updates the scalar at key when its on-disk value differs from
+// `value`. Existing `~` (null) and "" are treated equivalently for the
+// equality check, so no spurious diff appears for unchanged null fields.
+// When the new value is empty, the scalar is emitted as `~` to match the
+// project's convention for absent optional fields.
 func setScalar(m *yaml.Node, key, value string) {
 	for i := 0; i+1 < len(m.Content); i += 2 {
 		if m.Content[i].Value == key {
 			v := m.Content[i+1]
-			v.Value = value
-			if value != "" && v.Tag == "!!null" {
+			existing := v.Value
+			if v.Tag == "!!null" {
+				existing = ""
+			}
+			if existing == value {
+				return
+			}
+			if value == "" {
+				v.Value = "~"
+				v.Tag = "!!null"
+			} else {
+				v.Value = value
 				v.Tag = ""
 			}
 			return
