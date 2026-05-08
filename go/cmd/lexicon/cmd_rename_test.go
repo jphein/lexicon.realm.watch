@@ -22,6 +22,7 @@ import (
 type fakeFS struct {
 	entries  map[string]fakeEntry // path -> entry
 	commands [][]string           // recorded fs.Run invocations
+	cmdDirs  []string             // working dir captured for each Run / RunInDir call
 	runErr   error
 	runOut   []byte
 }
@@ -84,6 +85,13 @@ func (f *fakeFS) Symlink(target, link string) error {
 
 func (f *fakeFS) Run(name string, args ...string) ([]byte, error) {
 	f.commands = append(f.commands, append([]string{name}, args...))
+	f.cmdDirs = append(f.cmdDirs, "")
+	return f.runOut, f.runErr
+}
+
+func (f *fakeFS) RunInDir(dir, name string, args ...string) ([]byte, error) {
+	f.commands = append(f.commands, append([]string{name}, args...))
+	f.cmdDirs = append(f.cmdDirs, dir)
 	return f.runOut, f.runErr
 }
 
@@ -259,6 +267,99 @@ func TestExecute_GHCommandRecorded(t *testing.T) {
 	if !contains(cmd, "rename") || !contains(cmd, "watch.realm.watch") {
 		t.Errorf("gh command missing rename or new name: %v", cmd)
 	}
+}
+
+// TestExecute_GHCommandHasNoCFlag is a regression test for issue #1: gh
+// has no -C flag. The runbook used to invoke `gh -C <dir> repo rename …`
+// which fails on every invocation. It must use cmd.Dir / RunInDir instead.
+func TestExecute_GHCommandHasNoCFlag(t *testing.T) {
+	tmpCat := writeTempCatalog(t, `projects:
+  - id: realmwatch
+    current_name: realmwatch
+    kind: service
+    realm: void
+    domain: ~
+    repo: https://github.com/jphein/realmwatch
+    description: x
+    created: 2025-09-01
+    prior_names: []
+    status: active
+`)
+	fake := newFakeFS()
+	projects := "/projects"
+	fake.addDir(filepath.Join(projects, "watch.realm.watch"))
+	fake.runOut = []byte("ok")
+
+	env := newTestEnv(t, fake, projects)
+	env.oldID = "realmwatch"
+	env.newName = "watch.realm.watch"
+	env.catalogPath = tmpCat
+
+	steps := buildRenameSteps()
+	skip := skipAllExcept(5)
+	if rc := executeRenamePlan(env, steps, skip); rc != 0 {
+		t.Fatalf("step 5 should succeed; stderr=%q", env.stderr.(*bytes.Buffer).String())
+	}
+	if len(fake.commands) != 1 {
+		t.Fatalf("expected 1 command, got %d: %v", len(fake.commands), fake.commands)
+	}
+	cmd := fake.commands[0]
+	if contains(cmd, "-C") {
+		t.Errorf("gh command must not include unsupported -C flag: %v", cmd)
+	}
+	if want := filepath.Join(projects, "watch.realm.watch"); fake.cmdDirs[0] != want {
+		t.Errorf("gh should run with cwd=%q; got %q", want, fake.cmdDirs[0])
+	}
+}
+
+// TestExecute_GHSkipsWhenNoRemote is a regression test for issue #1: when
+// a project has no GitHub remote (catalog `repo:` is empty), step 5 should
+// log a skip and return nil rather than attempting `gh repo rename` and
+// failing.
+func TestExecute_GHSkipsWhenNoRemote(t *testing.T) {
+	tmpCat := writeTempCatalog(t, `projects:
+  - id: realm-portal
+    current_name: realm-portal
+    kind: tool
+    realm: forge
+    domain: ~
+    repo: ~
+    description: x
+    created: 2026-04-01
+    prior_names: []
+    status: local-only
+`)
+	fake := newFakeFS()
+	projects := "/projects"
+	fake.addDir(filepath.Join(projects, "portal.realm.watch"))
+
+	env := newTestEnv(t, fake, projects)
+	env.oldID = "realm-portal"
+	env.newName = "portal.realm.watch"
+	env.catalogPath = tmpCat
+
+	steps := buildRenameSteps()
+	skip := skipAllExcept(5)
+	rc := executeRenamePlan(env, steps, skip)
+	if rc != 0 {
+		t.Fatalf("step 5 should not error when no remote; stderr=%q", env.stderr.(*bytes.Buffer).String())
+	}
+	if len(fake.commands) != 0 {
+		t.Errorf("gh must not run when project has no remote; commands=%v", fake.commands)
+	}
+	stdout := env.stdout.(*bytes.Buffer).String()
+	if !strings.Contains(stdout, "skip") && !strings.Contains(stdout, "no remote") {
+		t.Errorf("step 5 should log a skip notice; got: %s", stdout)
+	}
+}
+
+func writeTempCatalog(t *testing.T, body string) string {
+	t.Helper()
+	p := filepath.Join(t.TempDir(), "projects.yaml")
+	if err := os.WriteFile(p, []byte(body), 0o644); err != nil {
+		t.Fatalf("write tmp catalog: %v", err)
+	}
+	return p
 }
 
 func TestExecute_LexiconClaimUpdatesCatalog(t *testing.T) {

@@ -22,16 +22,22 @@ type renameFS interface {
 	Symlink(oldname, newname string) error
 	Lstat(path string) (os.FileInfo, error)
 	Run(name string, args ...string) ([]byte, error)
+	RunInDir(dir, name string, args ...string) ([]byte, error)
 }
 
 type osRenameFS struct{}
 
-func (osRenameFS) Stat(p string) (os.FileInfo, error) { return os.Stat(p) }
-func (osRenameFS) Rename(o, n string) error           { return os.Rename(o, n) }
-func (osRenameFS) Symlink(o, n string) error          { return os.Symlink(o, n) }
+func (osRenameFS) Stat(p string) (os.FileInfo, error)  { return os.Stat(p) }
+func (osRenameFS) Rename(o, n string) error            { return os.Rename(o, n) }
+func (osRenameFS) Symlink(o, n string) error           { return os.Symlink(o, n) }
 func (osRenameFS) Lstat(p string) (os.FileInfo, error) { return os.Lstat(p) }
 func (osRenameFS) Run(name string, args ...string) ([]byte, error) {
 	return exec.Command(name, args...).CombinedOutput()
+}
+func (osRenameFS) RunInDir(dir, name string, args ...string) ([]byte, error) {
+	cmd := exec.Command(name, args...)
+	cmd.Dir = dir
+	return cmd.CombinedOutput()
 }
 
 // renameStep is one item in the 10-step runbook.
@@ -295,10 +301,24 @@ func stepClaudeMDReminder(env *renameEnv) error {
 }
 
 func stepGHRepoRename(env *renameEnv) error {
+	// Skip if catalog says this project has no GitHub remote — `gh repo
+	// rename` would otherwise fail. The catalog is the source of truth here;
+	// we look up by the immutable id (env.oldID) regardless of whether step
+	// 9 has already updated current_name.
+	if env.catalogPath != "" {
+		cat, err := lexicon.LoadCatalog(env.catalogPath)
+		if err == nil {
+			if proj, ok := cat.Resolve(env.oldID); ok && proj.Repo == "" {
+				fmt.Fprintf(env.stdout, "  skipped: %s has no GitHub remote (catalog repo: ~)\n", env.oldID)
+				return nil
+			}
+		}
+	}
 	cwd := filepath.Join(env.projectsDir, env.newName)
-	out, err := env.fs.Run("gh", "-C", cwd, "repo", "rename", env.newName, "--yes")
+	// gh has no -C flag — must be invoked with the project as cwd.
+	out, err := env.fs.RunInDir(cwd, "gh", "repo", "rename", env.newName, "--yes")
 	if err != nil {
-		// Echo gh's output so the operator can see why (no remote, missing auth, already renamed).
+		// Echo gh's output so the operator can see why (missing auth, already renamed).
 		fmt.Fprintf(env.stderr, "  gh output: %s\n", strings.TrimSpace(string(out)))
 		return err
 	}
