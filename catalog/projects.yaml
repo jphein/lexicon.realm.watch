@@ -14,6 +14,7 @@ projects:
     created: 2026-04-23
     prior_names: []
     status: active
+    notes:
 
   - id: dark
     current_name: dark.realm.watch
@@ -26,6 +27,7 @@ projects:
     created: 2026-04-15
     prior_names: []
     status: active
+    notes:
 
   - id: realm-sigil
     current_name: sigil.realm.watch
@@ -54,6 +56,7 @@ projects:
     created: 2026-04-26
     prior_names: []
     status: active
+    notes:
 
   - id: realmwatch
     current_name: realmwatch
@@ -92,6 +95,7 @@ projects:
     created: ~
     prior_names: []
     status: active
+    notes:
 
   - id: claude-code-switcher
     current_name: claude-code-switcher
@@ -104,6 +108,7 @@ projects:
     created: ~
     prior_names: []
     status: active
+    notes:
 
   - id: cloud-chat-assistant
     current_name: cloud-chat-assistant
@@ -116,6 +121,7 @@ projects:
     created: ~
     prior_names: []
     status: active
+    notes:
 
   - id: artcardsv5
     current_name: artcardsv5
@@ -128,6 +134,7 @@ projects:
     created: ~
     prior_names: []
     status: active
+    notes:
 
   - id: dreamspace
     current_name: dreamspace
@@ -140,6 +147,7 @@ projects:
     created: ~
     prior_names: []
     status: active
+    notes:
 
   - id: hostname-badge
     current_name: hostname-badge
@@ -152,6 +160,7 @@ projects:
     created: ~
     prior_names: []
     status: active
+    notes:
 
   - id: techempower
     current_name: techempower
@@ -164,6 +173,7 @@ projects:
     created: ~
     prior_names: []
     status: active
+    notes:
 
   - id: unshuffled
     current_name: unshuffled
@@ -176,6 +186,7 @@ projects:
     created: ~
     prior_names: []
     status: active
+    notes:
 
   - id: opus
     current_name: opus
@@ -188,17 +199,21 @@ projects:
     created: ~
     prior_names: []
     status: active
+    notes:
 
   - id: portfolio
-    current_name: portfolio
+    current_name: portfolio.realm.watch
     kind: tool
     realm: fantasy
     audience: realm
     domain: ~
-    repo: ~
+    repo: https://github.com/jphein/portfolio.realm.watch
     description: "Fantasy-themed portfolio with AI creatures, constellation map"
     created: ~
-    prior_names: []
+    prior_names:
+      - name: portfolio
+        retired: 2026-05-08
+        reason: Adopt *.realm.watch convention for realm-aligned projects
     status: active
     notes: "[Live](https://portfolio.jphe.in), private repo"
 
@@ -242,6 +257,7 @@ projects:
     created: ~
     prior_names: []
     status: active
+    notes:
 
   - id: claudedoublehours
     current_name: claudedoublehours
@@ -254,6 +270,7 @@ projects:
     created: ~
     prior_names: []
     status: active
+    notes:
 
   - id: gnome-shell-monitor
     current_name: gnome-shell-monitor
@@ -279,6 +296,7 @@ projects:
     created: ~
     prior_names: []
     status: active
+    notes:
 
   - id: disks
     current_name: disks
@@ -388,6 +406,7 @@ projects:
     created: ~
     prior_names: []
     status: active
+    notes:
 
   - id: realm-optimizer
     current_name: realm-optimizer
@@ -426,6 +445,7 @@ projects:
     created: ~
     prior_names: []
     status: active
+    notes:
 
   - id: obs-plugins
     current_name: obs-plugins
@@ -717,6 +737,7 @@ projects:
     created: ~
     prior_names: []
     status: active
+    notes:
 
   - id: imaginalvision.com
     current_name: imaginalvision.com
@@ -885,6 +906,7 @@ projects:
     created: ~
     prior_names: []
     status: active
+    notes:
 
   - id: streaming
     current_name: streaming
