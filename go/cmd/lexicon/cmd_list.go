@@ -15,6 +15,7 @@ func cmdList(args []string, stdout, stderr io.Writer) int {
 	realm := fs.String("realm", "", "filter by realm")
 	kind := fs.String("kind", "", "filter by kind")
 	status := fs.String("status", "", "filter by status")
+	audience := fs.String("audience", "", "filter by audience (realm | personal | external | fork)")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
@@ -33,12 +34,19 @@ func cmdList(args []string, stdout, stderr io.Writer) int {
 		if *status != "" && p.Status != *status {
 			continue
 		}
+		if *audience != "" && lexicon.InferAudience(p) != *audience {
+			continue
+		}
 		desc := p.Description
 		if desc == "" {
 			desc = "(no description)"
 		}
-		fmt.Fprintf(stdout, "%-15s %-30s [%s/%s/%s]  %s\n",
-			p.ID, p.CurrentName, p.Kind, p.Realm, p.Status, desc)
+		aud := lexicon.InferAudience(p)
+		if aud == "" {
+			aud = "?"
+		}
+		fmt.Fprintf(stdout, "%-15s %-30s [%s/%s/%s/%s]  %s\n",
+			p.ID, p.CurrentName, p.Kind, p.Realm, aud, p.Status, desc)
 	}
 	return 0
 }

@@ -47,6 +47,17 @@ func TestLoadCatalog_NullableFields(t *testing.T) {
 	}
 }
 
+func TestLoadCatalog_AudienceParsed(t *testing.T) {
+	c := loadTestCatalog(t)
+	if got := c.Projects[0].Audience; got != "realm" {
+		t.Errorf("clock.audience = %q, want %q", got, "realm")
+	}
+	// dreamspace and realmwatch fixtures don't set audience → empty.
+	if got := c.Projects[1].Audience; got != "" {
+		t.Errorf("dreamspace.audience = %q, want empty (not set in fixture)", got)
+	}
+}
+
 func TestLoadCatalog_Missing(t *testing.T) {
 	_, err := LoadCatalog("/no/such.yaml")
 	if err == nil {

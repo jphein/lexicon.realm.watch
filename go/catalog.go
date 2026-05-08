@@ -15,6 +15,7 @@ type Project struct {
 	CurrentName string      `yaml:"current_name"`
 	Kind        string      `yaml:"kind"`
 	Realm       string      `yaml:"realm"`
+	Audience    string      `yaml:"audience,omitempty"`
 	Domain      string      `yaml:"domain"`
 	Repo        string      `yaml:"repo"`
 	Description string      `yaml:"description"`
@@ -182,6 +183,7 @@ func mappingScalarValue(m *yaml.Node, key string) string {
 // have mutated since load. Everything else stays verbatim.
 func updateProjectMapping(m *yaml.Node, p *Project) {
 	setScalar(m, "current_name", p.CurrentName)
+	setScalar(m, "audience", p.Audience)
 	setScalar(m, "repo", p.Repo)
 	setScalar(m, "notes", p.Notes)
 	setPriorNames(m, p.PriorNames)
@@ -297,6 +299,9 @@ func newProjectMapping(p *Project) *yaml.Node {
 	appendKV(m, "current_name", p.CurrentName)
 	appendKV(m, "kind", p.Kind)
 	appendKV(m, "realm", p.Realm)
+	if p.Audience != "" {
+		appendKV(m, "audience", p.Audience)
+	}
 	appendNullableKV(m, "domain", p.Domain)
 	appendNullableKV(m, "repo", p.Repo)
 	appendKV(m, "description", p.Description)

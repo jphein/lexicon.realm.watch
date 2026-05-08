@@ -1,6 +1,9 @@
 package lexicon
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 // Severity classifies a validation finding. "error" means the catalog is
 // broken; "warning" means it's intentional-pending and should be visible
@@ -66,6 +69,27 @@ func Validate(cat *Catalog, v *Vocabulary, rb *RecipeBook) []Issue {
 		}
 	}
 
+	// Catalog: warn when audience is unset and the default-inference rules can't
+	// resolve it. A *.realm.watch suffix → realm; a fork-kind project → fork;
+	// otherwise the operator must classify by hand. See
+	// docs/superpowers/specs/2026-05-08-audience-classification.md.
+	if cat != nil {
+		for _, p := range cat.Projects {
+			if p.Audience != "" {
+				continue
+			}
+			if InferAudience(p) != "" {
+				continue
+			}
+			issues = append(issues, Issue{
+				Severity: SeverityWarning,
+				Code:     "pending_audience",
+				Subject:  p.ID,
+				Detail:   "audience unset and not inferable — set audience: realm | personal | external | fork",
+			})
+		}
+	}
+
 	// Recipes: every source must resolve to a non-empty group.
 	if rb != nil && v != nil {
 		for name, r := range rb.recipes {
@@ -85,4 +109,27 @@ func Validate(cat *Catalog, v *Vocabulary, rb *RecipeBook) []Issue {
 	}
 
 	return issues
+}
+
+// InferAudience returns the audience implied by a project's other fields, or
+// "" when no rule fires. Rules:
+//   - explicit Audience wins
+//   - kind == "fork" → "fork"
+//   - current_name suffix .realm.watch → "realm"
+//
+// Callers (renderers, filters) treat "" as "unclassified".
+func InferAudience(p *Project) string {
+	if p == nil {
+		return ""
+	}
+	if p.Audience != "" {
+		return p.Audience
+	}
+	if p.Kind == "fork" {
+		return "fork"
+	}
+	if strings.HasSuffix(p.CurrentName, ".realm.watch") {
+		return "realm"
+	}
+	return ""
 }

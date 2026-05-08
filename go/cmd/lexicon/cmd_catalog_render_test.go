@@ -11,38 +11,48 @@ import (
 )
 
 // fixtureCatalog returns a small in-memory catalog spanning the well-known
-// status groups so the formatter exercises grouping, ordering, and optional
-// fields without depending on the live catalog/projects.yaml.
+// audience and status groups so the formatter exercises grouping, ordering,
+// and optional fields without depending on the live catalog/projects.yaml.
 func fixtureCatalog() *lexicon.Catalog {
 	return &lexicon.Catalog{
 		Path: "fixture",
 		Projects: []*lexicon.Project{
 			{
 				ID: "alpha", CurrentName: "alpha.realm.watch",
-				Kind: "realm-tool", Realm: "oracle", Status: "active",
+				Kind: "realm-tool", Realm: "oracle", Audience: "realm", Status: "active",
 				Description: "First fixture project.",
 				Repo:        "https://github.com/jphein/alpha",
 			},
 			{
-				ID: "zeta", CurrentName: "zeta",
-				Kind: "library", Realm: "signal", Status: "active",
+				ID: "zeta", CurrentName: "zeta.realm.watch",
+				Kind: "library", Realm: "signal", Audience: "realm", Status: "active",
 				Description: "Library that sorts after alpha.",
 			},
 			{
 				ID: "homelab", CurrentName: "homelab",
-				Kind: "service", Realm: "void", Status: "local-only",
+				Kind: "service", Realm: "void", Audience: "personal", Status: "local-only",
 				Description: "LAN-only service.",
 				Notes:       "Lives on disks.",
 			},
 			{
 				ID: "old-thing", CurrentName: "old-thing",
-				Kind: "tool", Realm: "forge", Status: "archived",
+				Kind: "tool", Realm: "forge", Audience: "personal", Status: "archived",
 				Description: "",
+			},
+			{
+				ID: "donkeyco", CurrentName: "donkeyco",
+				Kind: "site", Realm: "signal", Audience: "external", Status: "active",
+				Description: "Family site.",
+			},
+			{
+				ID: "gstack", CurrentName: "gstack",
+				Kind: "fork", Realm: "signal", Status: "active",
+				Description: "Upstream tooling fork.",
 			},
 			{
 				ID: "mystery", CurrentName: "mystery",
 				Kind: "tool", Realm: "?", Status: "experimental",
-				Description: "Unknown realm — exercises pass-through statuses.",
+				Description: "Unclassified — no audience set.",
 			},
 		},
 	}
@@ -56,16 +66,18 @@ func TestCatalogRender_SkillOutput(t *testing.T) {
 		"description: Use to look up JP's projects",
 		"# Project Catalog\n",
 		"## How to read\n",
-		"## Projects (active)\n",
-		"## Projects (local-only)\n",
-		"## Projects (archived)\n",
-		"## Projects (experimental)\n",
+		"## Realm-watch family (active)\n",
+		"## Personal services & homelab (local-only)\n",
+		"## Personal services & homelab (archived)\n",
+		"## Standalone brands (active)\n",
+		"## Forks (active)\n",
+		"## Unclassified (experimental)\n",
 		"### alpha (`alpha.realm.watch`)",
 		"- **Path:** `~/Projects/alpha.realm.watch/`",
 		"- **Kind:** realm-tool · **Realm:** oracle · **Status:** active",
 		"- First fixture project.",
 		"- Repo: <https://github.com/jphein/alpha>",
-		"### zeta\n",
+		"### zeta (`zeta.realm.watch`)",
 		"### homelab\n",
 		"- Notes: Lives on disks.",
 		"**Realm:** —", // realm "?" passes through valueOrDash
@@ -79,8 +91,12 @@ func TestCatalogRender_SkillOutput(t *testing.T) {
 	alphaIdx := strings.Index(got, "### alpha")
 	zetaIdx := strings.Index(got, "### zeta")
 	homelabIdx := strings.Index(got, "### homelab")
-	if !(alphaIdx < zetaIdx && zetaIdx < homelabIdx) {
-		t.Errorf("expected order alpha → zeta → homelab; got positions %d/%d/%d", alphaIdx, zetaIdx, homelabIdx)
+	donkeyIdx := strings.Index(got, "### donkeyco")
+	gstackIdx := strings.Index(got, "### gstack")
+	mysteryIdx := strings.Index(got, "### mystery")
+	if !(alphaIdx < zetaIdx && zetaIdx < homelabIdx && homelabIdx < donkeyIdx && donkeyIdx < gstackIdx && gstackIdx < mysteryIdx) {
+		t.Errorf("expected order realm(alpha,zeta) → personal(homelab) → external(donkeyco) → fork(gstack) → unclassified(mystery); got %d/%d/%d/%d/%d/%d",
+			alphaIdx, zetaIdx, homelabIdx, donkeyIdx, gstackIdx, mysteryIdx)
 	}
 
 	if strings.Contains(got, "Repo: <~>") {
@@ -99,20 +115,25 @@ func TestCatalogRender_SkillEmptyCatalog(t *testing.T) {
 	}
 }
 
-func TestCatalogRender_SkillStatusGroupOrder(t *testing.T) {
+func TestCatalogRender_SkillAudienceGroupOrder(t *testing.T) {
 	cat := fixtureCatalog()
 	got := string(renderSkill(cat))
+	// Order must be audience-major (realm, personal, external, fork,
+	// unclassified) and status-minor (active, local-only, archived,
+	// then any custom statuses alphabetically) within each audience.
 	groups := []string{
-		"## Projects (active)",
-		"## Projects (local-only)",
-		"## Projects (archived)",
-		"## Projects (experimental)",
+		"## Realm-watch family (active)",
+		"## Personal services & homelab (local-only)",
+		"## Personal services & homelab (archived)",
+		"## Standalone brands (active)",
+		"## Forks (active)",
+		"## Unclassified (experimental)",
 	}
 	last := -1
 	for _, g := range groups {
 		idx := strings.Index(got, g)
 		if idx == -1 {
-			t.Errorf("missing group header %q", g)
+			t.Errorf("missing group header %q\n--- output ---\n%s", g, got)
 			continue
 		}
 		if idx <= last {
@@ -133,9 +154,9 @@ func TestCatalogRender_MDTable(t *testing.T) {
 	wantLines := []string{
 		"| **alpha.realm.watch** | First fixture project. | — | [GitHub](https://github.com/jphein/alpha); Realm: oracle |",
 		"| **homelab** | LAN-only service. | — | Realm: void; Lives on disks. |",
-		"| **mystery** | Unknown realm — exercises pass-through statuses. | — | — |",
+		"| **mystery** | Unclassified — no audience set. | — | — |",
 		"| **old-thing** | — | — | Realm: forge |",
-		"| **zeta** | Library that sorts after alpha. | — | Realm: signal |",
+		"| **zeta.realm.watch** | Library that sorts after alpha. | — | Realm: signal |",
 	}
 	for _, want := range wantLines {
 		if !strings.Contains(got, want) {
@@ -145,7 +166,7 @@ func TestCatalogRender_MDTable(t *testing.T) {
 
 	alphaIdx := strings.Index(got, "| **alpha.realm.watch** |")
 	homelabIdx := strings.Index(got, "| **homelab** |")
-	zetaIdx := strings.Index(got, "| **zeta** |")
+	zetaIdx := strings.Index(got, "| **zeta.realm.watch** |")
 	if !(alphaIdx < homelabIdx && homelabIdx < zetaIdx) {
 		t.Errorf("md-table not sorted by current_name (alpha→homelab→zeta); got %d/%d/%d", alphaIdx, homelabIdx, zetaIdx)
 	}

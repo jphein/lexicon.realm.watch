@@ -3,6 +3,7 @@ projects:
     current_name: clock.realm.watch
     kind: realm-tool
     realm: signal
+    audience: realm
     domain: clock.realm.watch
     repo: https://github.com/jphein/clock.realm.watch
     description: A clock for an AI that doesn't have one.

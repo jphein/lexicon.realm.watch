@@ -28,7 +28,8 @@ func TestValidate_LiveDataPasses(t *testing.T) {
 
 func TestValidate_PendingRealmIsWarning(t *testing.T) {
 	cat := &Catalog{Projects: []*Project{
-		{ID: "needs-classification", CurrentName: "needs-classification", Realm: PendingRealm},
+		// Audience set so we isolate the realm warning under test.
+		{ID: "needs-classification", CurrentName: "needs-classification", Realm: PendingRealm, Audience: "personal"},
 	}}
 	v := &Vocabulary{categories: map[string]map[string]vocabGroup{
 		"realms": {"fantasy": {Words: []string{"a"}}},
@@ -60,6 +61,59 @@ func TestValidate_DetectsMissingRealm(t *testing.T) {
 	}
 	if !found {
 		t.Errorf("expected unknown_realm issue, got %v", issues)
+	}
+}
+
+func TestValidate_PendingAudienceIsWarning(t *testing.T) {
+	cat := &Catalog{Projects: []*Project{
+		// No audience, no realm.watch suffix, not a fork → should warn.
+		{ID: "speech-to-cli", CurrentName: "speech-to-cli", Realm: "signal", Kind: "tool"},
+		// Realm.watch suffix → inferred → no warning.
+		{ID: "clock", CurrentName: "clock.realm.watch", Realm: "signal", Kind: "realm-tool"},
+		// fork kind → inferred → no warning.
+		{ID: "gstack", CurrentName: "gstack", Realm: "signal", Kind: "fork"},
+		// Explicit audience → no warning.
+		{ID: "donkeyco", CurrentName: "donkeyco", Realm: "signal", Audience: "external"},
+	}}
+	v := &Vocabulary{categories: map[string]map[string]vocabGroup{
+		"realms": {"signal": {Words: []string{"a"}}},
+	}}
+	issues := Validate(cat, v, &RecipeBook{recipes: map[string]recipeDef{}})
+	pending := 0
+	for _, i := range issues {
+		if i.Code == "pending_audience" {
+			pending++
+			if i.Subject != "speech-to-cli" {
+				t.Errorf("pending_audience on wrong subject: %q", i.Subject)
+			}
+			if i.Severity != SeverityWarning {
+				t.Errorf("pending_audience should be warning, got %q", i.Severity)
+			}
+		}
+	}
+	if pending != 1 {
+		t.Errorf("expected exactly 1 pending_audience warning, got %d (issues: %v)", pending, issues)
+	}
+}
+
+func TestInferAudience(t *testing.T) {
+	cases := []struct {
+		name string
+		p    *Project
+		want string
+	}{
+		{"explicit wins", &Project{Audience: "personal", CurrentName: "x.realm.watch", Kind: "fork"}, "personal"},
+		{"fork kind", &Project{Kind: "fork", CurrentName: "gstack"}, "fork"},
+		{"realm suffix", &Project{Kind: "realm-tool", CurrentName: "clock.realm.watch"}, "realm"},
+		{"unclassified", &Project{Kind: "tool", CurrentName: "speech-to-cli"}, ""},
+		{"nil project", nil, ""},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if got := InferAudience(c.p); got != c.want {
+				t.Errorf("InferAudience = %q, want %q", got, c.want)
+			}
+		})
 	}
 }
 
