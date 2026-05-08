@@ -77,7 +77,7 @@ projects:
     realm: signal
     audience: realm
     domain: status.realm.watch
-    repo: ~
+    repo: https://github.com/jphein/status.realm.watch
     description: Status dashboard for the realm.watch family + homelab — HTTP/ping/TCP/UDP/version checks across the realm.
     created: 2026-04-01
     prior_names: []
