@@ -183,6 +183,7 @@ func mappingScalarValue(m *yaml.Node, key string) string {
 func updateProjectMapping(m *yaml.Node, p *Project) {
 	setScalar(m, "current_name", p.CurrentName)
 	setScalar(m, "repo", p.Repo)
+	setScalar(m, "notes", p.Notes)
 	setPriorNames(m, p.PriorNames)
 }
 

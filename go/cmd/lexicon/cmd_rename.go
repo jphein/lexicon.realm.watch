@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -398,7 +399,37 @@ func updateCatalogRepoField(catalogPath, projID, repoURL string) error {
 		return fmt.Errorf("project %q not found in catalog", projID)
 	}
 	proj.Repo = repoURL
+	// Scrub stale "Local only" / "(no remote)" qualifiers from notes — they
+	// self-contradict the repo URL we just set. Issue #7.
+	proj.Notes = scrubLocalOnlyFromNotes(proj.Notes)
 	return cat.Save()
+}
+
+// scrubLocalOnlyFromNotes drops "Local only" / "(no remote)" qualifiers that
+// describe the project as having no GitHub remote. Called after a remote URL
+// is added to the catalog so the notes field doesn't self-contradict.
+//
+// Handles the patterns observed across JP's catalog as of 2026-05:
+//   - Whole content: `Local only`, `Local only (no remote)`, `Local only.`
+//   - Leading qualifier: `Local only (no remote). Rest of note...`
+//   - Trailing parenthetical: `Some note (no remote)`
+//
+// Anything outside these patterns is left untouched — the catalog has many
+// notes that legitimately mention "remote" in other senses (remote VMs,
+// remote machines, etc.).
+func scrubLocalOnlyFromNotes(notes string) string {
+	if notes == "" {
+		return notes
+	}
+	trimmed := strings.TrimSpace(notes)
+	switch trimmed {
+	case "Local only", "Local only.", "Local only (no remote)", "Local only (no remote).":
+		return ""
+	}
+	leading := regexp.MustCompile(`^Local only(?: \(no remote\))?\.\s+`)
+	notes = leading.ReplaceAllString(notes, "")
+	notes = strings.TrimSuffix(notes, " (no remote)")
+	return notes
 }
 
 func stepDNSReminder(env *renameEnv) error {

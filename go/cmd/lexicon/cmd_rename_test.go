@@ -546,6 +546,88 @@ func TestExecute_GHExistingRemote_UpdatesCatalogRepoField(t *testing.T) {
 	}
 }
 
+// TestScrubLocalOnlyFromNotes covers the issue #7 patterns observed across
+// JP's catalog: whole-content "Local only" qualifiers, leading qualifier
+// followed by a real sentence, and a trailing parenthetical.
+func TestScrubLocalOnlyFromNotes(t *testing.T) {
+	cases := []struct {
+		name string
+		in   string
+		want string
+	}{
+		{"empty", "", ""},
+		{"whole_localonly", "Local only", ""},
+		{"whole_localonly_period", "Local only.", ""},
+		{"whole_no_remote_paren", "Local only (no remote)", ""},
+		{"whole_no_remote_paren_period", "Local only (no remote).", ""},
+		{"leading_local_only", "Local only. Companion piece to `oracle-mcp` UI", "Companion piece to `oracle-mcp` UI"},
+		{"leading_no_remote", "Local only (no remote). Phase 1 shipped, Phase 2 in flight", "Phase 1 shipped, Phase 2 in flight"},
+		{"leading_no_remote_with_path", "Local only (no remote). `deploy.sh` pushes to `openclaw` host", "`deploy.sh` pushes to `openclaw` host"},
+		{"trailing_paren", "Some note about deployment (no remote)", "Some note about deployment"},
+		{"unrelated_remote_mention", "Deploys to remote VM at 10.0.6.137", "Deploys to remote VM at 10.0.6.137"},
+		{"local_only_in_middle", "Some preamble. Local only. trailing", "Some preamble. Local only. trailing"},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := scrubLocalOnlyFromNotes(tc.in)
+			if got != tc.want {
+				t.Errorf("scrubLocalOnlyFromNotes(%q)\n  got:  %q\n  want: %q", tc.in, got, tc.want)
+			}
+		})
+	}
+}
+
+// TestExecute_GHCreateRemote_ScrubsLocalOnlyNotes is the issue #7 regression.
+// When --create-remote adds a remote to a project whose notes start with
+// "Local only" or end with "(no remote)", that qualifier must be stripped so
+// the catalog doesn't self-contradict (repo URL set + notes claiming no remote).
+func TestExecute_GHCreateRemote_ScrubsLocalOnlyNotes(t *testing.T) {
+	tmpCat := writeTempCatalog(t, `projects:
+  - id: bestiary
+    current_name: bestiary
+    kind: tool
+    realm: oracle
+    domain: ~
+    repo: ~
+    description: x
+    created: 2026-04-01
+    prior_names: []
+    status: local-only
+    notes: "Local only (no remote). Deploys to Alpine VM ` + "`jp@10.0.6.137:/opt/bestiary`" + `"
+`)
+	fake := newFakeFS()
+	projects := "/projects"
+	fake.addDir(filepath.Join(projects, "bestiary.realm.watch"))
+	fake.runOut = []byte("Created")
+
+	env := newTestEnv(t, fake, projects)
+	env.oldID = "bestiary"
+	env.newName = "bestiary.realm.watch"
+	env.catalogPath = tmpCat
+	env.createRemote = true
+
+	steps := buildRenameSteps()
+	if rc := executeRenamePlan(env, steps, skipAllExcept(5)); rc != 0 {
+		t.Fatalf("step 5 failed; stderr=%q", env.stderr.(*bytes.Buffer).String())
+	}
+	cat, err := lexicon.LoadCatalog(tmpCat)
+	if err != nil {
+		t.Fatalf("reload catalog: %v", err)
+	}
+	proj, ok := cat.Resolve("bestiary")
+	if !ok {
+		t.Fatal("project lost from catalog")
+	}
+	wantRepo := "https://github.com/jphein/bestiary.realm.watch"
+	if proj.Repo != wantRepo {
+		t.Errorf("repo not set: %q (want %q)", proj.Repo, wantRepo)
+	}
+	wantNotes := "Deploys to Alpine VM `jp@10.0.6.137:/opt/bestiary`"
+	if proj.Notes != wantNotes {
+		t.Errorf("notes not scrubbed:\n  got:  %q\n  want: %q", proj.Notes, wantNotes)
+	}
+}
+
 func writeTempCatalog(t *testing.T, body string) string {
 	t.Helper()
 	p := filepath.Join(t.TempDir(), "projects.yaml")
