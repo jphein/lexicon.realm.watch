@@ -578,16 +578,19 @@ projects:
     notes: "Deploys to Alpine VM `jp@10.0.6.137:/opt/bestiary`"
 
   - id: oracle-chat
-    current_name: oracle-chat
+    current_name: chat.realm.watch
     kind: tool
     realm: oracle
     domain: ~
-    repo: ~
+    repo: https://github.com/jphein/chat.realm.watch
     description: Reusable AI chat web component (CSS + JS) — themable via custom properties
     created: ~
-    prior_names: []
+    prior_names:
+      - name: oracle-chat
+        retired: 2026-05-08
+        reason: Adopt *.realm.watch convention for realm-aligned projects
     status: local-only
-    notes: "Local only. Companion piece to `oracle-mcp` UI"
+    notes: "Companion piece to `oracle-mcp` UI"
 
   - id: clawwatch
     current_name: clawwatch
