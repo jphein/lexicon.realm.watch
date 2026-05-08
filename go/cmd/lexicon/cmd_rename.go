@@ -165,9 +165,9 @@ func buildRenameSteps() []renameStep {
 			doFunc: stepPackageMetadata,
 		},
 		{
-			num: 4, title: "CLAUDE.md sweeps", auto: false, skipKey: "claude-md",
-			detail: "Update ~/.claude/CLAUDE.md project table and project-local CLAUDE.md",
-			doFunc: stepClaudeMDReminder,
+			num: 4, title: "CLAUDE.md sweeps", auto: true, skipKey: "claude-md",
+			detail: "Rewrite project-local CLAUDE.md to use new name",
+			doFunc: stepClaudeMD,
 		},
 		{
 			num: 5, title: "GitHub repo rename", auto: true, skipKey: "gh",
@@ -301,9 +301,17 @@ func stepPackageMetadata(env *renameEnv) error {
 	return nil
 }
 
-func stepClaudeMDReminder(env *renameEnv) error {
-	fmt.Fprintln(env.stdout, "  ~/.claude/CLAUDE.md       : project table — replace old row")
-	fmt.Fprintf(env.stdout, "  %s/CLAUDE.md  : project-local references\n", filepath.Join(env.projectsDir, env.newName))
+func stepClaudeMD(env *renameEnv) error {
+	projDir := filepath.Join(env.projectsDir, env.newName)
+	edited, err := applyClaudeMDSweep(projDir, env.oldID, env.newName)
+	if err != nil {
+		return err
+	}
+	if !edited {
+		fmt.Fprintln(env.stdout, "  no CLAUDE.md edits required (file absent or already up to date)")
+		return nil
+	}
+	fmt.Fprintf(env.stdout, "  updated: %s\n", filepath.Join(projDir, "CLAUDE.md"))
 	return nil
 }
 
