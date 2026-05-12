@@ -1,0 +1,36 @@
+# Network device registry — switches, routers, APs, and managed hosts on the realm.
+# Distinct from projects (software JP authors) and agents (named subagents):
+# these are physical or virtual machines with management IPs that JP owns or co-manages.
+#
+# Schema is provisional; will harden once a second entry lands. The `prior_names`
+# pattern follows projects.yaml so the rename workflow can extend here later.
+# The lexicon Go binary does NOT yet validate or render this file — see
+# docs/superpowers/specs/2026-04-26-lexicon-design.md for the scope it currently covers.
+
+hosts:
+  - id: east-tree-trunk
+    current_name: east-tree-trunk
+    kind: switch
+    realm: signal
+    audience: treelink
+    mgmt_ip: 10.37.5.2
+    vlan: 37
+    model: Netgear GS308T v1 (Realtek RTL8380M rev C)
+    os: OpenWrt 25.12.x (realtek/rtl838x)
+    location: east — Treelink office
+    contacts:
+      - jp@jphein.com
+      - thomas@treelink.us
+    created: 2026-05-12
+    prior_names:
+      - name: gst308t-office
+        retired: 2026-05-12
+    status: active
+    notes: |
+      Treelink-side switch JP co-manages with Thomas — not a homelab device.
+      Plugged in "off lan8" of the deployed GS308T (10.0.6.110), sharing the
+      ISP shared-L2 segment for its uplink. Independent gateway/DNS at
+      10.37.0.1 (Treelink), L3-isolated from homelab VLANs (no gatekeeper
+      route to VID 37). Reachable from katana via enp5s0.37/10.37.5.1; from
+      wakizashi only via ProxyJump through katana. See memory
+      east_tree_trunk.md for full access matrix.

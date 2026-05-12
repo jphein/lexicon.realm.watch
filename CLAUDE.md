@@ -6,7 +6,7 @@ This file gives Claude Code project-specific instructions when working in this r
 
 - Go library + `lexicon` CLI in `go/`
 - Vocabularies (YAML) in `vocabularies/`
-- Catalog (canonical project registry) in `catalog/projects.yaml`
+- Catalog (canonical project registry) in `catalog/projects.yaml`; agents in `catalog/agents.yaml`, voices in `catalog/voices.yaml`, network hosts in `catalog/hosts.yaml` (provisional schema — Go side does not yet validate or render hosts.yaml)
 - Spec: `docs/superpowers/specs/2026-04-26-lexicon-design.md`
 - v0.1 plan: `docs/superpowers/plans/2026-04-26-lexicon-v0.1.md`
 
