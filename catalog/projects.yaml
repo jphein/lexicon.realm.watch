@@ -90,7 +90,7 @@ projects:
     realm: signal
     audience: personal
     domain: ~
-    repo: ~
+    repo: https://github.com/techempower-org/speech-to-cli
     description: MCP server for STT/TTS via Azure Speech
     created: ~
     prior_names: []
@@ -116,7 +116,7 @@ projects:
     realm: signal
     audience: personal
     domain: ~
-    repo: ~
+    repo: https://github.com/techempower-org/cloud-chat-assistant
     description: MCP server for multi-session Azure OpenAI chat
     created: ~
     prior_names: []
@@ -252,7 +252,7 @@ projects:
     realm: signal
     audience: personal
     domain: ~
-    repo: ~
+    repo: https://github.com/techempower-org/gnome-speaks
     description: GNOME Shell speech extension service
     created: ~
     prior_names: []
