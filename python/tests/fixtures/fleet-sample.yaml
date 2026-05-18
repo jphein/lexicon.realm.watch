@@ -1,0 +1,49 @@
+# python/tests/fixtures/fleet-sample.yaml
+version: 1
+nodes:
+  - fleet_id: "mac:78:48:59:a8:25:97"
+    current_name: hp-switch
+    prior_names: []
+    realm: signal
+    kind: switch
+    role: managed_switch_24port
+    vendor: "HP V1910-24G"
+    status: curated
+    first_seen: 2024-08-12
+    last_seen: 2026-05-18
+
+  - fleet_id: "mac:b4:fb:e4:12:34:56"
+    current_name: east-tree-trunk
+    prior_names: []
+    realm: forest
+    kind: switch
+    role: managed_switch_8port
+    vendor: "TRENDnet GS308T"
+    status: curated
+    first_seen: 2026-05-18
+    last_seen: 2026-05-18
+
+  - fleet_id: "mac:de:ad:be:ef:00:01"
+    current_name: gst308t-office
+    prior_names: []
+    status: retired
+    replaced_by: "mac:b4:fb:e4:12:34:56"
+    retired_on: 2026-05-18
+    retire_reason: "swapped for new TRENDnet on VLAN 37"
+
+  - fleet_id: "mac:aa:bb:cc:dd:ee:01"
+    current_name: glasswing-printer
+    prior_names:
+      - { name: hp-laserjet-m234, retired_on: 2025-12-01, reason: "fantasy-renamed" }
+    realm: forest
+    kind: printer
+    role: laser_printer
+    status: curated
+
+  - fleet_id: "fleet:11111111-2222-3333-4444-555555555555"
+    current_name: ha-energy-bridge
+    prior_names: []
+    realm: signal
+    kind: ha_entity
+    role: energy_bridge
+    status: curated
