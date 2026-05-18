@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] — 2026-05-18
+
+### Added
+- `FleetCatalog` class: parallel to project `Catalog` with `retired`/`replaced_by` lifecycle for hardware-swap renames.
+- `load_fleet_catalog(path)` and `load_catalog_by_kind(path, kind)` entrypoints.
+- Schema validation: `fleet_id` regex (`mac:` or `fleet:` prefixes), duplicate detection, `replaced_by` only on retired entries.
+- Mutation: `FleetCatalog.rename()`, `.retire()`, `.save()` with comment-preserving YAML round-trip.
+
 ## [1.5.0] — 2026-05-07
 
 The `lexicon rename` runbook actually does its job now. The first end-to-end test of `lexicon rename` (`realm-portal` → `portal.realm.watch`) surfaced four bugs and one bonus YAML serializer issue; this release fixes all five.

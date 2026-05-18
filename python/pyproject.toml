@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lexicon-realm-watch"
-version = "0.1.0"
+version = "0.3.0"
 description = "Names and the changing of names — Python parity for lexicon.realm.watch."
 readme = "README.md"
 requires-python = ">=3.10"
