@@ -53,3 +53,64 @@ def test_resolve_walks_replaced_by_chain(fleet: FleetCatalog) -> None:
 
 def test_resolve_returns_none_on_miss(fleet: FleetCatalog) -> None:
     assert fleet.resolve("does-not-exist") is None
+
+
+import tempfile
+
+
+def _write_yaml(text: str) -> Path:
+    f = tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False)
+    f.write(text)
+    f.close()
+    return Path(f.name)
+
+
+def test_invalid_fleet_id_rejected() -> None:
+    p = _write_yaml("""
+version: 1
+nodes:
+  - fleet_id: "not-a-valid-id"
+    current_name: bad
+""")
+    with pytest.raises(ValueError, match="fleet_id"):
+        load_fleet_catalog(p)
+
+
+def test_duplicate_current_name_rejected() -> None:
+    p = _write_yaml("""
+version: 1
+nodes:
+  - fleet_id: "mac:aa:aa:aa:aa:aa:aa"
+    current_name: dup
+    status: curated
+  - fleet_id: "mac:bb:bb:bb:bb:bb:bb"
+    current_name: dup
+    status: curated
+""")
+    with pytest.raises(ValueError, match="duplicate"):
+        load_fleet_catalog(p)
+
+
+def test_replaced_by_only_valid_when_retired() -> None:
+    p = _write_yaml("""
+version: 1
+nodes:
+  - fleet_id: "mac:aa:aa:aa:aa:aa:aa"
+    current_name: live-with-replaced-by
+    status: curated
+    replaced_by: "mac:bb:bb:bb:bb:bb:bb"
+""")
+    with pytest.raises(ValueError, match="replaced_by"):
+        load_fleet_catalog(p)
+
+
+def test_status_must_be_known() -> None:
+    p = _write_yaml("""
+version: 1
+nodes:
+  - fleet_id: "mac:aa:aa:aa:aa:aa:aa"
+    current_name: bad-status
+    status: ghost
+""")
+    with pytest.raises(ValueError, match="status"):
+        load_fleet_catalog(p)

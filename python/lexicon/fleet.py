@@ -118,6 +118,40 @@ class FleetCatalog:
         return e
 
 
+def _validate_entries(entries: list[FleetEntry]) -> None:
+    seen_ids: set[str] = set()
+    live_names: dict[str, str] = {}
+    for e in entries:
+        if not FLEET_ID_RE.match(e.fleet_id):
+            raise ValueError(f"invalid fleet_id: {e.fleet_id!r}")
+        if e.fleet_id in seen_ids:
+            raise ValueError(f"duplicate fleet_id: {e.fleet_id}")
+        seen_ids.add(e.fleet_id)
+
+        if e.status not in VALID_STATUSES:
+            raise ValueError(f"unknown status {e.status!r} for {e.fleet_id}")
+
+        if e.replaced_by and e.status != "retired":
+            raise ValueError(
+                f"replaced_by only valid for retired entries; "
+                f"{e.fleet_id} has status={e.status}"
+            )
+
+        if e.status in LIVE_STATUSES:
+            if e.current_name in live_names:
+                raise ValueError(
+                    f"duplicate current_name {e.current_name!r}: "
+                    f"{live_names[e.current_name]} and {e.fleet_id}"
+                )
+            live_names[e.current_name] = e.fleet_id
+            for p in e.prior_names:
+                if p.name in live_names:
+                    raise ValueError(
+                        f"prior_name {p.name!r} on {e.fleet_id} "
+                        f"collides with live entry {live_names[p.name]}"
+                    )
+
+
 def load_fleet_catalog(path: str | Path) -> FleetCatalog:
     p = Path(path)
     yaml = YAML(typ="rt")
@@ -125,4 +159,5 @@ def load_fleet_catalog(path: str | Path) -> FleetCatalog:
         raw = yaml.load(f) or {}
     nodes_raw = raw.get("nodes", []) or []
     entries = [FleetEntry.from_raw(dict(n)) for n in nodes_raw]
+    _validate_entries(entries)
     return FleetCatalog(entries=entries, source_path=p, raw_root=raw)
