@@ -11,6 +11,12 @@ from pathlib import Path
 from typing import Iterable
 
 from .catalog import Catalog, ClaimOpts, PriorName, Project, load_catalog
+from .fleet import (
+    FleetCatalog,
+    FleetEntry,
+    FleetPriorName,
+    load_fleet_catalog,
+)
 from .recipe import RecipeBook, RollOptions, load_recipe_book
 from .seeded import seeded_index
 from .vocabulary import Vocabulary, load_vocabulary_dir, load_vocabulary_file
@@ -18,12 +24,16 @@ from .vocabulary import Vocabulary, load_vocabulary_dir, load_vocabulary_file
 __all__ = [
     "Catalog",
     "ClaimOpts",
+    "FleetCatalog",
+    "FleetEntry",
+    "FleetPriorName",
     "PriorName",
     "Project",
     "RecipeBook",
     "RollOptions",
     "Vocabulary",
     "load_catalog",
+    "load_fleet_catalog",
     "load_recipe_book",
     "load_vocabulary_dir",
     "load_vocabulary_file",
