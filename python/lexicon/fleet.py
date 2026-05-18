@@ -225,10 +225,14 @@ def _validate_entries(entries: list[FleetEntry]) -> None:
                 )
             live_names[e.current_name] = e.fleet_id
             for p in e.prior_names:
-                if p.name in live_names:
+                # A prior_name that matches a live name on a DIFFERENT entry
+                # is a real collision. Matching this same entry's current_name
+                # is fine — it's the natural state after a rename round-trip.
+                owner = live_names.get(p.name)
+                if owner is not None and owner != e.fleet_id:
                     raise ValueError(
                         f"prior_name {p.name!r} on {e.fleet_id} "
-                        f"collides with live entry {live_names[p.name]}"
+                        f"collides with live entry {owner}"
                     )
 
 
