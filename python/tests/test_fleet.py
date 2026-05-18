@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from lexicon import FleetCatalog, load_fleet_catalog
+from lexicon import FleetCatalog, FleetEntry, load_fleet_catalog
 
 
 FIXTURE = Path(__file__).parent / "fixtures" / "fleet-sample.yaml"
@@ -114,3 +114,41 @@ nodes:
 """)
     with pytest.raises(ValueError, match="status"):
         load_fleet_catalog(p)
+
+
+def test_rename_appends_to_prior_names(fleet: FleetCatalog) -> None:
+    fleet.rename("mac:78:48:59:a8:25:97", "iron-eye", reason="fantasy-renamed")
+    e = fleet.resolve("iron-eye")
+    assert e is not None
+    assert e.current_name == "iron-eye"
+    assert any(p.name == "hp-switch" for p in e.prior_names)
+    assert fleet.resolve("hp-switch") is e
+
+
+def test_retire_with_replacement(fleet: FleetCatalog) -> None:
+    new_entry = FleetEntry(
+        fleet_id="mac:99:99:99:99:99:99",
+        current_name="iron-replacement",
+        realm="signal",
+        kind="switch",
+        status="curated",
+    )
+    fleet.retire(
+        "mac:78:48:59:a8:25:97",
+        new_entry=new_entry,
+        retired_on="2026-05-18",
+        reason="swapped",
+    )
+    assert fleet.resolve("hp-switch").current_name == "iron-replacement"
+    old = fleet._by_id["mac:78:48:59:a8:25:97"]
+    assert old.status == "retired"
+    assert old.replaced_by == "mac:99:99:99:99:99:99"
+
+
+def test_save_round_trip(fleet: FleetCatalog, tmp_path: Path) -> None:
+    fleet.rename("mac:78:48:59:a8:25:97", "iron-eye")
+    out = tmp_path / "fleet.yaml"
+    fleet.save(out)
+    reloaded = load_fleet_catalog(out)
+    assert reloaded.resolve("hp-switch").current_name == "iron-eye"
+    assert reloaded.resolve("iron-eye") is not None

@@ -117,6 +117,86 @@ class FleetCatalog:
             e = self._by_id.get(e.replaced_by)
         return e
 
+    def rename(
+        self,
+        fleet_id: str,
+        new_name: str,
+        reason: str | None = None,
+        today: str | None = None,
+    ) -> None:
+        e = self._by_id.get(fleet_id)
+        if e is None:
+            raise KeyError(f"unknown fleet_id: {fleet_id}")
+        if e.status not in LIVE_STATUSES:
+            raise ValueError(f"cannot rename {e.status} entry {fleet_id}")
+        old = e.current_name
+        if new_name == old:
+            return
+        e.prior_names.append(
+            FleetPriorName(name=old, retired_on=today or _today(), reason=reason)
+        )
+        e.current_name = new_name
+        _validate_entries(self.entries)
+        self._reindex()
+
+    def retire(
+        self,
+        old_fleet_id: str,
+        new_entry: FleetEntry | None = None,
+        retired_on: str | None = None,
+        reason: str | None = None,
+    ) -> None:
+        e = self._by_id.get(old_fleet_id)
+        if e is None:
+            raise KeyError(f"unknown fleet_id: {old_fleet_id}")
+        if new_entry is not None:
+            if new_entry.fleet_id in self._by_id:
+                raise ValueError(f"fleet_id already exists: {new_entry.fleet_id}")
+            self.entries.append(new_entry)
+            e.replaced_by = new_entry.fleet_id
+        e.status = "retired"
+        e.retired_on = retired_on or _today()
+        if reason:
+            e.retire_reason = reason
+        _validate_entries(self.entries)
+        self._reindex()
+
+    def save(self, path: str | Path | None = None) -> None:
+        target = Path(path) if path else self.source_path
+        if target is None:
+            raise ValueError("no path provided and no source_path on catalog")
+        yaml = YAML(typ="rt")
+        yaml.default_flow_style = False
+        out = CommentedMap()
+        out["version"] = 1
+        out["nodes"] = CommentedSeq(self._to_raw(e) for e in self.entries)
+        with target.open("w") as f:
+            yaml.dump(out, f)
+
+    @staticmethod
+    def _to_raw(e: FleetEntry) -> CommentedMap:
+        m = CommentedMap()
+        m["fleet_id"] = e.fleet_id
+        m["current_name"] = e.current_name
+        m["prior_names"] = CommentedSeq(
+            CommentedMap({"name": p.name, "retired_on": p.retired_on, "reason": p.reason})
+            for p in e.prior_names
+        )
+        for k in ("realm", "kind", "role", "vendor", "notes",
+                  "first_seen", "last_seen", "replaced_by",
+                  "retired_on", "retire_reason"):
+            v = getattr(e, k)
+            if v is not None:
+                m[k] = v
+        m["status"] = e.status
+        if e.discovery_evidence is not None:
+            m["discovery_evidence"] = e.discovery_evidence
+        return m
+
+
+def _today() -> str:
+    return date.today().isoformat()
+
 
 def _validate_entries(entries: list[FleetEntry]) -> None:
     seen_ids: set[str] = set()
