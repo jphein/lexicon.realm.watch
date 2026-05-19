@@ -38,6 +38,8 @@ class FleetEntry:
     kind: str | None = None
     role: str | None = None
     vendor: str | None = None
+    category: str | None = None
+    ops_ip: str | None = None
     status: str = "curated"
     notes: str | None = None
     first_seen: str | None = None
@@ -65,6 +67,8 @@ class FleetEntry:
             kind=raw.get("kind"),
             role=raw.get("role"),
             vendor=raw.get("vendor"),
+            category=raw.get("category"),
+            ops_ip=raw.get("ops_ip"),
             status=raw.get("status", "curated"),
             notes=raw.get("notes"),
             first_seen=raw.get("first_seen"),
@@ -182,7 +186,7 @@ class FleetCatalog:
             CommentedMap({"name": p.name, "retired_on": p.retired_on, "reason": p.reason})
             for p in e.prior_names
         )
-        for k in ("realm", "kind", "role", "vendor", "notes",
+        for k in ("realm", "kind", "role", "vendor", "category", "ops_ip", "notes",
                   "first_seen", "last_seen", "replaced_by",
                   "retired_on", "retire_reason"):
             v = getattr(e, k)
