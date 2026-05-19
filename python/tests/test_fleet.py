@@ -152,3 +152,24 @@ def test_save_round_trip(fleet: FleetCatalog, tmp_path: Path) -> None:
     reloaded = load_fleet_catalog(out)
     assert reloaded.resolve("hp-switch").current_name == "iron-eye"
     assert reloaded.resolve("iron-eye") is not None
+
+
+def test_category_and_ops_ip_fields(fleet: FleetCatalog, tmp_path: Path) -> None:
+    """category and ops_ip are first-class fields for ops integration
+    (drive scripts/lib/fleet.sh equivalents in downstream consumers)."""
+    e = fleet.resolve("hp-switch")
+    e.category = "switch_vendor"
+    e.ops_ip = "10.0.6.103"
+    out = tmp_path / "fleet.yaml"
+    fleet.save(out)
+    reloaded = load_fleet_catalog(out)
+    r = reloaded.resolve("hp-switch")
+    assert r.category == "switch_vendor"
+    assert r.ops_ip == "10.0.6.103"
+
+
+def test_category_and_ops_ip_optional(fleet: FleetCatalog) -> None:
+    """Existing entries without the new fields still load (backward compat)."""
+    e = fleet.resolve("east-tree-trunk")
+    assert e.category is None
+    assert e.ops_ip is None

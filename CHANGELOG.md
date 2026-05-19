@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] — 2026-05-19
+
+### Added
+- `FleetEntry.category` — operator-curated bucket (`ap` / `router` / `switch_openwrt` / `switch_vendor` / etc.) used by ops scripts to group hosts by capability without inferring from `kind`/`role`.
+- `FleetEntry.ops_ip` — operator-curated management IP, distinct from any IP recorded as live state in a downstream consumer's database. Lets fleet.yaml be the single source for fleet-wide ops scripts.
+
 ## [1.6.0] — 2026-05-18
 
 ### Added
