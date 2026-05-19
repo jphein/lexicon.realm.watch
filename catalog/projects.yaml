@@ -64,12 +64,12 @@ projects:
     realm: void
     audience: personal
     domain: ~
-    repo: ~
+    repo: https://github.com/jphein/realmwatch
     description: Fantasy-themed homelab network monitor + AI voice assistant.
     created: 2025-09-01
     prior_names: []
-    status: local-only
-    notes: Candidate for rename to <something>.realm.watch in v0.2.
+    status: active
+    notes: Went public 2026-05-19 alongside the lexicon fleet-catalog feature ship. Candidate for rename to <something>.realm.watch in v0.2.
 
   - id: status
     current_name: status.realm.watch
