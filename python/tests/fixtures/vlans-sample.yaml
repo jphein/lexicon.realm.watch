@@ -1,0 +1,45 @@
+# Sample VLAN registry used by VLANCatalog tests.
+version: 1
+
+wan_zones:
+  - wan
+  - wanguard
+
+vlans:
+  3:
+    label: Backup WAN
+    type: wan
+    status: standby
+    desc: Emergency uplink
+    icon: "📡"
+  6:
+    label: Admin
+    type: lan
+    status: active
+    desc: Servers, management
+    icon: "⚔"
+    zone: admin
+  10:
+    label: Cameras
+    type: lan
+    status: active
+    desc: Surveillance cameras
+    icon: "📹"
+    zone: lan
+    prior_names:
+      - name: IoT
+        retired_on: '2026-05-20'
+        reason: VLAN repurposed for camera traffic
+  11:
+    label: Family
+    type: lan
+    status: active
+    desc: Personal devices
+    icon: "👪"
+    zone: family
+  38:
+    label: Primary WAN
+    type: wan
+    status: active
+    desc: Main internet uplink
+    icon: "🌍"
