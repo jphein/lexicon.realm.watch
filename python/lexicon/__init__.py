@@ -19,6 +19,12 @@ from .fleet import (
 )
 from .recipe import RecipeBook, RollOptions, load_recipe_book
 from .seeded import seeded_index
+from .vlans import (
+    VLANCatalog,
+    VLANEntry,
+    VLANPriorName,
+    load_vlan_catalog,
+)
 from .vocabulary import Vocabulary, load_vocabulary_dir, load_vocabulary_file
 
 __all__ = [
@@ -31,10 +37,14 @@ __all__ = [
     "Project",
     "RecipeBook",
     "RollOptions",
+    "VLANCatalog",
+    "VLANEntry",
+    "VLANPriorName",
     "Vocabulary",
     "load_catalog",
     "load_fleet_catalog",
     "load_recipe_book",
+    "load_vlan_catalog",
     "load_vocabulary_dir",
     "load_vocabulary_file",
     "roll",
@@ -130,4 +140,6 @@ def load_catalog_by_kind(path, kind: str = "projects"):
         return load_catalog(path)
     if kind == "fleet":
         return load_fleet_catalog(path)
+    if kind == "vlans":
+        return load_vlan_catalog(path)
     raise ValueError(f"unknown catalog kind: {kind}")
