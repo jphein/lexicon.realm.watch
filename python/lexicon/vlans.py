@@ -1,7 +1,7 @@
 # python/lexicon/vlans.py
 """VLAN catalog — stable per-VLAN identity for realmwatch.
 
-Parallels FleetCatalog but keyed on a numeric VLAN ID (3..4094) rather than a
+Parallels FleetCatalog but keyed on a numeric VLAN ID (1..4094) rather than a
 MAC- or UUID-based fleet_id. Unlike fleet entries, VLAN IDs don't get retired
 and replaced — a VLAN's *label* changes, the ID stays. So there's no
 retire/replaced_by lifecycle here, just rename + add + remove.
@@ -11,8 +11,12 @@ ships (firewall_parser.VLANS). The `zone:` key encodes fw4 zone-name
 mismatches (some realms have a zone literally named "lan" that carries IoT
 traffic); the parser consumes it via ZONE_VLAN.
 
-YAML round-trips via ruamel.yaml-typ=rt so operator comments and ordering
-survive `.save()`.
+YAML round-trips via ruamel.yaml typ=rt. When the catalog was loaded from
+a file (so self._raw_root is populated), `.save()` mutates the root map in
+place so top-level comments and document structure survive. Per-entry sub-
+maps are rebuilt, so per-VLAN inline comments are not preserved across a
+mutation + save cycle — operator comments at the top of the file (and on
+the `wan_zones` / `vlans:` section markers) do survive.
 """
 
 from __future__ import annotations
@@ -119,10 +123,15 @@ class VLANCatalog:
         return self._by_id.get(vid) if vid is not None else None
 
     def zone_to_vlan(self) -> dict[str, int | None]:
-        """fw4 zone-name → VLAN ID. WAN zones map to None."""
+        """fw4 zone-name → VLAN ID. wan_zones always map to None.
+
+        wan_zones overlapping with entry.zone values is rejected at load
+        time (see _validate_entries), so this map is always well-defined:
+        if a key is in wan_zones, its value is unambiguously None.
+        """
         out: dict[str, int | None] = dict(self._by_zone)
         for z in self.wan_zones:
-            out.setdefault(z, None)
+            out[z] = None
         return out
 
     def rename(
@@ -132,7 +141,12 @@ class VLANCatalog:
         reason: str | None = None,
         today: str | None = None,
     ) -> None:
-        """Rename a VLAN's label; preserves old label in prior_names."""
+        """Rename a VLAN's label; preserves old label in prior_names.
+
+        Transactional: if validation fails (e.g. label collision), the entry
+        is restored to its pre-call state and the exception propagates. The
+        catalog is never left half-mutated.
+        """
         e = self._by_id.get(vlan_id)
         if e is None:
             raise KeyError(f"unknown VLAN id: {vlan_id}")
@@ -142,18 +156,29 @@ class VLANCatalog:
             raise ValueError("new_label must be non-empty")
         if new_label == e.label:
             return
+        # Snapshot, mutate, validate, rollback-on-failure.
+        old_label = e.label
+        old_priors = list(e.prior_names)
         e.prior_names.append(
-            VLANPriorName(name=e.label, retired_on=today or _today(), reason=reason)
+            VLANPriorName(name=old_label, retired_on=today or _today(), reason=reason)
         )
         e.label = new_label
-        _validate_entries(self.entries)
+        try:
+            _validate_entries(self.entries, wan_zones=self.wan_zones)
+        except Exception:
+            e.label = old_label
+            e.prior_names = old_priors
+            raise
         self._reindex()
 
     def add(self, entry: VLANEntry) -> None:
+        """Add a new VLAN. Validates the resulting catalog state before
+        committing; on failure the entry is not added."""
         if entry.vlan_id in self._by_id:
             raise ValueError(f"VLAN {entry.vlan_id} already exists")
+        # Validate the proposed state first; only mutate on success.
+        _validate_entries(self.entries + [entry], wan_zones=self.wan_zones)
         self.entries.append(entry)
-        _validate_entries(self.entries)
         self._reindex()
 
     def remove(self, vlan_id: int) -> None:
@@ -163,19 +188,50 @@ class VLANCatalog:
         self._reindex()
 
     def save(self, path: str | Path | None = None) -> None:
+        """Write the catalog back to yaml.
+
+        When the catalog was loaded from a file (self._raw_root is the original
+        CommentedMap), mutate it in place — that preserves top-level operator
+        comments and document structure. Per-entry maps are rebuilt for entries
+        that change, so inline comments inside an individual VLAN's entry can
+        be lost across a rename. Catalogs built programmatically (no raw_root)
+        get a fresh-built map.
+        """
         target = Path(path) if path else self.source_path
         if target is None:
             raise ValueError("no path provided and no source_path on catalog")
         yaml = YAML(typ="rt")
         yaml.default_flow_style = False
-        out = CommentedMap()
-        out["version"] = 1
+
+        out = self._raw_root if self._raw_root is not None else CommentedMap()
+
+        if "version" not in out:
+            out["version"] = 1
+
         if self.wan_zones:
             out["wan_zones"] = CommentedSeq(self.wan_zones)
-        vlans_map = CommentedMap()
+        elif "wan_zones" in out:
+            del out["wan_zones"]
+
+        existing_vlans = out.get("vlans")
+        if not isinstance(existing_vlans, CommentedMap):
+            existing_vlans = CommentedMap()
+        live_ids = {e.vlan_id for e in self.entries}
+
+        # Drop entries that no longer exist.
+        for key in list(existing_vlans.keys()):
+            try:
+                if int(key) not in live_ids:
+                    del existing_vlans[key]
+            except (TypeError, ValueError):
+                del existing_vlans[key]
+
+        # Update / insert each current entry.
         for e in sorted(self.entries, key=lambda x: x.vlan_id):
-            vlans_map[e.vlan_id] = self._to_raw(e)
-        out["vlans"] = vlans_map
+            existing_vlans[e.vlan_id] = self._to_raw(e)
+
+        out["vlans"] = existing_vlans
+
         with target.open("w") as f:
             yaml.dump(out, f)
 
@@ -205,7 +261,10 @@ def _today() -> str:
     return date.today().isoformat()
 
 
-def _validate_entries(entries: list[VLANEntry]) -> None:
+def _validate_entries(
+    entries: list[VLANEntry],
+    wan_zones: list[str] | None = None,
+) -> None:
     seen_ids: set[int] = set()
     live_labels: dict[str, int] = {}
     live_zones: dict[str, int] = {}
@@ -248,6 +307,15 @@ def _validate_entries(entries: list[VLANEntry]) -> None:
                     )
                 live_zones[e.zone] = e.vlan_id
 
+    # wan_zones must not overlap with any entry.zone — otherwise zone_to_vlan()
+    # would have to choose between None and a VLAN id for the same key.
+    for z in wan_zones or []:
+        if z in live_zones:
+            raise ValueError(
+                f"wan_zone {z!r} collides with VLAN {live_zones[z]} which "
+                f"declares the same zone — wan_zones reserve no-VLAN-id zones only"
+            )
+
 
 def load_vlan_catalog(path: str | Path) -> VLANCatalog:
     """Load a VLANCatalog from a yaml file. Validates before returning."""
@@ -264,5 +332,5 @@ def load_vlan_catalog(path: str | Path) -> VLANCatalog:
             raise ValueError(f"non-integer VLAN key in {p}: {vid!r}")
         entries.append(VLANEntry.from_raw(vid_int, dict(entry_raw or {})))
     wan_zones = list(raw.get("wan_zones") or [])
-    _validate_entries(entries)
+    _validate_entries(entries, wan_zones=wan_zones)
     return VLANCatalog(entries=entries, wan_zones=wan_zones, source_path=p, raw_root=raw)
