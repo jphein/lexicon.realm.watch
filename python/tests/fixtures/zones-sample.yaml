@@ -1,0 +1,18 @@
+# Sample fw4 zone registry used by ZoneCatalog tests.
+version: 1
+host: example-gateway
+
+zones:
+  - current_name: admin
+    type: lan
+    notes: Servers and management
+  - current_name: lan
+    type: lan
+    prior_names:
+      - name: home
+        retired_on: '2026-04-01'
+        reason: renamed to match OpenWrt naming conventions
+  - current_name: iot
+    type: lan
+  - current_name: wan
+    type: wan
