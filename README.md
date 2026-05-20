@@ -1,6 +1,6 @@
 # lexicon.realm.watch
 
-Names and the changing of names. The third realm.watch tool — works alongside [clock](https://github.com/jphein/clock.realm.watch) (cache invalidation at the prompt seam) and [realm-sigil](https://github.com/jphein/realm-sigil) (deterministic build-time naming) to handle the runtime naming surface and the project-rename workflow.
+**The identity authority for the realm.watch family.** Names and the changing of names — runtime name rolling, the project rename runbook, the FleetCatalog backing realmwatch's `fleet.yaml`, and the project catalog backing the `project-catalog` Claude Code skill. The third realm.watch tool, working alongside [clock](https://github.com/jphein/clock.realm.watch) (cache invalidation at the prompt seam) and [realm-sigil](https://github.com/jphein/realm-sigil) (deterministic build-time naming) to handle the runtime naming surface and the project-rename workflow.
 
 > *There are only two hard things in computer science. Clock handles one, sigil handles the other, lexicon is what you reach for when they collide.*
 
@@ -8,14 +8,39 @@ Live at **[jphein.github.io/lexicon.realm.watch](https://jphein.github.io/lexico
 
 ## What it does
 
-- **Roll names** for the things you create every day: agents, branches, projects, entities. Themed vocabularies, deterministic when you want it, random when you don't.
-- **Be the system of record** for every project in `~/Projects/` — current name, prior names, realm, kind, repo, domain. Catalog lives in `catalog/projects.yaml`; git is your audit log.
-- **Drive renames** of existing projects through a 10-step guided runbook — directory mv, transitional symlink, package metadata sweep, GitHub repo rename, Claude Code session storage, catalog mutation, manual-verify checklist.
-- **Own the canonical vocabularies** — realms, adjectives, nouns, scientists, creatures. As of v1.0 these are the source of truth that realm-sigil consumes.
+- **Source of truth for identity.** Lexicon is THE identity authority for the
+  realm.watch family — every host, every project, every named agent has an
+  entry, a stable `id`, a current name, and a paper trail of prior names.
+  Other tools consume; lexicon owns.
+- **FleetCatalog** backs realmwatch's `fleet.yaml` — operator-curated YAML of
+  hosts (current_name, prior_names, kind, role, realm, mac, ips). Realmwatch
+  imports `realm_fleet` to resolve a host name → canonical entry, and
+  realmwatch's `/fleet/rename`, `/fleet/replace`, `/fleet/promote`,
+  `/fleet/reload` endpoints delegate to it.
+- **Project Catalog** backs the `project-catalog` Claude Code skill —
+  `catalog/projects.yaml` is the system of record for every project in
+  `~/Projects/`. `lexicon catalog render --format=skill` projects it into
+  `~/.claude/skills/project-catalog/SKILL.md` for lazy-loaded LLM context.
+- **Roll names** for the things you create every day: agents, branches,
+  projects, entities. Themed vocabularies, deterministic when you want it,
+  random when you don't.
+- **Drive renames** of existing projects through a 10-step guided runbook —
+  directory mv, transitional symlink, package metadata sweep, GitHub repo
+  rename, Claude Code session storage, catalog mutation, manual-verify
+  checklist.
+- **Own the canonical vocabularies** — realms, adjectives, nouns, scientists,
+  creatures. As of v1.0 these are the source of truth that realm-sigil
+  consumes.
 
 ## Three implementations, one contract
 
-Lexicon ships as a Go binary plus parity libraries in Python and JavaScript. Same recipe names, same option keys, same results. Cross-language consistency is enforced by a shared fixture (`tests/fixtures/seeded-recipes.json`): given a seed and a recipe, every implementation must produce the same name byte-for-byte.
+Lexicon ships as a Go binary plus parity libraries in Python and JavaScript. **Pick the one that fits your environment** — they are functionally identical, only the host language differs:
+
+- **Go binary (`go/cmd/lexicon`)** — the CLI. One static binary. Fast catalog rendering, used by scripts, CI, and the `project-catalog` skill regen.
+- **Python library (`python/`)** — what realmwatch imports as `realm_fleet`. Use this when you're already in a Python service and want in-process catalog access.
+- **JavaScript library (`js/`)** — runs in Node and in the browser without environment branching. Use this for static sites and Next.js / Vercel projects that need name rolls at runtime.
+
+Same recipe names, same option keys, same results. Cross-language consistency is enforced by a shared fixture (`tests/fixtures/seeded-recipes.json`): given a seed and a recipe, every implementation must produce the same name byte-for-byte.
 
 ```
 seed: "lexicon" + recipe: project + realm: signal

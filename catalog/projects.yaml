@@ -65,11 +65,16 @@ projects:
     audience: personal
     domain: ~
     repo: https://github.com/jphein/realmwatch
-    description: Fantasy-themed homelab network monitor + AI voice assistant.
+    description: Fantasy-themed homelab network monitor + game engine + MCP platform. 47 plugins covering network monitoring, the realm CLI (40+ verbs), the RPG layer (realm-engine, progression, quests, combat-ward, codex), and the Astral Conduit MCP server.
     created: 2025-09-01
     prior_names: []
     status: active
-    notes: Went public 2026-05-19 alongside the lexicon fleet-catalog feature ship. Candidate for rename to <something>.realm.watch in v0.2.
+    notes: |
+      Went public 2026-05-19 alongside the lexicon fleet-catalog feature
+      ship. In May 2026 absorbed os.realm.watch's servers/ tree (realm-engine,
+      progression, quest_forge, lore_keeper, combat_ward) as native plugins;
+      os.realm.watch is now OS-layer only. Candidate for rename to
+      <something>.realm.watch in v0.2.
 
   - id: status
     current_name: status.realm.watch
@@ -279,11 +284,15 @@ projects:
     audience: personal
     domain: ~
     repo: ~
-    description: GNOME Shell log/compositor health watcher (component of os.realm.watch)
+    description: GNOME Shell log/compositor health watcher — surfaces crashes/segfaults/hangs to realmwatch as realm events.
     created: ~
     prior_names: []
     status: active
-    notes: "Lives at `os.realm.watch/extensions/gnome-shell-monitor/`"
+    notes: |
+      Split across two repos as of 2026-05-19: the GNOME extension itself
+      lives at `os.realm.watch/extensions/gnome-shell-monitor/`; the
+      log-parser plugin that turns its output into realm events lives at
+      `realmwatch/plugins/gnome-shell-monitor/`.
 
   - id: kiyo-xhci-fix
     current_name: kiyo-xhci-fix
@@ -402,11 +411,17 @@ projects:
     audience: realm
     domain: os.realm.watch
     repo: "https://github.com/jphein/os.realm.watch"
-    description: RealmWatch OS — 5 FastMCP game servers (RPG layer over network monitor)
+    description: OS-layer integration for realmwatch — GNOME shell extension, theme watcher, desktop session glue. RPG game servers used to live here; they were absorbed into realmwatch as plugins in May 2026.
     created: ~
     prior_names: []
     status: active
-    notes:
+    notes: |
+      Scope reduced 2026-05-19 — the five FastMCP game servers
+      (realm_engine, progression, quest_forge, lore_keeper, combat_ward)
+      and their event-producer plugins (gnome_shell_monitor,
+      realm_optimizer, daily_rite) moved into realmwatch as native plugins.
+      What remains here is OS-layer only: the GNOME extension at
+      extensions/gnome-shell-monitor/ and the theme watcher.
 
   - id: realm-optimizer
     current_name: realm-optimizer
@@ -415,11 +430,11 @@ projects:
     audience: personal
     domain: ~
     repo: ~
-    description: "AI-powered system optimization advisor, surfaces suggestions as realm quests (plugin in os.realm.watch)"
+    description: "AI-powered system optimization advisor — surfaces disk/journal/swap/zombie findings as realm events that the quest forge turns into optimization quests."
     created: ~
     prior_names: []
     status: active
-    notes: "Lives at `os.realm.watch/servers/plugins/realm_optimizer.py`"
+    notes: "Now a native realmwatch plugin at `realmwatch/plugins/system-optimizer/` (moved from os.realm.watch 2026-05-19)."
 
   - id: gaming-tuning
     current_name: gaming-tuning
