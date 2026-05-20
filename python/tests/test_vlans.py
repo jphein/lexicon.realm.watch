@@ -115,6 +115,29 @@ def test_rename_to_existing_live_label_raises(vlans: VLANCatalog) -> None:
         vlans.rename(6, "Cameras")  # already used by VLAN 10
 
 
+def test_rename_rolls_back_on_validation_failure(vlans: VLANCatalog) -> None:
+    """A failed rename must leave the catalog identical to its pre-call state."""
+    before_label = vlans.resolve(6).label
+    before_priors = list(vlans.resolve(6).prior_names)
+    with pytest.raises(ValueError):
+        vlans.rename(6, "Cameras")  # collides with VLAN 10
+    after = vlans.resolve(6)
+    assert after.label == before_label, "label leaked despite validation failure"
+    assert after.prior_names == before_priors, "prior_names leaked despite validation failure"
+    # The "Cameras" label must still resolve to VLAN 10, not 6.
+    assert vlans.resolve("Cameras").vlan_id == 10
+
+
+def test_add_rolls_back_on_validation_failure(vlans: VLANCatalog) -> None:
+    """A failed add must not leave the entry in self.entries."""
+    before_ids = {e.vlan_id for e in vlans.entries}
+    bad = VLANEntry(vlan_id=99, label="Admin", type="lan", status="active")  # label collides
+    with pytest.raises(ValueError, match="duplicate label"):
+        vlans.add(bad)
+    assert {e.vlan_id for e in vlans.entries} == before_ids, "bad entry was retained"
+    assert vlans.resolve(99) is None
+
+
 # ── validation ──────────────────────────────────────────────────────────────
 
 def test_invalid_vlan_id_rejected() -> None:
@@ -182,6 +205,29 @@ vlans:
         load_vlan_catalog(p)
 
 
+def test_wan_zone_overlap_with_entry_zone_rejected() -> None:
+    """wan_zones must not name a zone that's also declared by a live VLAN entry."""
+    p = _write_yaml("""
+version: 1
+wan_zones:
+  - admin
+vlans:
+  6:
+    label: Admin
+    status: active
+    zone: admin
+""")
+    with pytest.raises(ValueError, match="wan_zone .* collides"):
+        load_vlan_catalog(p)
+
+
+def test_zone_to_vlan_forces_wan_zones_to_none(vlans: VLANCatalog) -> None:
+    """wan_zones map to None unconditionally, even if a key would otherwise resolve."""
+    zmap = vlans.zone_to_vlan()
+    for z in vlans.wan_zones:
+        assert zmap[z] is None, f"wan_zone {z!r} should map to None"
+
+
 def test_inactive_label_collisions_allowed() -> None:
     """Deprecated/inactive VLANs can share labels with active ones (they don't resolve)."""
     p = _write_yaml("""
@@ -199,6 +245,31 @@ vlans:
 
 
 # ── save round-trip ─────────────────────────────────────────────────────────
+
+def test_save_preserves_top_level_comments() -> None:
+    """Header / section comments in the source file survive a rename + save."""
+    p = _write_yaml("""# Top-of-file operator comment — should survive a save().
+# Multi-line context worth keeping.
+version: 1
+
+# WAN zones section marker — survives too.
+wan_zones:
+  - wan
+
+vlans:
+  10:
+    label: Cameras
+    status: active
+""")
+    cat = load_vlan_catalog(p)
+    cat.rename(10, "Watchers")
+    cat.save()
+    text = p.read_text()
+    assert "Top-of-file operator comment" in text
+    assert "WAN zones section marker" in text
+    assert "Watchers" in text
+    assert "label: Cameras" not in text  # the rename took effect
+
 
 def test_save_round_trip_preserves_data(vlans: VLANCatalog) -> None:
     vlans.rename(10, "Watchers", reason="fantasy flavor")
