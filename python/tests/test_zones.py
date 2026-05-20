@@ -135,6 +135,21 @@ zones:
         load_zone_catalog(p)
 
 
+def test_prior_name_collision_detected_regardless_of_order() -> None:
+    """Regression: a single-pass validator would miss this collision because
+    entry A's prior name matches the current_name of LATER entry B."""
+    p = _write_yaml("""
+version: 1
+zones:
+  - current_name: bar
+    prior_names:
+      - name: foo
+  - current_name: foo
+""")
+    with pytest.raises(ValueError, match="collides"):
+        load_zone_catalog(p)
+
+
 def test_empty_current_name_rejected() -> None:
     p = _write_yaml("""
 version: 1

@@ -119,8 +119,10 @@ class ZoneCatalog:
         Transactional: validates the resulting state before committing the
         change; on failure the entry is restored exactly.
         """
-        e = next((x for x in self.entries if x.current_name == old_name), None)
-        if e is None:
+        # O(1) via _by_name; verify the hit is the LIVE entry, not just a
+        # prior-name shadow (which would mean addressing the wrong VLAN).
+        e = self._by_name.get(old_name)
+        if e is None or e.current_name != old_name:
             raise KeyError(f"unknown zone: {old_name!r}")
         if not new_name:
             raise ValueError("new_name must be non-empty")
@@ -169,11 +171,7 @@ class ZoneCatalog:
         if self.host:
             out["host"] = self.host
 
-        existing_zones = out.get("zones")
-        if not isinstance(existing_zones, CommentedSeq):
-            existing_zones = CommentedSeq()
-
-        # Rebuild the zones sequence — preserving order from self.entries.
+        # Rebuild the zones sequence — preserves order from self.entries.
         new_seq = CommentedSeq()
         for e in self.entries:
             new_seq.append(self._to_raw(e))
@@ -205,7 +203,12 @@ def _today() -> str:
 
 
 def _validate_entries(entries: list[ZoneEntry]) -> None:
-    live_names: dict[str, int] = {}  # name → index of owning entry
+    # Two-pass validation so collision checks are order-independent.
+    # A single-pass would miss the case where entry A's prior_name matches
+    # entry B's current_name when B appears later in the list.
+
+    # Pass 1: per-entry shape checks + collect all live current_names.
+    live_names: dict[str, int] = {}
     for idx, e in enumerate(entries):
         if not e.current_name:
             raise ValueError("zone entries must have a non-empty current_name")
@@ -214,7 +217,6 @@ def _validate_entries(entries: list[ZoneEntry]) -> None:
                 f"unknown zone type {e.type!r} for {e.current_name!r} "
                 f"(must be one of {[t for t in VALID_TYPES if t]} or None)"
             )
-
         if e.current_name in live_names:
             raise ValueError(
                 f"duplicate current_name {e.current_name!r}: "
@@ -222,11 +224,13 @@ def _validate_entries(entries: list[ZoneEntry]) -> None:
             )
         live_names[e.current_name] = idx
 
+    # Pass 2: collision checks now that we know the full live-name set.
+    # A prior_name on entry idx_A that matches the current_name of any OTHER
+    # live entry idx_B (whether B appears before or after A) is a collision —
+    # operators couldn't reliably address either zone. Matching this same
+    # entry's current_name is fine after a rename round-trip.
+    for idx, e in enumerate(entries):
         for p in e.prior_names:
-            # A prior_name that matches another LIVE entry's current_name is a
-            # collision — operators couldn't reliably address the live one.
-            # Matching this same entry's current_name is fine after a rename
-            # round-trip.
             owner_idx = live_names.get(p.name)
             if owner_idx is not None and owner_idx != idx:
                 raise ValueError(
