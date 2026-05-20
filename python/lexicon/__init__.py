@@ -26,6 +26,12 @@ from .vlans import (
     load_vlan_catalog,
 )
 from .vocabulary import Vocabulary, load_vocabulary_dir, load_vocabulary_file
+from .zones import (
+    ZoneCatalog,
+    ZoneEntry,
+    ZonePriorName,
+    load_zone_catalog,
+)
 
 __all__ = [
     "Catalog",
@@ -41,12 +47,16 @@ __all__ = [
     "VLANEntry",
     "VLANPriorName",
     "Vocabulary",
+    "ZoneCatalog",
+    "ZoneEntry",
+    "ZonePriorName",
     "load_catalog",
     "load_fleet_catalog",
     "load_recipe_book",
     "load_vlan_catalog",
     "load_vocabulary_dir",
     "load_vocabulary_file",
+    "load_zone_catalog",
     "roll",
     "roll_n",
     "roll_seeded",
@@ -142,4 +152,6 @@ def load_catalog_by_kind(path, kind: str = "projects"):
         return load_fleet_catalog(path)
     if kind == "vlans":
         return load_vlan_catalog(path)
+    if kind == "zones":
+        return load_zone_catalog(path)
     raise ValueError(f"unknown catalog kind: {kind}")
