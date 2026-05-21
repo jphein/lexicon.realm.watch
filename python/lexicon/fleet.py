@@ -17,8 +17,8 @@ from ruamel.yaml.comments import CommentedMap, CommentedSeq
 
 
 FLEET_ID_RE = re.compile(r"^(mac:[0-9a-f]{2}(:[0-9a-f]{2}){5}|fleet:[0-9a-f-]{36})$")
-LIVE_STATUSES = ("tentative", "curated")
-VALID_STATUSES = ("tentative", "curated", "retired")
+LIVE_STATUSES = ("tentative", "curated", "locked-out")
+VALID_STATUSES = ("tentative", "curated", "locked-out", "retired")
 MAX_RESOLVE_HOPS = 10
 
 
