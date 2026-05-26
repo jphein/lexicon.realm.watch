@@ -320,6 +320,23 @@ projects:
     status: local-only
     notes: Local only
 
+  - id: ubox0
+    current_name: ubox0
+    kind: tool
+    realm: forge
+    audience: personal
+    domain: ~
+    repo: https://github.com/jphein/ubox0
+    description: "Ops repo for the ubox0 homelab host — tailnet-side dnsmasq + Caddy for the split-horizon DNS that fronts realm.watch + jphe.in."
+    created: 2026-05-25
+    prior_names: []
+    status: active
+    notes: |
+      Companion to disks/, openwrt/, stack/. ubox0 hosts the
+      Tailscale-side resolver (100.120.187.90) plus Caddy reverse-proxy
+      for the half of *.jphe.in / *.realm.watch not served by disks.
+      Issues track listmonk-to-cloud migration and Headscale move.
+
   - id: realm-portal
     current_name: portal.realm.watch
     kind: tool
