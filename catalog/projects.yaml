@@ -600,7 +600,7 @@ projects:
     created: ~
     prior_names: []
     status: active
-    notes: "Production at `disks.jphe.in:8085`. HEAD currently on `feat/viz-dashboard`"
+    notes: "Production at `familiar:8085` (moved from disks.jphe.in 2026-05). HEAD currently on `feat/viz-dashboard`."
 
   - id: multipass-structural-memory-eval
     current_name: multipass-structural-memory-eval
@@ -1165,7 +1165,7 @@ projects:
     created: ~
     prior_names: []
     status: local-only
-    notes: "Local only (no git). 308M. Referenced by `~/.mempalace/config.json palace_path`. Migration to `disks.jphe.in:8085` daemon in flight"
+    notes: "Local only (no git). 308M. Referenced by `~/.mempalace/config.json palace_path`. Migration to the daemon on `familiar:8085` completed 2026-05."
 
   - id: claude-code-source
     current_name: claude-code-source
