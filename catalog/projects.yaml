@@ -65,7 +65,7 @@ projects:
     audience: personal
     domain: ~
     repo: https://github.com/jphein/realmwatch
-    description: Fantasy-themed homelab network monitor + game engine + MCP platform. 47 plugins covering network monitoring, the realm CLI (40+ verbs), the RPG layer (realm-engine, progression, quests, combat-ward, codex), and the Astral Conduit MCP server.
+    description: Fantasy-themed homelab network monitor + game engine + MCP platform. 48 plugins covering network monitoring, the realm CLI (40+ verbs), the RPG layer (realm-engine, progression, quests, combat-ward, codex), the Astral Conduit MCP server, and the Tide Singers wave-block plugin (manifest-driven live TUI dashboards over 13 realm verbs).
     created: 2025-09-01
     prior_names: []
     status: active
@@ -73,8 +73,14 @@ projects:
       Went public 2026-05-19 alongside the lexicon fleet-catalog feature
       ship. In May 2026 absorbed os.realm.watch's servers/ tree (realm-engine,
       progression, quest_forge, lore_keeper, combat_ward) as native plugins;
-      os.realm.watch is now OS-layer only. Candidate for rename to
-      <something>.realm.watch in v0.2.
+      os.realm.watch is now OS-layer only. 2026-05-27 shipped the Tide
+      Singers wave-block plugin: pure-stdlib ANSI renderer (renderer.py +
+      wave-block.py) with manifest-driven verb discovery — any plugin
+      declares a `wave` block in its plugin.json and gets `realm wave <verb>`
+      automatically. Also shipped `realm update` Phase A+B (Ubuntu safe-
+      upgrade + OpenWrt opkg via raw/Dropbear) and `realm ansible
+      upgrade-release` for major Ubuntu version bumps. Candidate for
+      rename to <something>.realm.watch in v0.2.
 
   - id: status
     current_name: status.realm.watch
