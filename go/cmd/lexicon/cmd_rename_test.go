@@ -99,7 +99,7 @@ func (f *fakeFS) RunInDir(dir, name string, args ...string) ([]byte, error) {
 // --plan tests
 // ---------------------------------------------------------------------------
 
-func TestRename_PlanPrintsTenSteps(t *testing.T) {
+func TestRename_PlanPrintsElevenSteps(t *testing.T) {
 	var stdout, stderr bytes.Buffer
 	code := run([]string{
 		"lexicon", "rename", "realmwatch", "watch.realm.watch",
@@ -110,7 +110,7 @@ func TestRename_PlanPrintsTenSteps(t *testing.T) {
 		t.Fatalf("exit %d; stderr=%q", code, stderr.String())
 	}
 	out := stdout.String()
-	for n := 1; n <= 10; n++ {
+	for n := 1; n <= 11; n++ {
 		needle := fmt.Sprintf("%2d.", n)
 		if !strings.Contains(out, needle) {
 			t.Errorf("plan output missing step %d marker %q\n%s", n, needle, out)
@@ -125,6 +125,7 @@ func TestRename_PlanPrintsTenSteps(t *testing.T) {
 		"DNS / Caddy reminder",
 		"Outline wiki path",
 		"Claude Code session storage rename",
+		"MemPalace wing rename",
 		"lexicon claim",
 		"Manual-verify checklist",
 		"realmwatch → watch.realm.watch",
@@ -194,6 +195,18 @@ func TestRename_BadSkipValue(t *testing.T) {
 	}, &stdout, &stderr)
 	if code == 0 {
 		t.Error("expected non-zero exit for skip=99")
+	}
+}
+
+func TestRename_SkipElevenIsValid(t *testing.T) {
+	var stdout, stderr bytes.Buffer
+	code := run([]string{
+		"lexicon", "rename", "old", "new",
+		"--plan", "--skip=11",
+		"--projects-dir", "/tmp/fake",
+	}, &stdout, &stderr)
+	if code != 0 {
+		t.Errorf("skip=11 should be valid; exit %d; stderr=%q", code, stderr.String())
 	}
 }
 
@@ -628,6 +641,55 @@ func TestExecute_GHCreateRemote_ScrubsLocalOnlyNotes(t *testing.T) {
 	}
 }
 
+func TestExecute_MempalaceWingRenamed(t *testing.T) {
+	fake := newFakeFS()
+	fake.runOut = []byte("Renamed 42 drawers from wing 'realmwatch' to 'watch.realm.watch'")
+
+	env := newTestEnv(t, fake, "/projects")
+	env.oldID = "realmwatch"
+	env.newName = "watch.realm.watch"
+
+	steps := buildRenameSteps()
+	skip := skipAllExcept(9)
+	if rc := executeRenamePlan(env, steps, skip); rc != 0 {
+		t.Fatalf("step 9 failed; stderr=%q", env.stderr.(*bytes.Buffer).String())
+	}
+	if len(fake.commands) != 1 {
+		t.Fatalf("expected 1 command, got %d: %v", len(fake.commands), fake.commands)
+	}
+	cmd := fake.commands[0]
+	if cmd[0] != "mempalace" || !contains(cmd, "rename-wing") {
+		t.Errorf("expected mempalace rename-wing command; got %v", cmd)
+	}
+	if !contains(cmd, "--from") || !contains(cmd, "realmwatch") {
+		t.Errorf("missing --from realmwatch: %v", cmd)
+	}
+	if !contains(cmd, "--to") || !contains(cmd, "watch.realm.watch") {
+		t.Errorf("missing --to watch.realm.watch: %v", cmd)
+	}
+}
+
+func TestExecute_MempalaceWingSkipsWhenNoWing(t *testing.T) {
+	fake := newFakeFS()
+	fake.runOut = []byte("0 drawers matched")
+	fake.runErr = fmt.Errorf("exit status 1")
+
+	env := newTestEnv(t, fake, "/projects")
+	env.oldID = "no-such-project"
+	env.newName = "renamed"
+
+	steps := buildRenameSteps()
+	skip := skipAllExcept(9)
+	rc := executeRenamePlan(env, steps, skip)
+	if rc != 0 {
+		t.Errorf("missing wing should not fail the runbook; rc=%d", rc)
+	}
+	stdout := env.stdout.(*bytes.Buffer).String()
+	if !strings.Contains(stdout, "skipping") {
+		t.Errorf("expected skip notice; got: %s", stdout)
+	}
+}
+
 func writeTempCatalog(t *testing.T, body string) string {
 	t.Helper()
 	p := filepath.Join(t.TempDir(), "projects.yaml")
@@ -655,9 +717,9 @@ func TestExecute_LexiconClaimUpdatesCatalog(t *testing.T) {
 	env.reason = "test rename"
 
 	steps := buildRenameSteps()
-	skip := skipAllExcept(9)
+	skip := skipAllExcept(10)
 	if rc := executeRenamePlan(env, steps, skip); rc != 0 {
-		t.Fatalf("execute step 9 failed; stderr=%q", env.stderr.(*bytes.Buffer).String())
+		t.Fatalf("execute step 10 failed; stderr=%q", env.stderr.(*bytes.Buffer).String())
 	}
 
 	cat, err := lexicon.LoadCatalog(tmpCat)
@@ -755,7 +817,7 @@ func skipAllExcept(steps ...int) map[int]bool {
 		keep[s] = true
 	}
 	skip := map[int]bool{}
-	for n := 1; n <= 10; n++ {
+	for n := 1; n <= 11; n++ {
 		if !keep[n] {
 			skip[n] = true
 		}

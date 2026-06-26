@@ -41,7 +41,7 @@ func (osRenameFS) RunInDir(dir, name string, args ...string) ([]byte, error) {
 	return cmd.CombinedOutput()
 }
 
-// renameStep is one item in the 10-step runbook.
+// renameStep is one item in the 11-step runbook.
 type renameStep struct {
 	num         int
 	title       string
@@ -113,7 +113,7 @@ func cmdRename(args []string, stdout, stderr io.Writer) int {
 	skipSet := map[int]bool{}
 	for _, s := range skipMulti.values {
 		n, err := strconv.Atoi(strings.TrimSpace(s))
-		if err != nil || n < 1 || n > 10 {
+		if err != nil || n < 1 || n > 11 {
 			fmt.Fprintf(stderr, "rename: --skip expects step number 1-10, got %q\n", s)
 			return 2
 		}
@@ -152,7 +152,7 @@ func cmdRename(args []string, stdout, stderr io.Writer) int {
 	return executeRenamePlan(env, steps, skipSet)
 }
 
-// buildRenameSteps returns the 10-step runbook from spec section 3.
+// buildRenameSteps returns the 11-step runbook from spec section 3.
 // The order mirrors the spec exactly.
 func buildRenameSteps() []renameStep {
 	return []renameStep{
@@ -197,12 +197,17 @@ func buildRenameSteps() []renameStep {
 			doFunc: stepSessionsRename,
 		},
 		{
-			num: 9, title: "lexicon claim — append rename to catalog", auto: true, skipKey: "claim",
+			num: 9, title: "MemPalace wing rename", auto: true, skipKey: "mempalace",
+			detail: "mempalace rename-wing --from {old} --to {new}",
+			doFunc: stepMempalaceWing,
+		},
+		{
+			num: 10, title: "lexicon claim — append rename to catalog", auto: true, skipKey: "claim",
 			detail: "lexicon claim {new} --renames={old} [--reason ...]",
 			doFunc: stepLexiconClaim,
 		},
 		{
-			num: 10, title: "Manual-verify checklist", auto: false, skipKey: "verify",
+			num: 11, title: "Manual-verify checklist", auto: false, skipKey: "verify",
 			detail: "Eyeball: cron jobs, systemd units, browser bookmarks, ~/.bashrc aliases, etc.",
 			doFunc: stepManualVerify,
 		},
@@ -456,6 +461,21 @@ func stepSessionsRename(env *renameEnv) error {
 		return nil
 	}
 	return env.fs.Rename(oldDir, newDir)
+}
+
+func stepMempalaceWing(env *renameEnv) error {
+	out, err := env.fs.Run("mempalace", "rename-wing", "--from", env.oldID, "--to", env.newName)
+	if err != nil {
+		msg := strings.TrimSpace(string(out))
+		if strings.Contains(msg, "0 drawers") || strings.Contains(msg, "not found") {
+			fmt.Fprintf(env.stdout, "  (no mempalace wing %q — skipping)\n", env.oldID)
+			return nil
+		}
+		fmt.Fprintf(env.stderr, "  mempalace output: %s\n", msg)
+		return err
+	}
+	fmt.Fprintf(env.stdout, "  %s\n", strings.TrimSpace(string(out)))
+	return nil
 }
 
 func stepLexiconClaim(env *renameEnv) error {
