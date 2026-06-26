@@ -712,18 +712,21 @@ projects:
     status: active
     notes: "Remote is org repo, not jphein"
 
-  - id: storyvox
-    current_name: storyvox
+  - id: candela
+    current_name: candela
     kind: tool
     realm: signal
     audience: external
-    domain: ~
-    repo: "https://github.com/jphein/storyvox"
-    description: Royal Road audiobook player with offline neural TTS + sentence-level reader/audio sync
+    domain: candela.techempower.org
+    repo: "https://github.com/techempower-org/candela"
+    description: Neural-voice audiobook player — reads any text from 20+ sources (Royal Road, AO3, Gutenberg, RSS, EPUB, Wikipedia, LibriVox…) via offline TTS (VoxSherpa — Piper/Kokoro/Kitten) or optional Azure HD; hybrid reader/audio with sentence highlighting. Library Nocturne aesthetic.
     created: ~
-    prior_names: []
+    prior_names:
+      - name: storyvox
+        retired: 2026-06-05
+        reason: Rebrand to Candela for the Google Play debut (storyvox name crowded/taken on Play)
     status: active
-    notes: "Active dev branch: `claude/issue-12-infinite-scroll`"
+    notes: "Rebranded storyvox → Candela (2026-06). Play package org.techempower.candela; engine/source namespace stays in.jphe.storyvox. GitHub repo renamed techempower-org/storyvox → /candela (old links redirect)."
 
   - id: voxsherpa-tts
     current_name: VoxSherpa-TTS
@@ -731,12 +734,12 @@ projects:
     realm: signal
     audience: external
     domain: ~
-    repo: "https://github.com/jphein/VoxSherpa-TTS"
+    repo: "https://github.com/techempower-org/VoxSherpa-TTS"
     description: "Offline neural TTS engine for Android (Sherpa-ONNX-powered, GPL v3)"
     created: ~
     prior_names: []
     status: active
-    notes: "Upstream: CodeBySonu95/VoxSherpa-TTS. On Play Store. Used by storyvox"
+    notes: "Fork of upstream CodeBySonu95/VoxSherpa-TTS. Consumed by Candela via JitPack (com.github.techempower-org:VoxSherpa-TTS:v2.8.0). Dependabot can't track JitPack tags — Candela uses a scheduled upstream-watch Action instead."
 
   - id: tonemask
     current_name: tonemask
