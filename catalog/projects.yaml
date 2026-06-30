@@ -1209,6 +1209,22 @@ projects:
     status: local-only
     notes: "Local only (no git). 69M, frozen since 2026-04-22 (`.all_done` flag)"
 
+  - id: dreamteam
+    current_name: dreamteam
+    kind: tool
+    realm: forge
+    audience: personal
+    domain: ~
+    repo: https://github.com/jphein/dreamteam
+    description: Claude Code plugin for memory-gated parallel agent orchestration — spawns named dream agents in isolated worktrees with admission control, reuse routing, and crash recovery.
+    created: 2026-06-30
+    prior_names: []
+    status: active
+    notes: |
+      Plugin installed via symlink: ~/.claude/plugins/cache/local/dreamteam/1.0.0 -> ~/Projects/dreamteam.
+      28 files: hook gates, 901-line SKILL.md, 4 custom agent types, 3 Workflow templates,
+      Artifact dashboard, and memory-budget scripts. Born from the 2026-06-30 OOM post-mortem.
+
   - id: deploy.realm.watch
     current_name: deploy.realm.watch
     kind: realm-tool
