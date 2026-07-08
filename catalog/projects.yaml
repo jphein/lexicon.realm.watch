@@ -1258,3 +1258,24 @@ projects:
       (Draconic Dominion / Eldritch Nexus / Jade Herald); MMO snake + six treasure-powers
       committed (flash pending). Live site: jphein.github.io/smol. Realm 'signal' =
       radio-mesh/data-flow, matching clock.realm.watch.
+
+  - id: guildmaster
+    current_name: guildmaster
+    kind: tool
+    realm: forge
+    audience: personal
+    domain: ~
+    repo: https://github.com/jphein/guildmaster
+    description: The guild hall of JP's dev-cycle toolchain — a git-tracked roster catalog rendered into an auto-loading Claude Code skill, housing the grimoire (prompt manager) and watchtower (agent diagnostics) subcommands.
+    created: 2026-07-08
+    prior_names: []
+    status: active
+    notes: |
+      One CLI (bin/guildmaster, aliased gm) whose subcommands are NOT separate repos,
+      so they are components of this entry rather than standalone catalog rows:
+        - grimoire — prompt manager: capture/promote/bless/render(->/gm:*)/fire (guildmaster #4-8, shipped)
+        - watchtower — `gm peek <agent>`: roster pid -> tmux pane diagnostics (guildmaster #2, shipped)
+        - quartermaster — agent-manager control plane (guildmaster #9-11, planned)
+      Also renders guild.yaml (a domain overlay on this catalog) into
+      ~/.claude/skills/guildmaster/SKILL.md. Realm 'forge' = craft/creation, matching
+      the dreamteam dev-tooling entry. domain empty until a dashboard serves.
