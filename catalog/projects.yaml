@@ -1237,3 +1237,24 @@ projects:
     prior_names: []
     status: active
     notes: v0.1 stub. Spec at docs/superpowers/specs/2026-05-08-design.md. Pairs with lexicon issue #10 (catalog deploy metadata fields).
+
+  - id: smol
+    current_name: smol
+    kind: tool
+    realm: signal
+    audience: personal
+    domain: ~
+    repo: https://github.com/jphein/smol
+    description: A whole game console + pocket watch on a $3 ESP32-C3 — unified no_std Rust firmware with a BOOT-menu, an ESP-NOW mesh (time sync, magical sigil names, shared-world MMO snake with treasure-powers), and single-hop internet-relay telemetry.
+    created: 2026-07-07
+    prior_names: []
+    status: active
+    notes: |
+      First downstream consumer of realm-sigil: a no_std Rust port of the deterministic
+      name algorithm at rust/clock/src/net/names.rs — fantasy node names (golden-ratio
+      id-spread seed) + forge version names (git-hash seed). See sigil.realm.watch #4
+      (corpus drift) and #5 (candidate to upstream as sigil-rs). Shipped 2026-07-07:
+      3-way ESP-NOW mesh (time sync + names) hardware-verified across 3 boards
+      (Draconic Dominion / Eldritch Nexus / Jade Herald); MMO snake + six treasure-powers
+      committed (flash pending). Live site: jphein.github.io/smol. Realm 'signal' =
+      radio-mesh/data-flow, matching clock.realm.watch.
