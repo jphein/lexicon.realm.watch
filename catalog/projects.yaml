@@ -1168,7 +1168,7 @@ projects:
     created: 2026-07-17
     prior_names: []
     status: active
-    notes: "Public 2026-07-18. Pages: https://jphein.github.io/ibags/ (realm-sigil version.json, monitored by status.realm.watch). Sister projects: itags, smartring, moyoung-watch. Prod (JP's house) still runs the Bermuda+ESPHome path; the custom_components/ibags integration is the public extraction — live-testing it on the HA VM is a follow-up. Internal notes: ha project scratch/ibags-internal/."
+    notes: "Public 2026-07-18. Pages: https://jphein.github.io/ibags/ (realm-sigil version.json, monitored by status.realm.watch). Sister projects: tagalong, smartring, moyoung-watch. Prod (JP's house) still runs the Bermuda+ESPHome path; the custom_components/ibags integration is the public extraction — live-testing it on the HA VM is a follow-up. Internal notes: ha project scratch/ibags-internal/."
 
   - id: itags
     current_name: tagalong
