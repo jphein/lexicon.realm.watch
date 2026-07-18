@@ -1160,15 +1160,15 @@ projects:
   - id: ibags
     current_name: ibags
     kind: tool
-    realm: forge
-    audience: personal
+    realm: signal
+    audience: public
     domain: ~
-    repo: ~
-    description: BLE bag tracker in Home Assistant — Bermuda presence + on-demand ring for a buttonless iTAG.
+    repo: https://github.com/jphein/ibags
+    description: A $2 buttonless BLE keyfinder as a bag tracker for Home Assistant — custom integration + ESPHome-node path.
     created: 2026-07-17
     prior_names: []
     status: active
-    notes: "Local git repo, no remote. Reference copies; live artifacts deploy to the HA VM (packages/bags_tag.yaml, iBags dashboard, ring ble_clients on kitchen + laundry-2 proxies)."
+    notes: "Public 2026-07-18. Pages: https://jphein.github.io/ibags/ (realm-sigil version.json, monitored by status.realm.watch). Sister projects: itags, smartring, moyoung-watch. Prod (JP's house) still runs the Bermuda+ESPHome path; the custom_components/ibags integration is the public extraction — live-testing it on the HA VM is a follow-up. Internal notes: ha project scratch/ibags-internal/."
 
   - id: itags
     current_name: itags
