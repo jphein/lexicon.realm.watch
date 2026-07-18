@@ -864,12 +864,12 @@ projects:
     realm: signal
     audience: external
     domain: ~
-    repo: "https://github.com/jphein/forageforall"
+    repo: "https://github.com/techempower-org/forageforall"
     description: Open-source map of fruit trees + edible plants on public land
     created: ~
     prior_names: []
     status: active
-    notes: "[Web app](https://jphein.github.io/forageforall/app/), AGPL-3.0"
+    notes: "[Web app](https://forage.techempower.org/app/), AGPL-3.0. Repo moved jphein -> techempower-org (old URL 301s); canonical site forage.techempower.org (jphein.github.io 404s)."
 
   - id: starcharts
     current_name: starcharts
