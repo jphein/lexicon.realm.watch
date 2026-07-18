@@ -1170,6 +1170,19 @@ projects:
     status: active
     notes: "Local git repo, no remote. Reference copies; live artifacts deploy to the HA VM (packages/bags_tag.yaml, iBags dashboard, ring ble_clients on kitchen + laundry-2 proxies)."
 
+  - id: itags
+    current_name: itags
+    kind: tool
+    realm: signal
+    audience: external
+    domain: ~
+    repo: https://github.com/jphein/itags
+    description: $2 BLE iTag keyfinders as room-aware buttons, find-my beepers, and presence for Home Assistant — native custom integration + ESPHome contested-claiming fleet.
+    created: 2026-07-18
+    prior_names: []
+    status: active
+    notes: "Public extraction of the iTag A/B/C system from ~/Projects/ha (which keeps the live prod copies). Pages: https://jphein.github.io/itags/ (realm-sigil version.json, monitored by status.realm.watch). Sister projects: smartring, moyoung-watch. Prod stays on the ESPHome fleet; the custom_components/itag integration is not yet live-tested on the HA VM."
+
   - id: mempalace-data
     current_name: mempalace-data
     kind: tool
