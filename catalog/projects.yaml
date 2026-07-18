@@ -1157,6 +1157,19 @@ projects:
     status: local-only
     notes: "Local only (no git). 42M (mostly the `scratch/` subdir from 2026-04-27 triage)"
 
+  - id: ibags
+    current_name: ibags
+    kind: tool
+    realm: forge
+    audience: personal
+    domain: ~
+    repo: ~
+    description: BLE bag tracker in Home Assistant — Bermuda presence + on-demand ring for a buttonless iTAG.
+    created: 2026-07-17
+    prior_names: []
+    status: active
+    notes: "Local git repo, no remote. Reference copies; live artifacts deploy to the HA VM (packages/bags_tag.yaml, iBags dashboard, ring ble_clients on kitchen + laundry-2 proxies)."
+
   - id: mempalace-data
     current_name: mempalace-data
     kind: tool
