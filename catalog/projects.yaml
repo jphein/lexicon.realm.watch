@@ -1199,6 +1199,19 @@ projects:
     status: active
     notes: "Public 2026-07-18 (HACS v0.1.0); Pages face-builder at https://jphein.github.io/moyoung-watch/. 2026-07-27: became the single project home — all MoYoung work extracted from ~/Projects/smartwatch (which is GTX2-only again; pre-split history stays in its log). Sister projects: ibags, tagalong, smartring. Deploy to the HA VM via deploy-moyoung-cc.sh (config in gitignored .deploy.env)."
 
+  - id: p5s-watch
+    current_name: p5s-watch
+    kind: tool
+    realm: signal
+    audience: personal
+    domain: ~
+    repo: https://github.com/jphein/p5s-watch
+    description: Reverse-engineering the P5S smartwatch (vendor app ZmooFit, Realtek RTL8762-class) for Linux + Home Assistant control.
+    created: 2026-07-27
+    prior_names: []
+    status: active
+    notes: "Private repo, recon stage 2026-07-27: GATT mapped (docs/gatt-map.md), protocol NOT yet spoken. NOT a MoYoung device (no 0xFEEA) — moyoung-watch's client will not drive it; shares only the Realtek 3c17-d293 UUID base. Closest public precedent = Gadgetbridge keephealth/C60 (cousin, not drop-in). Reads+notifies gated behind a probable vendor handshake on ff02. Next step = HCI-snoop ZmooFit. Sister projects: moyoung-watch, smartwatch (GTX2)."
+
   - id: mempalace-data
     current_name: mempalace-data
     kind: tool
