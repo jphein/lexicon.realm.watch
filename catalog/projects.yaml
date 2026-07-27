@@ -1186,6 +1186,19 @@ projects:
     status: active
     notes: "Public extraction of the iTag A/B/C system from ~/Projects/ha (which keeps the live prod copies). Pages: https://jphein.github.io/tagalong/ (realm-sigil version.json, monitored by status.realm.watch). Sister projects: smartring, moyoung-watch. Prod stays on the ESPHome fleet; the custom_components/itag integration (domain kept 'itag' — names the device) is not yet live-tested on the HA VM."
 
+  - id: moyoung-watch
+    current_name: moyoung-watch
+    kind: tool
+    realm: signal
+    audience: public
+    domain: ~
+    repo: https://github.com/jphein/moyoung-watch
+    description: MoYoung-v2 / Da Fit cheap smartwatches (TG38 etc.) as Home Assistant wearables — BLE client, custom integration, injectable custom faces + builder site.
+    created: 2026-07-18
+    prior_names: []
+    status: active
+    notes: "Public 2026-07-18 (HACS v0.1.0); Pages face-builder at https://jphein.github.io/moyoung-watch/. 2026-07-27: became the single project home — all MoYoung work extracted from ~/Projects/smartwatch (which is GTX2-only again; pre-split history stays in its log). Sister projects: ibags, tagalong, smartring. Deploy to the HA VM via deploy-moyoung-cc.sh (config in gitignored .deploy.env)."
+
   - id: mempalace-data
     current_name: mempalace-data
     kind: tool
