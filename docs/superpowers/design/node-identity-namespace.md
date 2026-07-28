@@ -91,6 +91,50 @@ raw YAML passes while the live namespace still collides.
 
 ---
 
+## 2b. 🔴 INVARIANT: a bare noun is never an identifier
+
+**This is the invariant, not a mitigation — and no vocabulary size can replace it.**
+
+The full sigil is unique: **256/256 distinct, 0 collisions.** The bare noun is not, and *cannot be*:
+
+| identifier form | distinct over 256 ids | collisions |
+|---|---|---|
+| **full sigil** (`adj noun`) | **256** | **0** |
+| bare noun, 32 nouns | 32 | **224** (max **9** ids share one noun) |
+| bare noun, 16 nouns | 16 | **240** (max **18**) |
+
+**Pigeonhole makes this permanent:** 256 ids over N nouns forces **≥ ⌈256/N⌉ ids per noun**. With 32
+nouns that is **≥ 8 boards sharing every noun, guaranteed**. Buying noun-uniqueness with vocabulary
+would need **N ≥ 256** — 256 nouns, which is absurd. **So the rule is the only fix available.**
+
+> **INVARIANT — any surface too small for the full sigil MUST show a disambiguated short form: `noun +
+> id`, or `adjective-initial + noun`. Never the bare noun.**
+
+### This is the actual root cause of the three-Herald bug
+`name_for_id()` has *always* returned a unique pair. Callers threw half of it away. And it is **not one
+bad line — it is systemic**, which is precisely why it needs to be a stated rule rather than a fix:
+
+`custom.rs:126` · `clock.rs:112` · `menu.rs:135` · `about.rs:92` · `ota_screen.rs:310` ·
+`mesh_snake/mod.rs:488` · `finder.rs:223` · `finder.rs:246` — **eight call sites take `.1` and discard
+the adjective.** Every one is a space-constrained surface, so every one was locally reasonable. The
+72×40 OLED cannot render "Obsidian Aegis", so *something* must shorten — the bug is that the shortening
+chose the **non-unique half**.
+
+`finder.rs` goes further and **clips** the noun (`clip(name, 6)`, `clip(name, 8)`), so a fix that only
+restores the adjective still needs the clip to be applied to a form that survives it.
+
+### Curation constraint that falls out of it
+Because short forms clip, **the noun set must stay distinct under truncation.** Verified for the shipped
+32: distinct at **5, 6 and 8** characters. This is *not* automatic — `citadel`/`citation` would collide
+at 6 — so **treat it as a check when swapping any word**, not a happy accident.
+
+### Why this settles 32 × 32 over 32 × 16
+Both are collision-free on the **full sigil**, so the tiebreak is entirely about the **short form**:
+32 nouns halve the bare-noun blast radius (**max 9 ids per noun instead of 18**). That is mitigation
+while the invariant is the fix — but it is free mitigation, and the fleet grows.
+
+---
+
 ## 3. The taxonomy — the durable part
 
 `names.rs` already separates two namespaces deliberately: node names come from FANTASY, **version**
@@ -159,9 +203,11 @@ Four judgement calls, stated so they can be reversed cheaply:
    re-voiced without touching the taxonomy.
 3. **`herald` and `oracle` are reserved even though they are lovely words.** Both are genuinely
    overloaded today. If a feature is ever renamed, they can return — the reserved set is data.
-4. **32 × 32, not larger.** 32 × 16 also proves clean, but 32 nouns leaves room to reserve more words
-   later without re-proving uniqueness. Going wider (64) would mean a bigger one-time rename for
-   headroom nobody has asked for.
+4. **32 × 32, not 32 × 16 and not 64.** Both smaller options are collision-free on the *full* sigil, so
+   the tiebreak is the **short form** (§2b): 32 nouns halve the bare-noun blast radius, max 9 ids per
+   noun instead of 18. Going wider (64) would mean a bigger one-time rename for headroom nobody has
+   asked for. *If 32 genuinely good nouns had not been reachable after exclusions, 16 good words beat 32
+   padded ones — the invariant matters more than the count.*
 
 ---
 
