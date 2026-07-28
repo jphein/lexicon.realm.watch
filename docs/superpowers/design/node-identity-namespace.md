@@ -31,15 +31,36 @@ choices against the real mapping — `adj[seed % A]`, `noun[(seed >> 8) % N]`, `
 **`32 × 16` = 512 combinations achieves zero collisions while `40 × 40` = 1600 still collides seven
 times.** Three times the vocabulary, still broken. So corpus size is not the lever.
 
-### The mechanism
-With `A = 2^k`, `seed % A` is the seed's **low k bits** and `(seed >> 8) % N` is **bits 8…8+k−1** —
-two **disjoint bit fields**. Non-power-of-two moduli *mix* bits, correlating the two indices, which is
-why `24 × 25` is catastrophic despite the two counts being coprime. (Coprimality is the wrong
-intuition here and was my first guess; the numbers refuted it.)
+### The mechanism — and the limit of the explanation
+With `A = 2^k`, `seed % A` selects the seed's **low k bits** and `(seed >> 8) % N` selects **bits
+8…8+k−1**. Those bit *ranges* don't overlap, which is why powers of two behave far better than
+arbitrary moduli: non-power-of-two moduli *mix* bits across the whole word and correlate the two
+indices, which is why `24 × 25` is catastrophic despite the counts being coprime. (Coprimality is the
+wrong intuition and was my first guess; the numbers refuted it.)
 
-There is an algebraic half too, and it explains why **32** specifically: `2654435761` is **odd**, so
-`gcd(G, 32) = 1` and `id ↦ (id·G) mod 32` is a **bijection mod 32**. With 32 adjectives the adjective
-alone separates every id-class mod 32, leaving the noun to separate only the 8 ids within each class.
+One algebraic half **is** provable, and it is why **32** specifically: `2654435761` is **odd**, so
+`gcd(G, 32) = 1` and `id ↦ (id·G) mod 32` is a **bijection mod 32**. So 32 adjectives separate every
+id-class mod 32 outright, leaving the noun to separate only the 8 ids inside each class.
+
+> ⚠️ **The second half is NOT proved, and I overstated this at first.** Calling the two fields
+> "disjoint" is too strong: **carries out of the low bits of `i·G` propagate into bits 8–12**, so the
+> noun index is not independent of the adjective index and there is no clean algebraic argument that the
+> 8 ids in a class always land on 8 distinct nouns. *(morpheus-sigil's correction, verified.)*
+>
+> **So the enumeration is doing real work — it is not decorating a theorem.** Injectivity is a property
+> of the **tuple `(G, A, N)`**, established by exhaustive check, not by the bit-field picture. The
+> picture explains *why to look at powers of two*; it does not license skipping the test.
+
+### 🔓 Corollary: words are free, counts are not
+Because injectivity depends only on `(G, A, N)` — **never on which words are in the lists** — the
+vocabulary can be **re-curated freely**: swap a word, reorder, beautify, replace something JP dislikes.
+**None of that can break uniqueness.** Only two things can:
+
+1. changing a **count** away from 32, or
+2. letting a **reserved word** back in.
+
+Those are exactly the two properties the sigil crate gates, which is why they are asserted as an
+**equality** (`len == 32`) and an **empty intersection** rather than as bounds.
 
 ### What the guarantee is
 **Not** a probability, and **not** a size inequality — `24 × 25` satisfies `600 ≥ 256` and collides 201
@@ -125,8 +146,10 @@ restores the adjective still needs the clip to be applied to a form that survive
 
 ### Curation constraint that falls out of it
 Because short forms clip, **the noun set must stay distinct under truncation.** Verified for the shipped
-32: distinct at **5, 6 and 8** characters. This is *not* automatic — `citadel`/`citation` would collide
-at 6 — so **treat it as a check when swapping any word**, not a happy accident.
+32: distinct at **4, 5, 6 and 8** characters (morpheus-sigil independently confirmed 4 — one tighter
+than I checked). This is *not* automatic — `citadel`/`citation` would collide at 6 — so **treat it as a
+check when swapping any word**, not a happy accident. It is the one curation constraint that is *not*
+covered by the counts-are-the-only-risk corollary above, because it depends on the letters.
 
 ### Why this settles 32 × 32 over 32 × 16
 Both are collision-free on the **full sigil**, so the tiebreak is entirely about the **short form**:

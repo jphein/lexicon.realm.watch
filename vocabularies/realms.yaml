@@ -11,6 +11,20 @@ realms:
   fantasy:
     description: High-fantasy Tolkienesque vocabulary
     words: [primal, shadow, ember, runic, moonlit, ravenforge, brimwarden, hollow, mistveil, oakheart]
+  fleet:
+    # NODE IDENTITY. Registered as a realm so sync-vocabularies.sh emits it — the script
+    # iterates realms.keys() and looks up the matching group in adjectives.yaml/nouns.yaml,
+    # so a group without a realm entry is invisible to everything downstream
+    # (lexicon -> sync -> realms.json -> codegen -> Rust). Found by morpheus-sigil, 2026-07-28.
+    #
+    # ⚠️ The adjectives.fleet / nouns.fleet groups are SIZE-LOCKED at 32 each and must stay so:
+    # node names are adj[seed % 32] + noun[(seed >> 8) % 32], and 32 = 2^5 is what yields 256
+    # distinct names across the whole u8 id space. See
+    # docs/superpowers/design/node-identity-namespace.md. The `words` list below is realm
+    # FLAVOUR (project/branch rolls), sampled from the noun group — it is NOT a third corpus and
+    # is not size-locked.
+    description: Node identity — one board, one name (size-locked 32x32; see design doc)
+    words: [aegis, brazier, cairn, chalice, citadel, diadem, lodestar, obelisk, orrery, sanctum]
   tarot:
     description: Tarot-card archetypes and arcana
     words: [arcana, fool, hierophant, hanged, tower, star, sun, moon, judgement, world]
