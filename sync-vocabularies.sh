@@ -106,28 +106,62 @@ PYEOF
 
 TARGET="$SIGIL_DIR/words/realms.json"
 
-case "$MODE" in
-  dry-run)
-    echo "# would write: $TARGET"
-    printf '%s\n' "$RENDERED"
-    ;;
-  check)
-    if [[ ! -f "$TARGET" ]]; then
-      echo "drift: $TARGET does not exist" >&2
-      exit 1
-    fi
-    if ! diff -u "$TARGET" <(printf '%s\n' "$RENDERED") > /tmp/sync-vocab-diff.$$ 2>&1; then
-      echo "drift detected in $TARGET" >&2
-      cat /tmp/sync-vocab-diff.$$ >&2
-      rm -f /tmp/sync-vocab-diff.$$
-      exit 1
-    fi
-    rm -f /tmp/sync-vocab-diff.$$
-    echo "ok: $TARGET matches lexicon vocabularies"
-    ;;
-  write)
-    mkdir -p "$(dirname "$TARGET")"
-    printf '%s\n' "$RENDERED" > "$TARGET"
-    echo "wrote: $TARGET"
-    ;;
-esac
+# The reserved set travels the SAME path as the vocabularies, because it is only meaningful
+# alongside them: a consumer that generates a node-identity table must assert
+# `vocabulary ∩ reserved == ∅` BEFORE asserting uniqueness, and it can only do that if the
+# exclusion list arrives with the words. Shipping the words without the exclusions is what lets a
+# downstream project quietly name a board after a role (`crown` IS the gateway role) — which is
+# the ambiguity this file exists to prevent. Flat sorted list; the grouped-by-reason YAML keeps
+# the rationale, consumers only need membership.
+RESERVED_YAML="$LEXICON_DIR/vocabularies/reserved.yaml"
+RENDERED_RESERVED="$(
+  python3 - "$RESERVED_YAML" <<'PYEOF'
+import json, sys
+try:
+    import yaml
+except ImportError:
+    print("error: PyYAML required to render reserved.json", file=sys.stderr); sys.exit(1)
+with open(sys.argv[1]) as f:
+    doc = yaml.safe_load(f) or {}
+groups = doc.get("reserved", {}) or {}
+words = sorted({w.strip().lower() for g in groups.values() for w in (g.get("words") or [])})
+print(json.dumps({"reserved": words}, indent=2, ensure_ascii=False))
+PYEOF
+)"
+TARGET_RESERVED="$SIGIL_DIR/words/reserved.json"
+
+emit() { # emit <mode> <target> <rendered> <label>
+  local mode="$1" target="$2" rendered="$3" label="$4"
+  case "$mode" in
+    dry-run)
+      echo "# would write: $target"
+      printf '%s\n' "$rendered"
+      ;;
+    check)
+      if [[ ! -f "$target" ]]; then
+        echo "drift: $target does not exist" >&2
+        return 1
+      fi
+      if ! diff -u "$target" <(printf '%s\n' "$rendered") > "/tmp/sync-vocab-diff.$$" 2>&1; then
+        echo "drift detected in $target" >&2
+        cat "/tmp/sync-vocab-diff.$$" >&2
+        rm -f "/tmp/sync-vocab-diff.$$"
+        return 1
+      fi
+      rm -f "/tmp/sync-vocab-diff.$$"
+      echo "ok: $target matches lexicon $label"
+      ;;
+    write)
+      mkdir -p "$(dirname "$target")"
+      printf '%s\n' "$rendered" > "$target"
+      echo "wrote: $target"
+      ;;
+  esac
+}
+
+# Both targets are checked even when the first drifts, so `--check` reports every divergence in one
+# run rather than making the caller re-run to discover the second.
+rc=0
+emit "$MODE" "$TARGET" "$RENDERED" "vocabularies" || rc=1
+emit "$MODE" "$TARGET_RESERVED" "$RENDERED_RESERVED" "reserved set" || rc=1
+exit "$rc"
