@@ -3,6 +3,18 @@ adjectives:
     # Path B union with realm-sigil/words/realms.json as of 2026-05-07.
     description: Atmospheric, evocative adjectives for fantasy names
     words: [ancient, arcane, blazing, brimming, celestial, draconic, eldritch, fabled, gilded, hallowed, hollow, infernal, jade, kindled, luminous, lunar, mystic, mythic, noble, obsidian, primal, radiant, runic, somber, spectral, twilight, valiant, woven]
+  fleet:
+    # NODE IDENTITY — size-locked at 32. See docs/superpowers/design/node-identity-namespace.md
+    #
+    # ⚠️ THE COUNT IS LOAD-BEARING. Node names are `adj[seed % A]` + `noun[(seed >> 8) % N]`
+    # with `seed = id * 2654435761`. A = 32 = 2^5 makes the adjective index the seed's LOW 5
+    # BITS and the noun index bits 8-12 — two DISJOINT bit fields, which is what yields 256
+    # distinct names over the full u8 id space. Non-powers-of-two mix bits and re-collide:
+    # 24 x 25 (600 combos) collides 201 times where 32 x 16 (512 combos) collides ZERO.
+    # ADDING OR REMOVING ONE WORD HERE BREAKS UNIQUENESS AND RENAMES EVERY BOARD.
+    # Grow the `fantasy` group instead — it feeds project/branch rolls and is free to change.
+    description: Node-identity adjectives (fantasy voice, size-locked at 32 — do not resize)
+    words: [ancient, arcane, argent, ashen, blazing, brimming, celestial, draconic, eldritch, fabled, gilded, hallowed, hollow, infernal, jade, kindled, luminous, lunar, mystic, mythic, noble, obsidian, primal, radiant, runic, seraphic, somber, spectral, twilight, umbral, valiant, woven]
   oracle:
     description: Adjectives for prophecy, fate, and divination
     words: [augural, fated, prescient, sibylline, dreaming, prophetic, foretold, whispered, veiled, divining, foreseen, omened, occult, scrying]

@@ -3,6 +3,17 @@ nouns:
     # Path B union with realm-sigil/words/realms.json as of 2026-05-07.
     description: Concrete fantasy nouns suitable for compound names
     words: [aegis, beacon, crown, dominion, echo, ember, forge, grimoire, herald, hollow, insignia, jewel, keystone, lantern, monolith, nexus, oracle, pinnacle, pulsar, quartz, raven, relic, sigil, throne, warden]
+  fleet:
+    # NODE IDENTITY — size-locked at 32. See docs/superpowers/design/node-identity-namespace.md
+    #
+    # ⚠️ Same locked-count rule as adjectives.fleet. Every word here is checked against
+    # vocabularies/reserved.yaml: node identity must not reuse a role, frame, feature, tool or
+    # version-namespace word. `crown` (gateway ROLE), `beacon` (a SMOLv1 FRAME), `forge` (the
+    # VERSION-name realm), `herald`, `oracle` and `sigil` were all removed for that reason.
+    # `hollow` is omitted here because it is also an adjective in this realm — "Hollow Hollow"
+    # is a reachable roll.
+    description: Node-identity nouns (fantasy voice, size-locked at 32 — do not resize)
+    words: [aegis, bastion, brazier, cairn, chalice, citadel, diadem, dominion, echo, ember, glyph, grimoire, insignia, jewel, keystone, lantern, lodestar, monolith, nexus, obelisk, orrery, pinnacle, pulsar, quartz, raven, relic, sanctum, spire, talisman, throne, vigil, warden]
   oracle:
     description: Nouns for prophecy, fate, and divination
     words: [oracle, augur, sibyl, prophet, omen, vision, harbinger, dreamer, seer, scrying, prophecy, runecast, soothsayer, divination]

@@ -1,0 +1,33 @@
+# Reserved words — MUST NOT appear in any node-identity vocabulary.
+#
+# Rationale and the full taxonomy: docs/superpowers/design/node-identity-namespace.md
+#
+# This file is DATA, deliberately. The exclusion is meant to be a TEST that every consumer
+# inherits, not a habit someone remembers — a hand-filtered reserved list rots exactly like the
+# hand-maintained entity lists that produced smol issues #308/#309/#310. Consumers should assert
+# `node vocabulary ∩ reserved == ∅` and fail the build, and apply the exclusion BEFORE any
+# uniqueness assertion (checking distinctness over the raw list passes while the live namespace
+# still collides).
+#
+# Add a word here the moment a project term is coined. That is cheaper than discovering, as we did
+# on 2026-07-28, that a board has been called `Crown` while `crown` is the gateway role — an
+# ambiguity that cost real debugging time.
+reserved:
+  roles:
+    description: Mesh roles and topology words — a node named for a role is a permanent ambiguity
+    words: [crown, gateway, leaf, relay, peer, holder]
+  frames:
+    description: SMOLv1 wire frames — a node named for a frame makes log lines ambiguous
+    words: [beacon, hello, ack, time, batt, grid, cfg, diag, scan, snk, fam]
+  namespaces:
+    description: Vocabularies that name something OTHER than a node — identity must not collide with provenance
+    words: [forge]
+  features:
+    description: Product features and screens
+    words: [bard, herald, familiar, cast, custom, bench, clock, snake]
+  tools:
+    description: Tools, products and sibling projects
+    words: [sigil, lexicon, realm, meshscope, observatory, ledger]
+  workflow:
+    description: Review and agent roles used in this project's process
+    words: [oracle, scribe]
