@@ -25,6 +25,11 @@ realms:
     # is not size-locked.
     description: Node identity — one board, one name (size-locked 32x32; see design doc)
     words: [aegis, brazier, cairn, chalice, citadel, diadem, lodestar, obelisk, orrery, sanctum]
+  creature:
+    # Registered so sync-vocabularies.sh emits it — a group without a realm entry is invisible
+    # downstream (learned the hard way with `fleet`, 2026-07-28).
+    description: The Mesh Familiar's creatures — one living thing, many boards
+    words: [sprite, wisp, moth, finch, wren, newt, hare, fawn, drake, kelpie]
   tarot:
     description: Tarot-card archetypes and arcana
     words: [arcana, fool, hierophant, hanged, tower, star, sun, moon, judgement, world]

@@ -15,6 +15,10 @@ adjectives:
     # Grow the `fantasy` group instead — it feeds project/branch rolls and is free to change.
     description: Node-identity adjectives (fantasy voice, size-locked at 32 — do not resize)
     words: [ancient, arcane, argent, ashen, blazing, brimming, celestial, draconic, eldritch, fabled, gilded, hallowed, hollow, infernal, jade, kindled, luminous, lunar, mystic, mythic, noble, obsidian, primal, radiant, runic, seraphic, somber, spectral, twilight, umbral, valiant, woven]
+  creature:
+    # Pairs with nouns.creature. See that group for why this is not size-locked.
+    description: Creature adjectives for the Mesh Familiar (disjoint from fleet and reserved)
+    words: [amber, bashful, chittering, curious, dappled, downy, drowsy, feathered, furred, gentle, glimmering, hungry, inquisitive, lively, mossy, nimble, plucky, quick, restless, scruffy, skittish, speckled, tufted, whiskered]
   oracle:
     description: Adjectives for prophecy, fate, and divination
     words: [augural, fated, prescient, sibylline, dreaming, prophetic, foretold, whispered, veiled, divining, foreseen, omened, occult, scrying]

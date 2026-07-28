@@ -14,12 +14,25 @@ nouns:
     # is a reachable roll.
     description: Node-identity nouns (fantasy voice, size-locked at 32 — do not resize)
     words: [aegis, bastion, brazier, cairn, chalice, citadel, diadem, dominion, echo, ember, glyph, grimoire, insignia, jewel, keystone, lantern, lodestar, monolith, nexus, obelisk, orrery, pinnacle, pulsar, quartz, raven, relic, sanctum, spire, talisman, throne, vigil, warden]
+  creature:
+    # THE FAMILIAR's creature names — a THIRD namespace (identity · provenance · creature).
+    # NOT size-locked and deliberately NOT a power of two: the familiar seeds from a u32
+    # (familiar/mod.rs:534), so the domain is ~2^32 and injectivity is IMPOSSIBLE, not merely
+    # unneeded. 24x24 = 576 combos keeps a birthday collision across 10 concurrently-visible
+    # creatures near 7.5%, and a collision is cosmetic — a creature is never an addressing key.
+    # The REAL requirement is set disjointness: from reserved, and from fleet.
+    description: Creature names for the Mesh Familiar (disjoint from fleet and reserved)
+    words: [sprite, wisp, moth, finch, wren, newt, vole, hare, fawn, cub, kit, imp, pika, shrew, marten, otter, gecko, skink, drake, wyrmling, pixie, brownie, kelpie, faun]
   oracle:
     description: Nouns for prophecy, fate, and divination
     words: [oracle, augur, sibyl, prophet, omen, vision, harbinger, dreamer, seer, scrying, prophecy, runecast, soothsayer, divination]
   forge:
     description: Nouns for smithing, craft, and creation
-    words: [forge, anvil, kiln, ember, hammer, smithy, smelter, ironheart, wright, crucible, bellows, mold, ingot, foundry]
+    # `ember` REMOVED 2026-07-28: it collided with nouns.fleet, and forge names BUILDS while fleet
+    # names BOARDS — one word doing both is the exact ambiguity the split exists to prevent.
+    # Replaced (not dropped) so the list stays 14 and only this index's name shifts; `quench` is
+    # already in smol's pinned forge table, so this moves upstream TOWARD it rather than further away.
+    words: [forge, anvil, kiln, quench, hammer, smithy, smelter, ironheart, wright, crucible, bellows, mold, ingot, foundry]
   signal:
     # Path B union with realm-sigil/words/realms.json as of 2026-05-07.
     description: Nouns for networking, electromagnetic, and data-flow imagery

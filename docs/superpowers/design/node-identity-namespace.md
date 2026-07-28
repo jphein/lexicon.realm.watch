@@ -173,8 +173,49 @@ provenance is never confused with identity at a glance."* This generalises that 
 | **Features** | a capability | `Bard`, `Herald`, `Familiar`, `Cast` | product words, never a name |
 | **Tools** | a program | `sigil`, `lexicon`, `meshscope` | project words, never a name |
 
+| **Creature** | the Familiar — *which living thing is this?* | `adjectives.creature` + `nouns.creature` (**24 × 24, deliberately NOT locked**) | disjoint from `fleet` **and** `reserved` |
+
 **The rule in one line: identity must not share a vocabulary with roles, versions, frames, features or
 tools.** Everything above is one of those, so everything above is reserved.
+
+### ⚠️ The gap that rule had: it only pointed outward
+
+`reserved.yaml` stops identity colliding with *roles and features*. **Nothing in it stopped two
+identity-ish namespaces colliding with each other** — and they did:
+
+- **`familiar/mod.rs:280` has carried the comment *"distinct from any node's name"* since it was
+  written, while creatures and nodes drew from the identical corpus.** The property was documented and
+  never held. *(Found by morpheus-sigil.)*
+- **`forge` shared the noun `ember` with `fleet`** — the **version** realm and the **identity** realm,
+  one word naming both a build and a board. Latent only because smol pins the old 20-word forge table;
+  it fires the moment anyone syncs.
+
+**So the rule needs a second clause: no two naming namespaces may share a word, in either position.**
+That is now machine-checked — `realms_disjoint` / `nouns_disjoint` / `adjectives_disjoint` are const fns
+in realm-sigil (`c17239d`), so a consumer asserts it at **compile time**.
+
+#### Which overlaps actually matter — the triage, not just the list
+The checker found overlaps in `signal` (`keystone`, `pulsar`), `stellar` (`celestial`, `luminous`),
+`tarot` (`arcane`) and `void`/`fantasy` (`hollow`, cross-position). Only **`forge`** was fixed. The
+distinguishing test is worth stating, because "all overlaps are bugs" would be both false and expensive:
+
+> **An overlap is dangerous when the two namespaces both name things that appear in the same
+> operational sentence.** *"Board X is running build Y"* puts identity and provenance side by side, so
+> `ember` meaning either is a real ambiguity. A **project** name never appears in that sentence, so
+> `pulsar` naming both a node and a repo costs nothing.
+
+`fantasy` overlaps `fleet` on 28 adjectives and 18 nouns **by design** — `fleet` was curated *from* that
+pool — and that is not a defect either.
+
+#### How the ember fix was chosen
+`ember` was removed from **`forge`**, not from `fleet`, and **replaced** rather than dropped:
+
+1. **`fleet` is size-locked at 32.** Removing a word breaks the lock *and* renames every board — a
+   second fleet-wide rename in one day.
+2. **Replacing keeps `forge` at 14**, so only the name at that one index shifts. Removing would shift
+   every subsequent index.
+3. **`quench` is already in smol's pinned forge table**, so the fix moves upstream *toward* smol rather
+   than further away — it **reduces** the sync divergence rather than adding to it.
 
 **The test this implies** — and it is the thing that stops this recurring when someone ships a feature
 called Ember: **when you coin a project term, add it to `reserved.yaml` in the same change.** The build
