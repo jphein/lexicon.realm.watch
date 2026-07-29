@@ -343,6 +343,32 @@ projects:
       for the half of *.jphe.in / *.realm.watch not served by disks.
       Issues track listmonk-to-cloud migration and Headscale move.
 
+  - id: spyglass
+    current_name: spyglass
+    kind: tool
+    realm: forge
+    audience: personal
+    domain: ~
+    repo: https://github.com/jphein/spyglass
+    description: "Camera wall dashboard for a permanently-mounted iPad 3 (iOS 9.3.6) — protocol-downgrade gateway that re-serves VLAN10 cameras plus optional Home Assistant status and controls as plain HTTP."
+    created: 2026-07-18
+    prior_names: []
+    status: active
+    notes: |
+      Extracted from ubox0:/opt/spyglass into its own repo 2026-07-28.
+      Deployed on ubox0 as spyglass.service (port 8300); source of truth is
+      ~/Projects/spyglass and ./deploy.sh rsyncs it. Private repo.
+
+      Hard constraint: static/index.html must stay strict ES5 — Safari 9 has
+      no WebRTC/MSE/modern TLS, and a syntax error blanks the wall panel with
+      no console available. server.py is stdlib-only (realm_sigil vendored).
+
+      HA is an optional passenger, never a dependency: status strip (outdoor
+      temp, solar, grid, battery SOC) plus a control drawer for outdoor
+      lighting and sprinkler valves, behind a closed server-side allowlist
+      (ha.json) and a confirm-tap. Grid/inverter/breaker-class entities are
+      denied at startup — switch.grid must never be reachable from the panel.
+
   - id: realm-portal
     current_name: portal.realm.watch
     kind: tool
