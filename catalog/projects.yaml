@@ -1360,3 +1360,36 @@ projects:
       Also renders guild.yaml (a domain overlay on this catalog) into
       ~/.claude/skills/guildmaster/SKILL.md. Realm 'forge' = craft/creation, matching
       the dreamteam dev-tooling entry. domain empty until a dashboard serves.
+
+  - id: endlesslitrpg
+    current_name: endlesslitrpg
+    kind: service
+    realm: fantasy
+    audience: personal
+    domain: ~
+    repo: https://github.com/jphein/endlesslitrpg
+    description: Endless LitRPG serial narrated by Ember (local Qwen3.6 on familiar). Rust workspace — engine, store, TTS registry, daemon, CLI — writing one chapter at a time with an append-only ledger, multi-voice audio (sherpa-onnx + Azure DragonHD), Range-streamable PCM for the ESP32-C6 watch, and an RSS feed.
+    created: 2026-07-29
+    prior_names: []
+    status: active
+    notes: |
+      Realm 'fantasy' matches what the daemon's own /api/version reports.
+      Domain empty deliberately: the watch does DNS but the daemon is reached
+      as katana.lan:8093, and a story.jphe.in name was considered and declined
+      as unnecessary (2026-07-29).
+
+      Eight crates. State is fold(ledger) with no denormalised columns, which
+      is what makes `rewind N` free. Ember *proposes* stat deltas and the
+      engine's validation gate accepts or rejects them, so a rising reject
+      rate is a drift metric rather than a bug. Audio contract: 16 kHz mono
+      s16le = exactly 32 bytes/ms, so byte_offset = ms x 32 and no frame
+      table is needed anywhere.
+
+      Runs under systemd on katana (litrpg-engine + litrpg-daemon, port 8093,
+      registered in status.realm.watch). The engine idles once the rendered
+      buffer is deep enough, so "doing nothing" is its correct resting state
+      — the playback cursor is the throttle.
+
+      Companion work lives in two other repos rather than here: the watch
+      client (esp32c6-watch, crates/story-proto + src/net/story_*) and a
+      Candela source module (candela, source-endless).
