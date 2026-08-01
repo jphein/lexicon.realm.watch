@@ -1196,11 +1196,21 @@ projects:
     audience: personal
     domain: ~
     repo: ~
-    description: Home Assistant scratch / triage workspace
+    description: Home Assistant workspace — packages, dashboards, deploy tooling, triage scratch
     created: ~
     prior_names: []
-    status: local-only
-    notes: "Local only (no git). 42M (mostly the `scratch/` subdir from 2026-04-27 triage)"
+    status: active
+    repo_url: https://github.com/jphein/ha
+    notes: "CORRECTED 2026-08-01: this is a real git repo (77 commits, remote
+      github.com/jphein/ha), NOT the 'local only, no git' the catalog said for months —
+      that stale note caused an agent to be warned there was no undo. Local-first pattern:
+      commits land on main and sit un-pushed (37 ahead at time of writing), so `git log`
+      is the source of truth rather than the remote. Holds the LIVE dashboards
+      (`dashboards/smol-mesh.dashboard.json`) and their generators.
+      ⚠️ `tools/build_smol_dashboard.py` is a SECOND WRITER to the `smol-control` view that
+      smol's own generator owns — running it clobbers (measured 2026-08-01: +94 dead rows,
+      −43 live entities, deletes JP's corrected power/solar card and the id50/id51 boxes,
+      resurrects retired id7/id9). Its docstring claims the opposite. See smol#355."
 
   - id: ibags
     current_name: ibags
