@@ -343,6 +343,25 @@ projects:
       for the half of *.jphe.in / *.realm.watch not served by disks.
       Issues track listmonk-to-cloud migration and Headscale move.
 
+  - id: sconce
+    current_name: sconce
+    kind: tool
+    realm: forge
+    audience: personal
+    domain: ~
+    repo: ~
+    description: "Ultra-light Home Assistant wall panel for ancient Android tablets — one static file, one scoped WebSocket, 0% idle CPU where the stock HA frontend costs ~50%. Sibling of spyglass (same job for old iPads)."
+    created: 2026-08-01
+    prior_names: []
+    status: active
+    notes: |
+      Lives at ~/Projects/sconce (source of truth); deploys to HA
+      /homeassistant/www/sconce/ via ./deploy.sh, which also hot-reloads the
+      wall tablet through a cache-busted command_webview. Serves the
+      laundry-room Galaxy Tab 2 (WebView 81 = ES2019 ceiling). No credential
+      in the file: /local/ is unauthenticated, token seeded to localStorage
+      for the non-admin laundry-panel HA user.
+
   - id: spyglass
     current_name: spyglass
     kind: tool
