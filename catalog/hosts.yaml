@@ -1,11 +1,31 @@
-# Network device registry — switches, routers, APs, and managed hosts on the realm.
-# Distinct from projects (software JP authors) and agents (named subagents):
-# these are physical or virtual machines with management IPs that JP owns or co-manages.
+# ⚠️ THIS IS NOT THE HOST REGISTRY. Do not add hosts here.
 #
-# Schema is provisional; will harden once a second entry lands. The `prior_names`
-# pattern follows projects.yaml so the rename workflow can extend here later.
-# The lexicon Go binary does NOT yet validate or render this file — see
-# docs/superpowers/specs/2026-04-26-lexicon-design.md for the scope it currently covers.
+# `fleet.yaml` in realmwatch is identity-of-record for all nodes. That is stated
+# in realmwatch/CLAUDE.md, and it is where all ~126 hosts actually live, with a
+# design spec, load-time validation, a rename/replace lifecycle, and a Python
+# library (lexicon.FleetCatalog, python/lexicon/fleet.py) that reads it. Nothing
+# reads THIS file — not the Go binary, not the Python package, nothing.
+#
+# History, so nobody re-derives it: this file was created 2026-05-12 for
+# east-tree-trunk. Seven days later that same switch triggered the fleet-catalog
+# design (realmwatch/docs/superpowers/specs/2026-05-18-lexicon-fleet-catalog-design.md),
+# which concluded a different file should own node identity. This file was
+# superseded almost immediately and never updated. Its original header promised
+# the schema would "harden once a second entry lands" — the second entry never
+# landed here because all 125 subsequent hosts went to fleet.yaml instead. Read
+# that promise as a stale note, not an invitation.
+#
+# The two records of east-tree-trunk have already drifted apart: this one and the
+# fleet.yaml one disagree on the rename date and the realm. One host, two records,
+# already inconsistent — which is the argument against adding a second host here.
+#
+# What remains: a single externally co-managed device. The stewardship fields it
+# carries (contacts, audience, location, os, mgmt_ip) were the one thing fleet.yaml
+# did not model; they have since been added to FleetEntry, so this file has no
+# unique capability left. It is kept rather than deleted because deleting JP's
+# only record of a shared device is his call, not a cleanup.
+#
+# New hosts go in fleet.yaml. Cameras, switches, APs, everything.
 
 hosts:
   - id: east-tree-trunk
