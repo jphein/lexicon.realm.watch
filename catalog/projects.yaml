@@ -1422,3 +1422,72 @@ projects:
       Companion work lives in two other repos rather than here: the watch
       client (esp32c6-watch, crates/story-proto + src/net/story_*) and a
       Candela source module (candela, source-endless).
+
+  - id: anyka3918-gc1084-camera
+    current_name: anyka3918-gc1084-camera
+    kind: tool
+    realm: forge
+    audience: personal
+    domain: ~
+    repo: ~
+    description: Anyka AK3918EN080 / GC1084 camera — rooted firmware, SD-card build tooling, HA integration
+    created: 2024-09-13
+    prior_names: []
+    status: active
+    notes: |
+      Root shell via the gergehack SD-card exploit. The SD card IS the
+      deployment mechanism — `tools/write-sd-card.sh` is the artefact, and a
+      fix that lives only on a running camera does not count. JP has a bag of
+      these, so treat it as a fleet platform, not one repaired camera.
+
+      Read `docs/backlog.md` before changing anything: it carries the rules
+      that were paid for. Chief among them — a defect can be load-bearing.
+      Fixing a real bug here broke a working IR-cut toggle.
+
+      Prefer reading the artifact (sources, kernel image, /proc/kallsyms) to
+      measuring the device; the device actively defeats measurement. One agent
+      owns the camera at a time — concurrent access produces plausible data
+      that means nothing, not a loud conflict.
+
+  - id: eyeplus-icam365-camera
+    current_name: eyeplus-icam365-camera
+    kind: docs
+    realm: oracle
+    audience: personal
+    domain: ~
+    repo: ~
+    description: EYEPLUS / iCam365 ONVIF pan-tilt cameras — local operation with the vendor cloud blocked
+    created: 2026-08-06
+    prior_names: []
+    status: active
+    notes: |
+      Two units: `icam365-01` is production (outdoors, by the cars),
+      `icam365-02` is the expendable lab unit. Read `docs/security.md` first —
+      these disclose their admin password unauthenticated, and VLAN isolation
+      is the only control.
+
+      The governing rule: on this firmware a `200` means "parsed", not
+      "honoured". Verify effects, never statuses. And do not "fix" the ONVIF
+      codec string — the cameras report H264 while streaming H.265, and that
+      lie is the only reason Home Assistant builds any camera entity at all.
+
+  - id: ilnk-e27-bulb-camera
+    current_name: ilnk-e27-bulb-camera
+    kind: docs
+    realm: oracle
+    audience: personal
+    domain: ~
+    repo: ~
+    description: iLnkP2P E27 bulb camera — WiFi pairing reverse-engineered and driven from a laptop
+    created: 2026-08-06
+    prior_names: []
+    status: active
+    notes: |
+      Currently unplugged; a research object, not a working camera. Zero open
+      TCP ports — video exists only over the proprietary PPPP channel and no
+      frame has ever been produced, so codec and resolution remain unknown.
+
+      Do NOT confuse with eyeplus-icam365-camera. Beken/RT-Thread running
+      iLnkP2P here vs Anyka-class Linux running TUTK/ThroughTek there. Both
+      talk UDP 32100, which has caused that conflation twice. A shared port
+      number is not a shared protocol.
