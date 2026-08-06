@@ -40,6 +40,16 @@ class FleetEntry:
     vendor: str | None = None
     category: str | None = None
     ops_ip: str | None = None
+    # Stewardship / physical facts. Absorbed from catalog/hosts.yaml, which
+    # modelled these and which fleet.yaml superseded as identity-of-record.
+    # mgmt_ip is deliberately NOT the same thing as ops_ip: east-tree-trunk is
+    # reached at east-tree-trunk.lan for ops but managed at 10.37.5.2 on an
+    # L3-isolated subnet. All default to None so they stay omitted from the
+    # ~126 entries that do not set them (see _to_raw, which skips None).
+    mgmt_ip: str | None = None
+    location: str | None = None
+    os: str | None = None
+    contacts: list[str] | None = None
     status: str = "curated"
     notes: str | None = None
     first_seen: str | None = None
@@ -69,6 +79,10 @@ class FleetEntry:
             vendor=raw.get("vendor"),
             category=raw.get("category"),
             ops_ip=raw.get("ops_ip"),
+            mgmt_ip=raw.get("mgmt_ip"),
+            location=raw.get("location"),
+            os=raw.get("os"),
+            contacts=raw.get("contacts"),
             status=raw.get("status", "curated"),
             notes=raw.get("notes"),
             first_seen=raw.get("first_seen"),
@@ -186,7 +200,12 @@ class FleetCatalog:
             CommentedMap({"name": p.name, "retired_on": p.retired_on, "reason": p.reason})
             for p in e.prior_names
         )
-        for k in ("realm", "kind", "role", "vendor", "category", "ops_ip", "notes",
+        # NOTE: this tuple is the whole persistence contract. A field absent from
+        # it is silently DROPPED on save, even though load() accepted it — so any
+        # field added to FleetEntry must be added here too, or it will not survive
+        # the next write (and the discovery callback writes routinely).
+        for k in ("realm", "kind", "role", "vendor", "category", "ops_ip",
+                  "mgmt_ip", "location", "os", "contacts", "notes",
                   "first_seen", "last_seen", "replaced_by",
                   "retired_on", "retire_reason"):
             v = getattr(e, k)

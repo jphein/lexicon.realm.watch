@@ -173,3 +173,62 @@ def test_category_and_ops_ip_optional(fleet: FleetCatalog) -> None:
     e = fleet.resolve("east-tree-trunk")
     assert e.category is None
     assert e.ops_ip is None
+
+
+def test_stewardship_fields_round_trip(fleet: FleetCatalog, tmp_path: Path) -> None:
+    """mgmt_ip / location / os / contacts survive a save+load cycle.
+
+    These absorb what catalog/hosts.yaml modelled before fleet.yaml became
+    identity-of-record. This test exists because load() accepts ANY key while
+    _to_raw() writes only an explicit tuple — so a field added to FleetEntry but
+    forgotten in that tuple loads fine, then vanishes on the next save with no
+    error. The discovery callback saves routinely, so "the next save" is minutes
+    away, not release-cycle away. Assert the round trip, not just the load.
+    """
+    e = fleet.resolve("east-tree-trunk")
+    e.mgmt_ip = "10.37.5.2"
+    e.location = "east — Treelink office"
+    e.os = "OpenWrt 25.12.x (realtek/rtl838x)"
+    e.contacts = ["jp@jphein.com", "thomas@treelink.us"]
+
+    out = tmp_path / "fleet.yaml"
+    fleet.save(out)
+    r = load_fleet_catalog(out).resolve("east-tree-trunk")
+
+    assert r.mgmt_ip == "10.37.5.2"
+    assert r.location == "east — Treelink office"
+    assert r.os == "OpenWrt 25.12.x (realtek/rtl838x)"
+    assert r.contacts == ["jp@jphein.com", "thomas@treelink.us"]
+
+
+def test_stewardship_fields_optional(fleet: FleetCatalog) -> None:
+    """Entries predating these fields still load (backward compat)."""
+    e = fleet.resolve("hp-switch")
+    assert e.mgmt_ip is None
+    assert e.location is None
+    assert e.os is None
+    assert e.contacts is None
+
+
+def test_unset_stewardship_fields_are_omitted_not_emitted(
+    fleet: FleetCatalog, tmp_path: Path
+) -> None:
+    """An unset field must not appear in the output at all.
+
+    contacts is a list, so defaulting it to field(default_factory=list) would be
+    the natural choice — and would stamp `contacts: []` onto every entry in the
+    catalog the first time the server saved. Default None + the None-skip in
+    _to_raw keeps unrelated entries diff-clean. Guard that.
+    """
+    out = tmp_path / "fleet.yaml"
+    fleet.save(out)
+    text = out.read_text()
+    for absent in ("contacts", "mgmt_ip", "location", "os:"):
+        assert absent not in text, f"{absent!r} emitted for entries that never set it"
+
+    # mgmt_ip distinct from ops_ip: setting one must not imply the other.
+    fleet.resolve("hp-switch").mgmt_ip = "10.0.6.103"
+    fleet.save(out)
+    r = load_fleet_catalog(out).resolve("hp-switch")
+    assert r.mgmt_ip == "10.0.6.103"
+    assert r.ops_ip is None
