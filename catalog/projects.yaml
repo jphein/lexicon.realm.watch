@@ -102,7 +102,10 @@ projects:
     audience: personal
     domain: ~
     repo: https://github.com/techempower-org/speech-to-cli
-    description: MCP server for STT/TTS via Azure Speech
+    description: Voice engine for STT/TTS via Azure Speech (MCP retired; bash
+      seams speak.py/listen.py) with automatic Wyoming LAN fallback — Piper
+      TTS (en_GB-cori-high) + local STT + wake-word detect_stream; 60s Azure
+      circuit breaker, SPEECH_FORCE_OFFLINE=1 lever
     created: ~
     prior_names: []
     status: active
@@ -264,7 +267,10 @@ projects:
     audience: personal
     domain: ~
     repo: https://github.com/techempower-org/gnome-speaks
-    description: GNOME Shell speech extension service
+    description: GNOME Shell voice extension — dictation, AI conversation, FIFO
+      speech queue (HTTP :7710), "cast …" spellbook (realm/HA/oracle spells),
+      wake word via familiar openwakeword, Wyoming offline fallback. Pages site
+      at techempower-org.github.io/gnome-speaks
     created: ~
     prior_names: []
     status: active
