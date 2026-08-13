@@ -1497,3 +1497,22 @@ projects:
       iLnkP2P here vs Anyka-class Linux running TUTK/ThroughTek there. Both
       talk UDP 32100, which has caused that conflation twice. A shared port
       number is not a shared protocol.
+
+  - id: theselfie
+    current_name: theselfie
+    kind: tool
+    realm: signal
+    audience: public
+    domain: ~
+    repo: https://github.com/jphein/theselfie
+    description: Gabba Goods BT-Classic selfie remote turned 6-button Home Assistant input via ESP32 HID host (ESPHome external component)
+    created: 2026-08-13
+    prior_names: []
+    status: active
+    notes: |
+      Remote is Bluetooth Classic (BR/EDR) — invisible to the BLE proxy mesh, so
+      Bermuda can never track it; repurposed instead. Original ESP32 only (the
+      one variant with a BR/EDR radio). HA side lives in ~/Projects/ha:
+      packages/selfie_remote.yaml + the selfie-remote dashboard (per-button
+      entity dropdowns, domain-smart dispatcher). Public teardown page at
+      jphein.github.io/theselfie (GitHub Pages, main:/docs).
