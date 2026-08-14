@@ -332,6 +332,42 @@ projects:
     status: local-only
     notes: Local only
 
+  - id: gpu0
+    current_name: gpu0
+    kind: tool
+    realm: forge
+    audience: personal
+    domain: ~
+    repo: ~
+    description: "Ops notes + cloud-init seed for the gpu0 inference server (Ubuntu Server 26.04 LTS, GTX 1050 Ti)"
+    created: 2026-08-14
+    prior_names: []
+    status: local-only
+    notes: |
+      Local only (no git). 120GB USB SSD imaged 2026-08-14 from the 26.04
+      cloud image + NoCloud seed — no installer; recipe in README.md, seed
+      files in seed/. Console password in Vaultwarden ("gpu0 ubuntu login (jp)").
+      Pascal GPU: nvidia-driver-580 is the last supported branch; CUDA 12 max
+      (CUDA 13 dropped Pascal).
+
+  - id: gpu1
+    current_name: gpu1
+    kind: tool
+    realm: forge
+    audience: personal
+    domain: ~
+    repo: ~
+    description: "Ops notes + cloud-init seed for the gpu1 inference server (Ubuntu Server 26.04 LTS, 2x NVIDIA P102-100)"
+    created: 2026-08-14
+    prior_names: []
+    status: local-only
+    notes: |
+      Local only (no git). 120GB USB SSD imaged 2026-08-14, same
+      cloud-image + NoCloud recipe as gpu0 (full write-up in gpu0/README.md).
+      Console password in Vaultwarden ("gpu1 ubuntu login (jp)").
+      2x P102-100 10GB = Pascal GP102 (mining 1080 Ti, no display outputs);
+      nvidia-driver-580 is the last supported branch, CUDA 12 max.
+
   - id: ubox0
     current_name: ubox0
     kind: tool
