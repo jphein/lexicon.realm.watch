@@ -344,11 +344,13 @@ projects:
     prior_names: []
     status: local-only
     notes: |
-      Local only (no git). 120GB USB SSD imaged 2026-08-14 from the 26.04
-      cloud image + NoCloud seed — no installer; recipe in README.md, seed
-      files in seed/. Console password in Vaultwarden ("gpu0 ubuntu login (jp)").
-      Pascal GPU: nvidia-driver-580 is the last supported branch; CUDA 12 max
-      (CUDA 13 dropped Pascal).
+      120GB USB SSD imaged 2026-08-14 from the 26.04 cloud image + NoCloud
+      seed — no installer; recipe in README.md, seed files in seed/. Console
+      password in Vaultwarden ("gpu0 ubuntu login (jp)"). Pascal GPU:
+      nvidia-driver-580 is the last supported branch; CUDA 12 max.
+      ⚠️ 2026-08-14: failing DIMM found (silent corruption, non-ECC — see
+      emberburrito#43 + README) and pulled; runs 3x4GB=12GB pending re-verify.
+      Hardware: Dell 0WR7PY, i7-3770, GTX 1050 Ti 4GB.
 
   - id: gpu1
     current_name: gpu1
@@ -362,11 +364,16 @@ projects:
     prior_names: []
     status: local-only
     notes: |
-      Local only (no git). 120GB USB SSD imaged 2026-08-14, same
-      cloud-image + NoCloud recipe as gpu0 (full write-up in gpu0/README.md).
-      Console password in Vaultwarden ("gpu1 ubuntu login (jp)").
-      2x P102-100 10GB = Pascal GP102 (mining 1080 Ti, no display outputs);
+      120GB USB SSD imaged 2026-08-14, same cloud-image + NoCloud recipe as
+      gpu0 (full write-up in gpu0/README.md). Console password in Vaultwarden
+      ("gpu1 ubuntu login (jp)"). 2x P102-100 10GB = Pascal GP102 (mining
+      1080 Ti, NO display outputs — box is fully headless; boot-beacon
+      streams dmesg to katana:9199/udp). Verified 2026-08-14: system RAM
+      memtester clean, both VRAMs pattern-tested clean (tools/vramtest.py).
+      Hardware: ASUS SABERTOOTH X58, i7-920, 10GB DDR3, BIOS 1402 (final).
       nvidia-driver-580 is the last supported branch, CUDA 12 max.
+      Role: batch/overflow inference annex — familiar (Arc B60) stays the
+      primary interactive AI host.
 
   - id: ubox0
     current_name: ubox0
