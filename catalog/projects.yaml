@@ -1579,3 +1579,15 @@ projects:
       packages/selfie_remote.yaml + the selfie-remote dashboard (per-button
       entity dropdowns, domain-smart dispatcher). Public teardown page at
       jphein.github.io/theselfie (GitHub Pages, main:/docs).
+  - id: mysticlight
+    current_name: mysticlight
+    kind: service
+    realm: fantasy
+    audience: personal
+    domain: ~
+    repo: ~
+    description: MSI Mystic Light → Home Assistant MQTT bridge (per-zone RGB via OpenRGB SDK on katana).
+    created: 2026-08-15
+    prior_names: []
+    status: active
+    notes: systemd services openrgb-sdk + mysticlightd on katana; /api/version on :7716.
