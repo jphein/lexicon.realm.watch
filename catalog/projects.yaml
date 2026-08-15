@@ -95,8 +95,9 @@ projects:
     status: active
     notes: |
       Runs on katana :8095 (hosts-realm-watch.service); fleet list in
-      hosts.json — 8 keeps, 5 VMs (conjured), 5 cloud/tailnet (distant
-      realms), 17 watchtowers. Collector = parallel SSH, one compound
+      hosts.json — 38 entries: 8 keeps, 6 VMs (conjured), 5 cloud/tailnet (distant
+      realms), 17 watchtowers, 2 anyka cameras (watchful eyes), android-
+      over-adb support (pocket familiars). Collector = parallel SSH+adb, one
       probe per host; gauges for RAM/load/disk, nvidia+lspci GPUs, hwmon
       temps, ufw walls, services/docker wards. Version-checked by
       status.realm.watch. Local repo only. Candidate for Caddy front-door.
