@@ -349,7 +349,7 @@ projects:
       password in Vaultwarden ("gpu0 ubuntu login (jp)"). Pascal GPU:
       nvidia-driver-580 is the last supported branch; CUDA 12 max.
       ⚠️ 2026-08-14: failing DIMM found (silent corruption, non-ECC — see
-      emberburrito#43 + README) and pulled; runs 3x4GB=12GB pending re-verify.
+      emberburrito#43 + README) and pulled; re-verified clean 2026-08-15 (memtester + VRAM) — in service at 3x4GB=12GB.
       Hardware: Dell 0WR7PY, i7-3770, GTX 1050 Ti 4GB.
 
   - id: gpu1
