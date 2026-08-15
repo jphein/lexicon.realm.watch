@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- `vocabularies/dreams.yaml` — a fourth identity namespace: `dreams.roster`, the dream-realm names the dreamteam plugin's spawn gate accepts. 61 names (37 carried over from the plugin's inline regex + 24 new), disjoint from JP's tmux session names. Lexicon is now the source of truth; `dreamteam/scripts/spawn-standards.sh` carries a derived copy and its test suite fails on drift.
+- `dreamer` recipe — `lexicon roll dreamer --n 7` returns N *distinct* agent names, which is the operational need: dreamteam forbids reusing a name within a session, and a 7-agent wave on 2026-08-14 ran out and spawned everyone under one name.
+
+### Fixed
+- `loadLiveVocabsCombined` (Go test helper) globs `vocabularies/*.yaml` instead of a hardcoded file list. The two loaders had drifted apart: the CLI globbed, the tests didn't, so a new vocabulary file was invisible to the live-data tests and any recipe sourcing from it failed `TestValidate_LiveDataPasses` while `lexicon validate` passed.
+
 ## [1.7.0] — 2026-05-19
 
 ### Added

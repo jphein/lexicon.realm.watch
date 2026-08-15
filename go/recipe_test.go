@@ -114,16 +114,22 @@ func TestRoll_UnknownRecipe(t *testing.T) {
 
 // loadLiveVocabsCombined loads all vocabularies/*.yaml into one Vocabulary.
 // In v0.1 we just merge each file's top-level categories.
+//
+// GLOBBED, not hand-listed (2026-08-14): the previous hardcoded file list meant
+// a new vocabulary file was invisible to the live-data tests, so a recipe that
+// sourced from it failed validation here while `lexicon validate` — which globs
+// the directory (cmd_roll.go loadVocabsFromDir) — passed. Two loaders disagreeing
+// about what "the vocabularies" are is the bug; this makes the test mirror the CLI.
 func loadLiveVocabsCombined() (*Vocabulary, error) {
 	combined := &Vocabulary{categories: map[string]map[string]vocabGroup{}}
-	files := []string{
-		"../vocabularies/realms.yaml",
-		"../vocabularies/adjectives.yaml",
-		"../vocabularies/nouns.yaml",
-		"../vocabularies/scientists.yaml",
-		"../vocabularies/creatures.yaml",
+	files, err := filepath.Glob(filepath.Join("..", "vocabularies", "*.yaml"))
+	if err != nil {
+		return nil, err
 	}
 	for _, f := range files {
+		if filepath.Base(f) == "recipes.yaml" {
+			continue // recipes are a RecipeBook, not a vocabulary
+		}
 		v, err := LoadVocabularyFile(f)
 		if err != nil {
 			return nil, err

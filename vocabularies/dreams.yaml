@@ -1,0 +1,106 @@
+# Dream names — the agent-identity namespace for the dreamteam plugin.
+#
+# A FOURTH namespace, alongside node identity (adjectives/nouns.fleet), the
+# familiar's creatures, and the realm vocabularies. These words name AGENTS —
+# the teammates a dreamteam orchestrator spawns — and nothing else.
+#
+# Source of truth: this file. `dreamteam/scripts/spawn-standards.sh` carries a
+# derived copy as a `|`-joined regex (the hook must stay dependency-free: it
+# runs on EVERY spawn and a YAML read there would put lexicon in the critical
+# path of every agent launch). Regenerate that copy with:
+#
+#   python3 -c "import yaml;print('|'.join(yaml.safe_load(open('vocabularies/dreams.yaml'))['dreams']['roster']['words']))"
+#
+# Roll distinct names for a wave with:  lexicon roll dreamer --n 7
+#
+# Rules for adding a word:
+#   - single lowercase token, kebab-safe (the spawn name is `<dream>-<role>`
+#     and the hook splits on the FIRST hyphen — a hyphenated dream name would
+#     truncate to its first segment and fail the roster check)
+#   - nocturnal / dream / sleep / sky / myth register — it must sound like it
+#     belongs beside luna, morpheus and vesper
+#   - disjoint from JP's tmux session names (hearth, crag, forge, glade, grove,
+#     hollow, rune, spire, vale) — a pane titled for a session is a permanent
+#     ambiguity, the same failure reserved.yaml exists to prevent. `ember`
+#     predates that rule and is grandfathered in.
+#   - no near-homographs of an existing entry (`vela` was dropped: too close to
+#     the `vale` session; `phantasos` was dropped: too close to `phantasm`)
+#
+# Not size-locked and deliberately not a power of two: unlike node identity,
+# nothing indexes this list by a hashed id — an orchestrator picks names by
+# hand, so the only requirement is that the pool is DEEP enough that a wave of
+# ~10 agents never runs out (2026-08-14: a 7-agent research wave did).
+dreams:
+  roster:
+    description: Dream-realm agent names for dreamteam teammates (union — the full accepted pool)
+    words:
+      # Typed personas — these have agent-type definitions in dreamteam/agents/
+      # and MUST spawn as subagent_type dreamteam:<name>.
+      - luna
+      - morpheus
+      - lucid
+      - nebula
+      - oracle
+      # Standing manager roles (typed; never handed to a worker agent).
+      - hypnos
+      - nyx
+      # The named worker roster (skill § The Dream Name Roster).
+      - vesper
+      - reverie
+      - somnia
+      - aurora
+      - selene
+      - drift
+      - wisp
+      - echo
+      - cirrus
+      - haze
+      # Overflow pool — drawn from when the table above is exhausted.
+      - twilight
+      - solace
+      - onyx
+      - zephyr
+      - muse
+      - starling
+      - slumber
+      - dusk
+      - mirage
+      - phantasm
+      - phoenix
+      - cassia
+      - solara
+      - yara
+      - lyra
+      - ember
+      - sage
+      - fern
+      - reeve
+      - hermes
+      # Deep bench, added 2026-08-14 — myth of sleep and night.
+      - oneiros
+      - erebus
+      - aether
+      - halcyon
+      - calypso
+      - elysium
+      - avalon
+      - sylph
+      - iris
+      - maia
+      # Deep bench — dusk, shadow and quiet.
+      - nocturne
+      - gloam
+      - umbra
+      - hush
+      - lull
+      - eclipse
+      # Deep bench — cloud and sky (pairs with cirrus/haze).
+      - nimbus
+      - stratus
+      # Deep bench — stars and the high sky.
+      - solstice
+      - meridian
+      - zenith
+      - nova
+      - quasar
+      - orion

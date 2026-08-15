@@ -113,6 +113,7 @@ lexicon roll project --realm fantasy         # → "Lunar-Pulsar"
 lexicon roll project --realm signal --n=5    # → five candidates to browse-and-pick
 lexicon roll branch --prefix feat            # → "feat/lunar-pulsar-forge"
 lexicon roll entity                          # → "Brimwarden Echo"
+lexicon roll dreamer --n 7                   # → seven DISTINCT dreamteam agent names
 
 # Catalog queries
 lexicon resolve dreamspace                   # → follows prior_names → current_name
@@ -211,6 +212,7 @@ vocabularies/
 ├── nouns.yaml          # same shape as adjectives
 ├── scientists.yaml     # for agent rolls (Docker-corpus + extensions)
 ├── creatures.yaml      # for entity rolls (sphinx, basilisk, kelpie, …)
+├── dreams.yaml         # dreamteam agent names (luna, morpheus, halcyon, …)
 └── recipes.yaml        # declarative recipe definitions
 ```
 

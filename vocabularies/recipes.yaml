@@ -38,3 +38,14 @@ recipes:
     sources:
       adjective: { from: adjectives, group: fantasy }
       creature:  { from: creatures,  group: any }
+
+  dreamer:
+    # `roll dreamer --n 7` is the intended call: RollN returns DISTINCT names,
+    # which is the whole point — dreamteam forbids reusing a name within a
+    # session, so an orchestrator staffing a wave needs N distinct picks in one
+    # shot. Bare name only; the `-<role>` suffix is chosen per task (roles are
+    # an open vocabulary in the spawn-standards gate).
+    description: dreamteam agent name — bare dream name, suffix with -<role> at spawn
+    pattern: "{dream:lower}"
+    sources:
+      dream: { from: dreams, group: roster }
