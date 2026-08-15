@@ -155,3 +155,48 @@ dreams:
       - heath
       - knoll
       - brook
+      # Deepened 2026-08-14 (emberburrito I1). hearthd's renamer filters
+      # candidates against live names AND its un-pruned rename history, so the
+      # usable pool shrinks monotonically: at 32 words the picker would return
+      # None and renames would stop SILENTLY — the roll itself still succeeds,
+      # so no error fires. Doubling the pool buys headroom; hearthd now also
+      # warns distinctly on exhaustion rather than going quiet.
+      # Every word below was checked against every group in every vocabulary
+      # file (not just the four named above) — zero collisions.
+      # `downs`, `march` and `wick` were dropped from the candidate set as
+      # ambiguous: a plural, a month/verb, and a candle part in a project full
+      # of candles.
+      - brae
+      - bourne
+      - bight
+      - copse
+      - corrie
+      - cove
+      - dale
+      - dingle
+      - fell
+      - firth
+      - ghyll
+      - glen
+      - grange
+      - haven
+      - howe
+      - hurst
+      - linn
+      - mere
+      - moss
+      - nook
+      - oxbow
+      - ridge
+      - scarp
+      - shaw
+      - skerry
+      - slade
+      - spinney
+      - swale
+      - tarn
+      - thwaite
+      - warren
+      - weald
+      - wharf
+      - whin
