@@ -49,3 +49,11 @@ recipes:
     pattern: "{dream:lower}"
     sources:
       dream: { from: dreams, group: roster }
+
+  session:
+    # hearthd calls `lexicon roll session --n 8` and takes the first name not
+    # already live and not in its rename history. RollN returns DISTINCT names.
+    description: tmux session name — bare place noun (hearthd auto-renamer)
+    pattern: "{place:lower}"
+    sources:
+      place: { from: dreams, group: sessions }

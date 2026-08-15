@@ -104,3 +104,54 @@ dreams:
       - nova
       - quasar
       - orion
+
+  # tmux session names — one workstation session, one *place*. This is the
+  # namespace the roster rules above call "JP's tmux session names": it was
+  # documented as a first-class namespace before it had a vocabulary file
+  # (2026-08-14, emberburrito#8). hearthd rolls from this group to auto-rename
+  # numeric sessions.
+  #
+  # Rules for adding a word:
+  #   - single lowercase token, a PLACE in register (hearth, glade, tor…)
+  #   - disjoint from dreams.roster (agents), nouns.fleet (node identity),
+  #     reserved.yaml, and realm vocabulary nouns. Grandfathered collisions
+  #     that predate the rule: ember (roster), forge (reserved), spire
+  #     (nouns.fleet), hollow (realms fantasy). Do not add new collisions.
+  sessions:
+    description: tmux session names — bare place nouns, rolled by hearthd's auto-renamer
+    words:
+      # live today (grandfathered set — kept so the vocabulary describes the
+      # whole namespace, not just the unclaimed pool)
+      - hearth
+      - crag
+      - forge
+      - glade
+      - grove
+      - hollow
+      - rune
+      - spire
+      - vale
+      - ember
+      # the unclaimed pool
+      - barrow
+      - delve
+      - fen
+      - ford
+      - holt
+      - marsh
+      - moor
+      - reach
+      - shoal
+      - thicket
+      - tor
+      - wold
+      - dell
+      - combe
+      - mire
+      - strand
+      - weir
+      - garth
+      - croft
+      - heath
+      - knoll
+      - brook
