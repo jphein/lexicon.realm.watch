@@ -1429,10 +1429,14 @@ projects:
     prior_names: []
     status: active
     notes: |
-      First downstream consumer of realm-sigil: a no_std Rust port of the deterministic
-      name algorithm at rust/clock/src/net/names.rs — fantasy node names (golden-ratio
-      id-spread seed) + forge version names (git-hash seed). See sigil.realm.watch #4
-      (corpus drift) and #5 (candidate to upstream as sigil-rs). Shipped 2026-07-07:
+      First downstream consumer of realm-sigil: VENDORS `sigil-names` (upstream
+      realm-sigil/rust is already no_std/no-alloc/no-deps) for fantasy node names
+      (golden-ratio id-spread seed) + forge version names (git-hash seed) at
+      rust/clock/src/net/names.rs. See sigil.realm.watch #4 (corpus drift) and #5
+      (upstreaming). CORRECTED 2026-08-15: an earlier "hand-ports the algorithm"
+      phrasing here sent an emberburrito extraction plan (#12) down a dead path —
+      the coupling it implied does not exist; emberburrito ruled smol needs
+      nothing from it. Shipped 2026-07-07:
       3-way ESP-NOW mesh (time sync + names) hardware-verified across 3 boards
       (Draconic Dominion / Eldritch Nexus / Jade Herald); MMO snake + six treasure-powers
       committed (flash pending). Live site: jphein.github.io/smol. Realm 'signal' =
