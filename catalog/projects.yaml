@@ -82,6 +82,25 @@ projects:
       upgrade-release` for major Ubuntu version bumps. Candidate for
       rename to <something>.realm.watch in v0.2.
 
+  - id: hosts
+    current_name: hosts.realm.watch
+    kind: service
+    realm: signal
+    audience: realm
+    domain: ~
+    repo: ~
+    description: The Realm Ledger — live fleet dashboard (specs, resources, services per host), SSH-collected, stdlib-only, fantasy-ledger UI.
+    created: 2026-08-15
+    prior_names: []
+    status: active
+    notes: |
+      Runs on katana :8095 (hosts-realm-watch.service); fleet list in
+      hosts.json — 8 keeps, 5 VMs (conjured), 5 cloud/tailnet (distant
+      realms), 17 watchtowers. Collector = parallel SSH, one compound
+      probe per host; gauges for RAM/load/disk, nvidia+lspci GPUs, hwmon
+      temps, ufw walls, services/docker wards. Version-checked by
+      status.realm.watch. Local repo only. Candidate for Caddy front-door.
+
   - id: status
     current_name: status.realm.watch
     kind: service
