@@ -1522,6 +1522,60 @@ projects:
       owns the camera at a time — concurrent access produces plausible data
       that means nothing, not a loud conflict.
 
+  - id: droid
+    current_name: droid
+    kind: tool
+    realm: forge
+    audience: personal
+    domain: ~
+    repo: ~
+    description: Motorola Droid 2 (A955, Android 2.2 Froyo) rooted into a passwordless SSH terminal — clean-room CVE-2010-EASY exploit, static-musl dropbear, reversible debloat.
+    created: 2026-08-15
+    prior_names: []
+    status: active
+    notes: |
+      Local-only and it STAYS private: `root/` holds working exploit source
+      (ratc.c) plus the device's real IP/serial/keys. The public showcase is a
+      SEPARATE repo — retroterm2 (github.com/jphein/retroterm2, GitHub Pages) —
+      documenting the method only, no topology. Realm split mirrors it: droid =
+      forge (the workshop), retroterm2 = signal (the terminal).
+
+      Root is a from-scratch reimplementation of CVE-2010-EASY
+      ("RageAgainstTheCage", Krahmer / Android Exploid Crew) — the adbd
+      unchecked-setuid race. Chosen over a bootloader unlock: Motorola's 2010
+      mapphone eFuse bootloader was never broken, so a userspace escalation
+      flashes nothing and wipes nothing. Persistence via the never-shipped
+      /system/etc/install-recovery.sh init hook.
+
+      Read root/NOTES.md before touching: dropbear is built against musl because
+      Ubuntu glibc's >=3.2 kernel floor breaks getrlimit/readdir on this 2.6.32
+      kernel; dropbear also needs /system/etc/shells or it rejects root before
+      checking the key.
+
+  - id: retroterm2
+    current_name: retroterm2
+    kind: tool
+    realm: signal
+    audience: personal
+    domain: ~
+    repo: https://github.com/jphein/retroterm2
+    description: RETROTERM 2 — wink-forward "product launch" for a 2010 Motorola Droid 2 reborn as a passwordless SSH console for a Claude Code agent fleet.
+    created: 2026-08-17
+    prior_names: []
+    status: active
+    notes: |
+      Public showcase / GitHub Pages site (https://jphein.github.io/retroterm2/,
+      GPLv3) — the marketing-joke front for the private droid project. Documents
+      the real engineering (legacy SHA-1 SSH side-door, VX ConnectBot signer fix,
+      DB key injection, framebuffer-driven verification, the CVE-2010-EASY root)
+      with METHOD ONLY — generic placeholders, no IPs/SSIDs/keys. Lab, source, and
+      device specifics live in droid (private, local-only).
+
+      Realm signal = the terminal; droid is forge = the workshop. Uses the shared
+      realm.watch family footer (sigil version via version.json) and an OG/Twitter
+      share card — JPEG, because a PNG-of-a-photo blew Signal's ~500KB preview cap.
+      Keep photos EXIF-stripped before publishing.
+
   - id: eyeplus-icam365-camera
     current_name: eyeplus-icam365-camera
     kind: docs
