@@ -1641,9 +1641,9 @@ projects:
     current_name: mysticlight
     kind: service
     realm: fantasy
-    audience: personal
+    audience: public
     domain: ~
-    repo: ~
+    repo: https://github.com/jphein/mysticlight
     description: MSI Mystic Light → Home Assistant MQTT bridge (per-zone RGB via OpenRGB SDK on katana).
     created: 2026-08-15
     prior_names: []
